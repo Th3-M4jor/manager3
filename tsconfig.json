@@ -5,6 +5,7 @@
         "jsxFactory": "m",
         "jsxFragmentFactory": "m.Frag",
         "module": "ES2015",
+        "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "keyofStringsOnly": true,
         "strict": true,
