@@ -1,0 +1,15 @@
+{
+    "presets": [
+        "@parcel/babel-preset-env"
+    ],
+    "plugins": [
+        "@parcel/babel-plugin-transform-runtime",
+        [
+            "@babel/plugin-transform-react-jsx",
+            {
+                "pragma": "m",
+                "pragmaFrag": "'['"
+            }
+        ]
+    ]
+}

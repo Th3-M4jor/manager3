@@ -1,0 +1,9 @@
+{
+    "parser": "sugarss",
+    "map": false,
+    "plugins": {
+        "postcss-import": {},
+        "tailwindcss": {},
+        "autoprefixer": {}
+    }
+}
