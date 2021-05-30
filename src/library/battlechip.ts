@@ -1,7 +1,7 @@
-import {Element, elementFromStr} from "./elements";
-import {Range, rangeFromStr} from "./ranges";
+import {Element, elementFromStr, elementArrToHtml} from "./elements";
+import {Range, rangeFromStr, rangeToShortStr} from "./ranges";
 import {ChipClass, ChipType, chipClassFromStr, chipTypeFromStr} from "./chipkind";
-import {Skill, skillFromStr} from "./skills";
+import {Skill, skillFromStr, skillToShortStr} from "./skills";
 
 export interface ChipData {
     Name: string,
@@ -19,6 +19,7 @@ export interface ChipData {
 export class BattleChip {
 
     public readonly name: string;
+    public readonly id: number;
     public readonly element: Element[];
     public readonly range: Range;
     public readonly class: ChipClass;
@@ -28,11 +29,8 @@ export class BattleChip {
     public readonly damage: string;
     public readonly skills: Skill[];
 
-    get skill(): Skill {
-        return this.skills.length == 1 ? this.skills[0] : Skill.Varies;
-    }
-
-    constructor(data: ChipData) {
+    constructor(id: number, data: ChipData) {
+        this.id = id;
         this.name = data.Name;
         this.element = data.Element.map(e => elementFromStr(e));
         this.skills = data.Skills.map(e => skillFromStr(e));
@@ -42,5 +40,21 @@ export class BattleChip {
         this.hits = data.Hits;
         this.description = data.Description;
         this.damage = data.Damage;
+    }
+
+    get skill(): Skill {
+        return this.skills.length == 1 ? this.skills[0] : Skill.Varies;
+    }
+
+    get skillAbv(): string {
+        return skillToShortStr(this.skill);
+    }
+
+    get rangeAbv(): string {
+        return rangeToShortStr(this.range);
+    }
+
+    renderElements() : JSX.Element {
+        return elementArrToHtml(this.element);
     }
 }

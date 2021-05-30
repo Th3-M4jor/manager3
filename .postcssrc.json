@@ -4,6 +4,8 @@
     "plugins": {
         "postcss-import": {},
         "tailwindcss": {},
-        "autoprefixer": {}
+        "autoprefixer": {},
+        "postcss-extend": {},
+        "postcss-mixins": {}
     }
 }
