@@ -3,76 +3,72 @@
 @tailwind utilities;
 
 .chipImgBox {
-    white-space: nowrap;
-    display: inline-block;
+    @apply whitespace-nowrap inline-block;
 }
 
 %chipImg {
-    height: 100%;
+    @apply h-full py-0 align-middle transform scale-125;
     padding-left: 2px;
     padding-right: 2px;
-    padding-top: 0px;
-    padding-bottom: 0px;
     vertical-align: middle;
-    @apply transform scale-125;
 }
 
 .fireChip {
     @extend %chipImg;
-    content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOBAMAAADtZjDiAAAABGdBTUEAALGPC/xhBQAAABVQTFRFKCgoeHB4oDBIsKio6DBI+JgA////esoD/wAAAE1JREFUCB0FwQENwjAUBcDrWwWM1MDPHIAlDCNgWeaAKijctfcHNk+okZ9IzRAHoVJ0KYhDiaQQifZA2O1kwZJ1T/PS26nOe/RXfMfY/nf4D6En5pTGAAAAAElFTkSuQmCC");
+    content: url("img/fire.png");
 }
 
 .aquaChip {
     @extend %chipImg;
-    content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAAABGdBTUEAALGPC/xhBQAAAFRJREFUKJFj+P///4YVKwgioDIGIFVRUKGBFwAVAJWBlGLKRTT8QBPBrhSojiilEHWYqilTSqwDMFXARVCUYhqGLIJQiulENBGylBLrAGIjlvjkAgAWUOd9VSCMVAAAAABJRU5ErkJggg==");
+    content: url("img/aqua.png");
 }
 
 .elecChip {
     @extend %chipImg;
-    content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOBAMAAADtZjDiAAAABGdBTUEAALGPC/xhBQAAABJQTFRFKCgoeHB4sKio+JgA+PAo////RbdwrwAAAEZJREFUCB0VwQENhEAMBMBJ+wpQsJDg4AVcSBXgXwy5Ge+13U56OUQPJT2LktkeoWdK6Fkl/EYJ/6WEoYRFiUY5bYf32u4PMa4I9zsAdFQAAAAASUVORK5CYII=");
+    content: url("img/elec.png");
 }
 
 .woodChip {
     @extend %chipImg;
-    content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOBAMAAADtZjDiAAAABGdBTUEAALGPC/xhBQAAAA9QTFRFKCgoMMhYeHB4sKio////UNJopAAAAERJREFUCNc1zbERwDAIxVBxLODPBjgLcCEbZP+dUuBUr5N4u7v74QbgosC0ncIUcgopx9CYWk4RGlPCKQNwah0Z/+75fLv0B4IMG42/AAAAAElFTkSuQmCC");
+    content: url("img/wood.png");
 }
 
 .windChip {
     @extend %chipImg;
-    content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOBAMAAADtZjDiAAAABGdBTUEAALGPC/xhBQAAAA9QTFRFKCgoeHB4sKio6Oj4////wq8ncQAAAEZJREFUCNc9jcENhAAMw6yyARPkUgZAzQbsPxSfHq9Iluzw2LYvfgCciI4odCShUJKocKZzF52e3eWd6UEZ96yn+jr/7v68j7ELsbTr2fEAAAAASUVORK5CYII=");
+    content: url("img/wind.png");
 }
 
 .swordChip {
     @extend %chipImg;
-    content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOBAMAAADtZjDiAAAABGdBTUEAALGPC/xhBQAAAA9QTFRFAOD4KCgoeHB4sKio////lIUzwwAAAD1JREFUCB0FwQERwwAIBLA8hwA6S/OvYRKKA5bku5B+f/Dpg7cKjoKNwhmFDe0YSjYoZ1A2i2ag8sD0E8gf39UOUJ0nXL4AAAAASUVORK5CYII=");
+    content: url("img/sword.png");
 }
 
 .breakChip {
     @extend %chipImg;
-    content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAAABGdBTUEAALGPC/xhBQAAAFFJREFUKM9j+P///4YVKwgioDIGIFVRUKGBFwAVAJWBlGoQAbAoBRoAR/iUIqtDU42iFCL34sUPIMJUTZlSXG4gVykJ3iItsAhHAbERS3xyAQCqnefV7r0a1gAAAABJRU5ErkJggg==");
+    content: url("img/break.png");
 }
 
 .cursorChip {
     @extend %chipImg;
-    content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAAABGdBTUEAALGPC/xhBQAAAEtJREFUKM9j+P///4YVKwgioDIGIFVRUaGBFwAVAJWBlEL4HzoYIAgrF6EULoGpFCKCrhTTasqUEgRkKaWNW0kILGKjgNiIJT65AACsmN81zVCWHQAAAABJRU5ErkJggg==");
+    content: url("img/cursor.png");
 }
 
 .recovChip {
     @extend %chipImg;
-    content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAAABGdBTUEAALGPC/xhBQAAAGJJREFUKM9j+P///4YVKwgioDIGIFVRUKGBFwAVAJWBlGoQAXAqfWHgAUTIDOxKIdJoCKH0R8YKIIIzFuBSCpFGQwvIU4pwK36l6CGApg7uP+yBhaaOQLjiUodQSmzEEp9cAE4xAlRqvKO9AAAAAElFTkSuQmCC");
+    content: url("img/recov.png");
 }
 
 .invisChip {
     @extend %chipImg;
-    content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAAABGdBTUEAALGPC/xhBQAAAFFJREFUKJFj+P///4YVKwgioDIGIFVRUKGBFwAVAJWBlKJJrGD4AURoguhK0VQgc7GbihWgKMW0FFmQXFNp41Y0k9BsoKm3IBGLx1RoxBKfXACrMsNFvVcK4wAAAABJRU5ErkJggg==");
+    content: url("img/invis.png");
 }
 
 .objectChip {
     @extend %chipImg;
-    content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAAABGdBTUEAALGPC/xhBQAAAEpJREFUKM9j+P///4YVKwgioDIGIFVRUKGBFwAVAJWBlGoQAdCVHsiwwERYlGJVt8DAA4vSHzMY0BBQ3TBVijNcCUcBsRFLfHIBADJ27qX4xuXwAAAAAElFTkSuQmCC");
+    content: url("img/object.png");
 }
 
 .nullChip {
     @extend %chipImg;
-    content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAADVJREFUKM9j+P///4YVKwgioDIGIFVRUKGBFwAVAJWBlGoQAQapUoiXqa10UIcAsRFLfHIBANLVuTXoUOn7AAAAAElFTkSuQmCC");
+    content: url("img/null.png");
 }
