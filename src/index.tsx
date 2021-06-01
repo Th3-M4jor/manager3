@@ -10,6 +10,7 @@ import { BattleChip, ChipData } from "./library/battlechip";
 import { ChipLibrary } from "./library/library";
 
 import {TopBar} from "./components/topbar";
+import {NavTabs} from "./components/navtabs";
 
 import "../static/styles.pcss";
 
@@ -75,6 +76,9 @@ class Manager extends MitrhilTsxComponent {
             <>
                 <div class="outermostDiv">
                     <TopBar tabName={this.tabToString()} msg={this.topMsg}/>
+                    <div style="background-color: #4abdb5; padding: 10px;">
+                        <NavTabs activeTab={this.activeTab}/>
+                    </div>
                 </div>
             </>
         );

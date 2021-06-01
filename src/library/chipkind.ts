@@ -1,37 +1,107 @@
-import { $enum } from "ts-enum-util";
+import { makeTaggedUnion, none, MemberType } from "safety-match";
 
-export enum ChipType {
-    Burst,
-    Construct,
-    Melee,
-    Projectile,
-    Wave,
-    Recovery,
-    Summon,
-    Support,
-    Trap,
-}
+export const ChipType = makeTaggedUnion({
+    Burst: none,
+    Construct: none,
+    Melee: none,
+    Projectile: none,
+    Wave: none,
+    Recovery: none,
+    Summon: none,
+    Support: none,
+    Trap: none,
+});
 
-const wrappedChipType = $enum(ChipType);
+export type ChipType = MemberType<typeof ChipType>;
 
 export function chipTypeFromStr(val: string): ChipType {
-    return wrappedChipType.getValueOrThrow(val);
+    switch (val) {
+        case "Burst":
+            return ChipType.Burst;
+        case "Construct":
+            return ChipType.Construct;
+        case "Melee":
+            return ChipType.Melee;
+        case "Projectile":
+            return ChipType.Projectile;
+        case "Recovery":
+            return ChipType.Recovery;
+        case "Summon":
+            return ChipType.Summon;
+        case "Support":
+            return ChipType.Support;
+        case "Trap":
+            return ChipType.Trap;
+        case "Wave":
+            return ChipType.Wave;
+        default:
+            throw new TypeError("Bad chiptype name");
+    }
 }
+
+const chipTypeShortStrMatcher = {
+    Burst: () => "BST",
+    Construct: () => "CNS",
+    Melee: () => "MLE",
+    Projectile: () => "PRJ",
+    Wave: () => "WVE",
+    Recovery: () => "RCV",
+    Summon: () => "SUM",
+    Support: () => "SPT",
+    Trap: () => "TRP",
+};
 
 export function chipTypeToShortStr(val: ChipType): string {
-    return wrappedChipType.getKeyOrThrow(val)
+    return val.match(chipTypeShortStrMatcher);
 }
 
-export enum ChipClass {
-    Standard,
-    Mega,
-    Giga,
-    Dark,
-    Support,
-}
+export const ChipClass = makeTaggedUnion({
+    Standard: none,
+    Mega: none,
+    Giga: none,
+    Dark: none,
+    Support: none,
+});
 
-const wrappedChipClass = $enum(ChipClass);
+export type ChipClass = MemberType<typeof ChipClass>;
 
 export function chipClassFromStr(val: string): ChipClass {
-    return wrappedChipClass.getValueOrThrow(val)
+    switch (val) {
+        case "Standard":
+            return ChipClass.Standard;
+        case "Support":
+            return ChipClass.Support;
+        case "Mega":
+            return ChipClass.Mega;
+        case "Giga":
+            return ChipClass.Giga;
+        case "Dark":
+            return ChipClass.Dark;
+        default:
+            throw new TypeError("Bad chipclass name");
+    }
+}
+
+const chipClassSortNumMatcher = {
+    Standard: () => 0,
+    Support: () => 0,
+    Mega: () => 1,
+    Giga: () => 2,
+    Dark: () => 3,
+};
+
+export function chipClassToSortNum(val: ChipClass): number {
+    return val.match(chipClassSortNumMatcher);
+}
+
+const chipClassMaxInFolderMatcher = {
+    Standard: () => 3,
+    Support: () => 3,
+    Mega: () => 1,
+    Giga: () => 1,
+    Dark: () => 1,
+};
+
+export function chipClassMaxInFolder(val: ChipClass): number {
+    return val.match(chipClassMaxInFolderMatcher);
 }

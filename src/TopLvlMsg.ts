@@ -25,57 +25,6 @@ export const TopLvlMsg = makeTaggedUnion({
 
 export type TopLvlMsgVal = MemberType<typeof TopLvlMsg>;
 
-/*
-export enum TopLvlMsgTag {
-    ChangeTab,
-    SetMsg,
-    JoinGroup,
-    LeaveGroup,
-    GroupsUpdated,
-    EraseData,
-    ImportData,
-    DoNothing,
-}
-
-interface SetTopMsg {
-    tag: TopLvlMsgTag.SetMsg,
-    msg: string
-}
-
-interface ChangeTab {
-    tag: TopLvlMsgTag.ChangeTab,
-    tabname: string,
-}
-
-interface JoinGroup {
-    tag: TopLvlMsgTag.JoinGroup,
-}
-
-interface LeaveGroup {
-    tag: TopLvlMsgTag.LeaveGroup,
-}
-
-interface GroupsUpdated {
-    tag: TopLvlMsgTag.GroupsUpdated,
-}
-
-interface ImportData {
-    tag: TopLvlMsgTag.ImportData,
-}
-
-interface EraseData {
-    tag: TopLvlMsgTag.EraseData,
-}
-
-interface DoNothing {
-    tag: TopLvlMsgTag.DoNothing,
-}
-
-export type TopLvlMsg = SetTopMsg | ChangeTab | JoinGroup | LeaveGroup | GroupsUpdated | ImportData | EraseData | DoNothing;
-*/
-
-//let x = TopLvlMsg.ChangeTab("thing");
-
 var topStream = stream<TopLvlMsgVal>();
 
 export function getTopStream() {

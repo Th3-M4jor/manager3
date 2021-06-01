@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+%nav-tab {
+    @apply inline-block font-normal text-base text-center align-middle select-none bg-transparent border border-solid border-transparent;
+    @apply py-1.5 px-3 rounded;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    position: relative;
+    flex: 1 1 auto;
+    cursor: pointer;
+    margin: 0;
+    font-family: inherit;
+}
+
+%nav-tab:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+%nav-tab:not(:first-child) {
+    margin-left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.activeNavTab {
+    @extend %nav-tab;
+    background-color: grey;
+    color: white;
+    border-bottom: 0px;
+}
+
+.inactiveNavTab {
+    @extend %nav-tab;
+    background-color: white;
+    color: blue;
+    border: 1px solid lightgray;
+}
+
+.ok-button {
+    @extend %nav-tab;
+    background-color: red;
+    color: white;
+}
+
+.nav-tab-group {
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+    padding-left: 125px;
+    transform: translate(0px, 6px);
+}
