@@ -9,6 +9,19 @@ export abstract class MitrhilTsxComponent<A = {}>
   }
 
   abstract view(vnode: m.CVnode<A>): m.Children | null | void;
+
+  oninit?(vnode: m.CVnode<A>): void;
+
+  oncreate?(vnode: m.CVnode<A>): void;
+
+  onupdate?(vnode: m.CVnode<A>): void;
+
+  onbeforeremove?(vnode: m.CVnode<A>): void | Promise<void>;
+
+  onremove?(vnode: m.CVnode<A>): void;
+
+  onbeforeupdate?(vnode: m.CVnode<A>): boolean;
+
 }
 
 declare global {

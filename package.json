@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "mithril": "^2.0.4",
+    "safety-match": "^0.4.4",
     "ts-enum-util": "^4.0.2"
   },
   "devDependencies": {
