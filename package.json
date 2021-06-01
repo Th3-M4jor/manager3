@@ -10,8 +10,7 @@
   },
   "dependencies": {
     "mithril": "^2.0.4",
-    "safety-match": "^0.4.4",
-    "ts-enum-util": "^4.0.2"
+    "safety-match": "^0.4.4"
   },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "^7.14.3",
