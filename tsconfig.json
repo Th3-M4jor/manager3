@@ -9,6 +9,10 @@
         "allowSyntheticDefaultImports": true,
         "keyofStringsOnly": true,
         "strict": true,
+        "noFallthroughCasesInSwitch": true,
+        "strictFunctionTypes": true,
+        "noImplicitAny": true,
+        "alwaysStrict": true,
         "lib":[
             "dom",
             "ES6",

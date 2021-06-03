@@ -3,9 +3,12 @@
 @tailwind utilities;
 
 %nav-tab {
-    @apply inline-block font-normal text-base text-center align-middle select-none bg-transparent border border-solid border-transparent;
-    @apply py-1.5 px-3 rounded;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    @apply inline-block font-normal text-base text-center
+        align-middle select-none bg-transparent border
+        border-solid border-transparent
+        py-1.5 px-3 rounded
+        transition-all duration-150;
+    //transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     position: relative;
     flex: 1 1 auto;
     cursor: pointer;
@@ -33,21 +36,26 @@
 
 .inactiveNavTab {
     @extend %nav-tab;
-    background-color: white;
+    @apply bg-white text-blue-700;
+    //background-color: white;
     color: blue;
     border: 1px solid lightgray;
 }
 
 .ok-button {
     @extend %nav-tab;
-    background-color: red;
-    color: white;
+    @apply bg-red-600 text-white;
+    //background-color: red;
+    //color: white;
 }
 
 .nav-tab-group {
+    @apply relative inline-flex align-middle pl-32 transform translate-y-1.5 -translate-x-px;
+    /*
     position: relative;
     display: inline-flex;
     vertical-align: middle;
     padding-left: 125px;
     transform: translate(0px, 6px);
+    */
 }

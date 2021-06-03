@@ -11,16 +11,19 @@ type ClassAndCallback = [string, (e: any) => void];
 function changeToFolder(_: any) {
     let topStream = top.getTopStream();
     topStream(top.TopLvlMsg.ChangeTab(top.Tabs.Folder));
+    topStream(top.TopLvlMsg.ChangeChipDesc(undefined));
 }
 
 function changeToPack(_: any) {
     let topStream = top.getTopStream();
     topStream(top.TopLvlMsg.ChangeTab(top.Tabs.Pack));
+    topStream(top.TopLvlMsg.ChangeChipDesc(undefined));
 }
 
 function changeToLibrary(_: any) {
     let topStream = top.getTopStream();
     topStream(top.TopLvlMsg.ChangeTab(top.Tabs.Library));
+    topStream(top.TopLvlMsg.ChangeChipDesc(undefined));
 }
 
 function dontRedraw(e: any) {

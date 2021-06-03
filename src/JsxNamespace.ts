@@ -20,7 +20,7 @@ export abstract class MitrhilTsxComponent<A = {}>
 
   onremove?(vnode: m.CVnode<A>): void;
 
-  onbeforeupdate?(vnode: m.CVnode<A>): boolean;
+  onbeforeupdate?(vnode: m.CVnode<A>, old: m.CVnode<A>): boolean;
 
 }
 

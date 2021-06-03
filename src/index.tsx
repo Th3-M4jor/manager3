@@ -14,6 +14,7 @@ import {NavTabs} from "./components/navtabs";
 
 import "../static/styles.pcss";
 
+
 async function main() {
     let response = await fetch("/manager/chips.json");
     let body: ChipData[] = await response.json();
@@ -27,6 +28,7 @@ class Manager extends MitrhilTsxComponent {
     private topMsg: string;
     private msgClearHandle: number | undefined;
     private activeTab: top.TabName;
+    private chipDescId: number | undefined; 
     
     constructor(attrs: m.CVnode) {
         super(attrs);
@@ -38,14 +40,15 @@ class Manager extends MitrhilTsxComponent {
 
     onMsg(msg: top.TopLvlMsgVal) {
         msg.match({
-            ChangeTab: (tabname) => this.activeTab = tabname,
-            DoNonting: () => {},
+            ChangeTab: (tabname) => {this.activeTab = tabname},
+            DoNothing: () => {},
             EraseData: () => {},
             GroupsUpdated: () => {},
             ImportData: () => {},
             JoinGroup: () => {},
             LeaveGroup: () => {},
             SetMsg: (msg) => {this.setTopMsg(msg)},
+            ChangeChipDesc: (id) => {this.chipDescId = id},
         });
     }
 
@@ -76,8 +79,11 @@ class Manager extends MitrhilTsxComponent {
             <>
                 <div class="outermostDiv">
                     <TopBar tabName={this.tabToString()} msg={this.topMsg}/>
-                    <div style="background-color: #4abdb5; padding: 10px;">
+                    <div style="background-color: #4abdb5;" class="p-2.5">
                         <NavTabs activeTab={this.activeTab}/>
+                        <div class="grid-cols-3 gap-0">
+                            
+                        </div>
                     </div>
                 </div>
             </>
