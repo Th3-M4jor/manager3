@@ -80,32 +80,3 @@ const skillSortNumMatcher = {
 export function skillToSortNum(val: Skill): number {
     return val.match(skillSortNumMatcher);
 }
-
-/*
-export function skillToShortStr(val: Skill): string {
-    switch (val) {
-        case Skill.Perception:
-            return "PER";
-        case Skill.Info:
-            return "INF";
-        case Skill.Tech:
-            return "TCH";
-        case Skill.Strength:
-            return "STR";
-        case Skill.Agility:
-            return "AGI";
-        case Skill.Endurance:
-            return "END";
-        case Skill.Charm:
-            return "CHM";
-        case Skill.Valor:
-            return "VLR";
-        case Skill.Affinity:
-            return "AFF";
-        case Skill.None:
-            return "--";
-        case Skill.Varies:
-            return "VAR";
-    }
-}
-*/

@@ -68,6 +68,7 @@ export function elementToSortNum(val: Element): number {
     return val.match(elementToSortNumMatcher);
 }
 
+
 const elementToCssClassMatcher = {
     Fire: () => "fireChip",
     Aqua: () => "aquaChip",

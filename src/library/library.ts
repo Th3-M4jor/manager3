@@ -11,8 +11,9 @@ export class ChipLibrary {
         ChipLibrary.instance.idMap.clear();
         
         data.forEach((chipData, idx) => {
-            let chip = new BattleChip(idx, chipData);
-            ChipLibrary.instance.idMap.set(idx, chip.name);
+            //increment so that id's start at 1
+            let chip = new BattleChip(idx + 1, chipData);
+            ChipLibrary.instance.idMap.set(idx + 1, chip.name);
             ChipLibrary.instance.chips.set(chip.name, chip);
         });
 
@@ -40,6 +41,10 @@ export class ChipLibrary {
 
     public static iter() {
         return this.instance.chips.entries();
+    }
+
+    public static array(): BattleChip[] {
+        return [...this.instance.chips.values()];
     }
 
     public static get size() {

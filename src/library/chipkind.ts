@@ -55,6 +55,22 @@ export function chipTypeToShortStr(val: ChipType): string {
     return val.match(chipTypeShortStrMatcher);
 }
 
+const chipTypeToSortNumMatcher = {
+    Burst: () => 0,
+    Construct: () => 1,
+    Melee: () => 2,
+    Projectile: () => 3,
+    Wave: () => 4,
+    Recovery: () => 5,
+    Summon: () => 6,
+    Support: () => 7,
+    Trap: () => 8,
+};
+
+export function chipTypeToSortNum(val: ChipType): number {
+    return val.match(chipTypeToSortNumMatcher);
+}
+
 export const ChipClass = makeTaggedUnion({
     Standard: none,
     Mega: none,

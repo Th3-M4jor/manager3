@@ -7,10 +7,9 @@ import * as top from "../TopLvlMsg";
 
 export interface packProps {
     active: boolean;
-    inFolderGroup: boolean;
 }
 
-export class Folder extends MitrhilTsxComponent<packProps> {
+export class Pack extends MitrhilTsxComponent<packProps> {
     
     onbeforeupdate(vnode: CVnode<packProps>, old: CVnode<packProps>): boolean {
         if (vnode.attrs.active == false && old.attrs.active == false) {

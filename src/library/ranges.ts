@@ -1,7 +1,7 @@
 import { makeTaggedUnion, none, MemberType } from "safety-match";
 
 export const Range = makeTaggedUnion({
-    Varies: none,
+    Var: none,
     Far: none,
     Near: none,
     Close: none,
@@ -13,7 +13,7 @@ export type Range = MemberType<typeof Range>;
 export function rangeFromStr(val: string): Range {
     switch(val) {
         case "Varies":
-            return Range.Varies;
+            return Range.Var;
         case "Far":
             return Range.Far;
         case "Near":
@@ -28,44 +28,17 @@ export function rangeFromStr(val: string): Range {
 }
 
 export function rangeToShortStr(val: Range): string {
-    
-    if (val.variant == "Varies") {
-        return "Var"; //only one that actually needs to be shortened
-    } else {
-        return val.variant;
-    }
-
+    return val.variant;
 }
 
-/*
-export enum Range {
-    Varies,
-    Far,
-    Near,
-    Close,
-    Self
+const rangeToSortNumMatcher = {
+    Var: () => 0,
+    Far: () => 1,
+    Near: () => 2,
+    Close: () => 3,
+    Self: () => 4,
 }
 
-const wrappedRange = $enum(Range);
-
-export function rangeFromStr(val: string): Range {
-    return wrappedRange.getValueOrThrow(val);
+export function rangeToSortNum(val: Range): number {
+    return val.match(rangeToSortNumMatcher);
 }
-
-export function rangeToShortStr(val: Range): string {
-    switch (val) {
-        case Range.Varies:
-            return "Var";
-        case Range.Far:
-            return "Far";
-        case Range.Near:
-            return "Near";
-        case Range.Close:
-            return "Close";
-        case Range.Self:
-            return "Self";
-        default:
-            throw new Error("Unreachable");
-    }
-}
-*/

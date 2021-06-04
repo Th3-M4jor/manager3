@@ -11,8 +11,12 @@ import { ChipLibrary } from "./library/library";
 
 import {TopBar} from "./components/topbar";
 import {NavTabs} from "./components/navtabs";
+import {Library} from "./components/library";
+import {Pack} from "./components/pack";
+import {Folder} from "./components/folder";
 
 import "../static/styles.pcss";
+import { ChipDesc } from "./components/chipdesc";
 
 
 async function main() {
@@ -81,8 +85,11 @@ class Manager extends MitrhilTsxComponent {
                     <TopBar tabName={this.tabToString()} msg={this.topMsg}/>
                     <div style="background-color: #4abdb5;" class="p-2.5">
                         <NavTabs activeTab={this.activeTab}/>
-                        <div class="grid-cols-3 gap-0">
-                            
+                        <div class="grid grid-cols-4 gap-0 sm:grid-cols-6">
+                            <Folder active={this.activeTab.variant == "Folder"} inFolderGroup={false}/>
+                            <Pack active={this.activeTab.variant == "Pack"}/>
+                            <Library active={this.activeTab.variant == "Library"}/>
+                            <ChipDesc displayChip={this.chipDescId}/>
                         </div>
                     </div>
                 </div>

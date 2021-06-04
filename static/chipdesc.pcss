@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+%chipDescBox {
+    @apply rounded-t-2xl bg-no-repeat;
+}
+
+.chipDescBackgroundSupprt {
+    @extend %chipDescBox;
+    background-image: url("img/chip-background-support.png");
+}
+
+.chipDescBackgroundMega {
+    @extend %chipDescBox;
+    background-image: url("img/chip-background-mega.png");
+}
+
+.chipDescBackgroundGiga {
+    @extend %chipDescBox;
+    background-image: url("img/chip-background-giga.png");
+}
+
+.chipDescBackgroundDark {
+    @extend %chipDescBox;
+    background-color: purple;
+}
+
+.chipDescPadding {
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+.chipDescSm {
+    font-size: 12px;
+    text-align: left;
+    border-top: 1px solid black;
+}
+
+.chipDescMd {
+    font-size: 14px;
+    text-align: left;
+    border-top: 1px solid black;
+}
+
+.chipDescLg {
+    font-size: 16px;
+    text-align: left;
+    border-top: 1px solid black;
+}
