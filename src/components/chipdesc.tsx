@@ -18,6 +18,10 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         );
     }
 
+    viewNoChip(): JSX.Element {
+        return <div class="hidden sm:block sm:col-span-2 chipDescBackgroundStd"/>
+    }
+
 
     onbeforeupdate(vnode: CVnode<chipDescProps>, old: CVnode<chipDescProps>): boolean {
         return (vnode.attrs.displayChip != old.attrs.displayChip);
@@ -25,13 +29,9 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     
     view(vnode: CVnode<chipDescProps>): JSX.Element {
         
-        if(!vnode.attrs.displayChip) {
-            return (
-                <div class="hidden sm:block sm:col-span-2 chipDescBackgroundStd"/>
-            );
-        } else {
-            return this.viewWithChip(vnode.attrs.displayChip);
-        }
+        //if(displayChip) return viewWithChip(displayChip) else return viewNoChip();
+
+        return vnode.attrs.displayChip ? this.viewWithChip(vnode.attrs.displayChip) : this.viewNoChip();
         
     }
 }

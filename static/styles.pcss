@@ -1,5 +1,7 @@
 @import "./elemimg.pcss";
 @import "./buttons.pcss";
+@import "./chipdesc.pcss";
+@import "./row.pcss";
 
 @tailwind base;
 @tailwind components;
@@ -14,6 +16,13 @@ body {
 	color: #212529;
 	text-align: left;
     background-color: #00637b !important;
+}
+
+div.Folder {
+    @apply rounded-lg text-center px-0 w-full overflow-y-scroll overflow-x-hidden font-bold text-white text-base;
+    font-family: "Lucida Console";
+    height: 85vh;
+    background-color: #00637b;
 }
 
 .tabPaneArea {
