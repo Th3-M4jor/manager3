@@ -46,20 +46,20 @@ export class Library extends MitrhilTsxComponent<libraryProps> {
     private viewTopRow(): JSX.Element {
         
         return (
-            <>
-                <div class="chip-top-row col-span-8 Chip px-0 whitespace-nowrap debug">
+            <div class="contents chip-top-row Chip">
+                <div class="col-span-4 px-0 whitespace-nowrap select-none" style="background-color: gray;">
                     {"NAME"}
                 </div>
-                <div class="chip-top-row col-span-3 Chip px-0 debug">
+                <div class="col-span-2 px-0 select-none" style="background-color: gray;">
                     {"SKILL"}
                 </div>
-                <div class="chip-top-row col-span-3 Chip px-0 whitespace-nowrap debug">
+                <div class="col-span-2 px-0 whitespace-nowrap select-none" style="background-color: gray;">
                     {"DMG"}
                 </div>
-                <div class="chip-top-row col-span-4 Chip px-0 whitespace-nowrap debug">
+                <div class="col-span-2 px-0 whitespace-nowrap select-none" style="background-color: gray;">
                     {"ELEM"}
                 </div>
-            </>
+            </div>
         );
     }
 
@@ -76,7 +76,7 @@ export class Library extends MitrhilTsxComponent<libraryProps> {
     view(vnode: CVnode<libraryProps>): JSX.Element {
 
 
-        let [col1CSS, col2CSS, libContainerCss] = vnode.attrs.active ? ["col-span-1 px-0", "col-span-3 px-0", "grid grid-cols-24 Folder activeFolder"] : ["hidden", "hidden", "grid grid-cols-24 Folder"];
+        let [col1CSS, col2CSS, libContainerCss] = vnode.attrs.active ? ["col-span-1 px-0", "col-span-3 px-0 z-10", "grid grid-cols-10 Folder activeFolder"] : ["hidden", "hidden", "grid grid-cols-10 Folder"];
 
         return (
             <>

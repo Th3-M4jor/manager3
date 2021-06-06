@@ -1,6 +1,6 @@
 import {Element, elementFromStr, elementArrToHtml} from "./elements";
 import {Range, rangeFromStr} from "./ranges";
-import {ChipClass, ChipType, chipClassFromStr, chipTypeFromStr, chipClassToSortNum, chipTypeToSortNum, chipTypeToShortStr, chipClassMaxInFolder} from "./chipkind";
+import {ChipClass, ChipType, chipClassFromStr, chipTypeFromStr, chipClassToSortNum, chipTypeToSortNum, chipTypeToShortStr, chipClassMaxInFolder, chipClassToCss, chipClassToBackgroundCss} from "./chipkind";
 import {Skill, skillFromStr, skillToShortStr} from "./skills";
 
 export interface ChipData {
@@ -59,6 +59,14 @@ export class BattleChip {
 
     get RangeAbv(): string {
         return this.range.variant;
+    }
+
+    get classCss(): string {
+        return chipClassToCss(this.class);
+    }
+
+    get backgroundCss(): string {
+        return chipClassToBackgroundCss(this.class);
     }
 
     get AvgDmg(): number {

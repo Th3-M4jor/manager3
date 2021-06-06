@@ -4,7 +4,7 @@
 
 
 .chipHover:hover {
-    background-color: rgb(172, 124, 36);
+    background-color: rgb(172, 124, 36) !important;
 }
 
 %battlechip {
@@ -32,4 +32,9 @@
 .SupportChip {
     @extend %battlechip;
     color: #86d3a7;
+}
+
+.DarkChip {
+    @extend %battlechip;
+    color: purple;
 }

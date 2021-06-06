@@ -121,3 +121,27 @@ const chipClassMaxInFolderMatcher = {
 export function chipClassMaxInFolder(val: ChipClass): number {
     return val.match(chipClassMaxInFolderMatcher);
 }
+
+const chipClassToCssMatcher = {
+    Standard: () => "Chip",
+    Mega: () => "Mega",
+    Giga: () => "Giga",
+    Support: () => "SupportChip",
+    Dark: () => "DarkChip"
+};
+
+export function chipClassToCss(val: ChipClass): string {
+    return val.match(chipClassToCssMatcher);
+}
+
+const chipClassBackgroundCssMatcher = {
+    Standard: () => "chipDescBackgroundStd",
+    Mega: () => "chipDescBackgroundMega",
+    Giga: () => "chipDescBackgroundGiga",
+    Support: () => "chipDescBackgroundSupprt",
+    Dark: () => "chipDescBackgroundDark"
+};
+
+export function chipClassToBackgroundCss(val: ChipClass): string {
+    return val.match(chipClassBackgroundCssMatcher);
+}
