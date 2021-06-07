@@ -46,17 +46,17 @@ export class Library extends MitrhilTsxComponent<libraryProps> {
     private viewTopRow(): JSX.Element {
         
         return (
-            <div class="contents chip-top-row Chip">
-                <div class="col-span-4 px-0 whitespace-nowrap select-none" style="background-color: gray;">
+            <div class="contents chip-top-row Chip z-20">
+                <div class="col-span-4 px-0 whitespace-nowrap select-none">
                     {"NAME"}
                 </div>
-                <div class="col-span-2 px-0 select-none" style="background-color: gray;">
+                <div class="col-span-2 px-0 select-none">
                     {"SKILL"}
                 </div>
-                <div class="col-span-2 px-0 whitespace-nowrap select-none" style="background-color: gray;">
+                <div class="col-span-2 px-0 whitespace-nowrap select-none">
                     {"DMG"}
                 </div>
-                <div class="col-span-2 px-0 whitespace-nowrap select-none" style="background-color: gray;">
+                <div class="col-span-2 px-0 whitespace-nowrap select-none">
                     {"ELEM"}
                 </div>
             </div>
