@@ -5,7 +5,7 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "start": "parcel serve ./static/index.html -p 8080 --open",
+    "start": "parcel serve ./static/index.html -p 9001",
     "build": "parcel build ./static/index.html --no-source-maps --public-url ./"
   },
   "dependencies": {
