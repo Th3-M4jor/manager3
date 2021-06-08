@@ -47,16 +47,16 @@ export class Library extends MitrhilTsxComponent<libraryProps> {
         
         return (
             <div class="chip-top-row Chip z-20">
-                <div class="w-5/12 px-0 whitespace-nowrap select-none">
+                <div class="w-4/10 px-0 whitespace-nowrap select-none">
                     {"NAME"}
                 </div>
-                <div class="w-3/12 px-0 select-none">
+                <div class="w-2/10 px-0 select-none">
                     {"SKILL"}
                 </div>
-                <div class="w-2/12 px-0 whitespace-nowrap select-none">
+                <div class="w-2/10 px-0 whitespace-nowrap select-none">
                     {"DMG"}
                 </div>
-                <div class="w-2/12 px-0 whitespace-nowrap select-none">
+                <div class="w-2/10 px-0 whitespace-nowrap select-none">
                     {"ELEM"}
                 </div>
             </div>

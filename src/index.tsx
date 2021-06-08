@@ -84,8 +84,8 @@ class Manager extends MitrhilTsxComponent {
                 <div class="outermostDiv">
                     <TopBar tabName={this.tabToString()} msg={this.topMsg}/>
                     <div style="background-color: #4abdb5;" class="p-2.5">
-                        <NavTabs activeTab={this.activeTab}/>
-                        <div class="grid grid-cols-4 gap-0 sm:grid-cols-6">
+                        <div class="grid grid-cols-4 gap-0 sm:grid-cols-5">
+                            <NavTabs activeTab={this.activeTab}/>
                             <Folder active={this.activeTab.variant == "Folder"} inFolderGroup={false}/>
                             <Pack active={this.activeTab.variant == "Pack"}/>
                             <Library active={this.activeTab.variant == "Library"}/>

@@ -19,7 +19,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     }
 
     viewNoChip(): JSX.Element {
-        return <div class="hidden sm:block sm:col-span-2 chipDescBackgroundStd"/>
+        return <div class="hidden sm:block sm:col-span-1 chipDescBackgroundStd debug"/>
     }
 
 

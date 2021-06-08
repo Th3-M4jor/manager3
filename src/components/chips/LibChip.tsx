@@ -18,16 +18,16 @@ export class LibraryChip extends MitrhilTsxComponent<LibChipProps> {
         let idVal = "L_" + vnode.attrs.chip.id;
         return (
             <div class={"select-none chip-row " + chipCss} id={idVal} onmouseover={() => {console.log(idVal)}}>
-                <div class="w-5/12 px-0 whitespace-nowrap select-none debug">
+                <div class="w-4/10 px-0 whitespace-nowrap select-none debug">
                     {vnode.attrs.chip.name}
                 </div>
-                <div class="w-3/12 px-0 whitespace-nowrap select-none debug">
+                <div class="w-2/10 px-0 whitespace-nowrap select-none debug">
                     {vnode.attrs.chip.SkillAbv}
                 </div>
-                <div class="w-2/12 px-0 whitespace-nowrap select-none debug">
+                <div class="w-2/10 px-0 whitespace-nowrap select-none debug">
                     {vnode.attrs.chip.damage}
                 </div>
-                <div class="w-2/12 px-0 whitespace-nowrap select-none debug">
+                <div class="w-2/10 px-0 whitespace-nowrap select-none debug">
                     {vnode.attrs.chip.renderElements()}
                 </div>
             </div>

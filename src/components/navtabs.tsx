@@ -71,11 +71,15 @@ export class NavTabs extends MitrhilTsxComponent<navTabProps> {
     noGroupTabs(activeTab: top.TabName): JSX.Element {
         let [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback]] = activeTab.match(noGroupNavTabMatcher);
         return (
-            <div class="nav-tab-group">
+            <>
+            <div class="col-span-1 debug"/>
+            <div class="col-span-3 px-6 nav-tab-group debug">
                 <button onclick={fldrCallback} class={fldrClass}>Folder</button>
                 <button onclick={packCallback} class={packClass}>Pack</button>
                 <button onclick={libCallback} class={libClass}>Library</button>
             </div>
+            <div class="hidden sm:col-span-1 sm:block debug"/>
+            </>
         );
 
     }
