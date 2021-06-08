@@ -32,7 +32,7 @@ class Manager extends MitrhilTsxComponent {
     private topMsg: string;
     private msgClearHandle: number | undefined;
     private activeTab: top.TabName;
-    private chipDescId: number | undefined; 
+    private chipDescId: number | undefined;
     
     constructor(attrs: m.CVnode) {
         super(attrs);
