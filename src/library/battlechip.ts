@@ -61,6 +61,14 @@ export class BattleChip {
         return this.range.variant;
     }
 
+    get KindAbv(): string {
+        return chipTypeToShortStr(this.kind);
+    }
+
+    get MaxInFldr(): number {
+        return chipClassMaxInFolder(this.class);
+    }
+
     get classCss(): string {
         return chipClassToCss(this.class);
     }

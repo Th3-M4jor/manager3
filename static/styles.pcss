@@ -3,6 +3,7 @@
 @import "./chipdesc.pcss";
 @import "./row.pcss";
 @import "./battlechip.pcss";
+@import "./inputbox.pcss";
 
 @tailwind base;
 @tailwind components;
@@ -19,11 +20,9 @@ body {
     background-color: #00637b;
 }
 
-
 div {
     background-color: inherit;
 }
-
 
 .Folder {
     @apply rounded-lg text-center px-0 w-full overflow-y-scroll overflow-x-hidden font-bold text-white text-base;
@@ -47,7 +46,7 @@ div {
 }
 
 .debug {
-    @apply border border-solid border-red-500;
+    @apply border border-solid border-red-500 border-collapse;
 }
 
 .outermostDiv {

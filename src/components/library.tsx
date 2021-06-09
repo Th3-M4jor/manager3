@@ -9,31 +9,29 @@ import * as sort from "./sortbox";
 
 import * as top from "../TopLvlMsg";
 
-import {LibraryChip} from "./chips/LibChip";
-
-import { SortOption } from "./sortbox";
+import { LibraryChip } from "./chips/LibChip";
 export interface libraryProps {
     active: boolean;
 }
 
 export class Library extends MitrhilTsxComponent<libraryProps> {
 
-    private sortMethod: SortOption;
+    private sortMethod: sort.SortOption;
     private chips: BattleChip[];
 
     constructor(attrs: m.CVnode<libraryProps>) {
         super(attrs);
-        this.sortMethod = SortOption.Name;
+        this.sortMethod = sort.SortOption.Name;
         this.chips = ChipLibrary.array();
         this.sortChips();
     }
 
     private sortChips() {
         let sortFunc: (a: BattleChip, b: BattleChip) => number = this.sortMethod.match({
-            AvgDmg: () => sort.sortBattleChipByAvgDmg,
+            AverageDamage: () => sort.sortBattleChipByAvgDmg,
             Element: () => sort.sortBattleChipByElement,
             Kind: () => sort.sortBattleChipByKind,
-            MaxDmg: () => sort.sortBattleChipByMaxDmg,
+            MaxDamage: () => sort.sortBattleChipByMaxDmg,
             Name: () => sort.sortBattleChipByName,
             Owned: () => { throw new TypeError("Invalid sort method") },
             Range: () => sort.sortBattleChipByRange,
@@ -44,7 +42,7 @@ export class Library extends MitrhilTsxComponent<libraryProps> {
     }
 
     private viewTopRow(): JSX.Element {
-        
+
         return (
             <div class="chip-top-row Chip z-20">
                 <div class="w-4/10 px-0 whitespace-nowrap select-none">
@@ -64,7 +62,7 @@ export class Library extends MitrhilTsxComponent<libraryProps> {
     }
 
     private renderChips(): JSX.Element[] {
-        return this.chips.map((c) => <LibraryChip chip={c} key={c.name + "_L"}/>);
+        return this.chips.map((c) => <LibraryChip chip={c} key={c.name + "_L"} />);
     }
 
     onbeforeupdate(vnode: CVnode<libraryProps>, old: CVnode<libraryProps>): boolean {
@@ -81,7 +79,11 @@ export class Library extends MitrhilTsxComponent<libraryProps> {
         return (
             <>
                 <div class={col1CSS}>
-
+                    <sort.SortBox currentMethod={this.sortMethod} onChange={(e) => {
+                        this.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
+                        this.sortChips();
+                        (e.target as HTMLSelectElement).blur(); //unfocus element automatically after changing sort method
+                    }} />
                 </div>
                 <div class={col2CSS}>
                     <div class={libContainerCss}>

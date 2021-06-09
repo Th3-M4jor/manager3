@@ -56,6 +56,7 @@
 }
 
 .chipDescDiv {
+    background-color: transparent;
     max-height: 70vh;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -65,4 +66,33 @@
 
 .chipDescDiv::-webkit-scrollbar {
     display: none;
+}
+
+@keyframes chip-in-one {
+    0% {
+     transform:rotateY(-90deg)
+    }
+    to {
+     transform:rotateY(0deg)
+    }
+}
+@keyframes chip-in-two {
+    0% {
+     transform:rotateY(-90deg)
+    }
+    to {
+     transform:rotateY(0deg)
+    }
+}
+
+.chipWindowOne {
+    animation-name:chip-in-one;
+    animation-duration:.3s;
+    animation-iteration-count:1
+}
+
+.chipWindowTwo {
+    animation-name:chip-in-two;
+    animation-duration:.3s;
+    animation-iteration-count:1
 }
