@@ -1,4 +1,4 @@
-import {cmp} from "./cmp";
+import {cmpN} from "./cmp";
 
 export function arrCmp<T>(a: T[], b: T[], toNumFn: (val: T) => number): number {
     //find which has shortest length
@@ -9,12 +9,12 @@ export function arrCmp<T>(a: T[], b: T[], toNumFn: (val: T) => number): number {
         let aSortNum = toNumFn(a[i]);
         let bSortNum = toNumFn(b[i]);
 
-        let pos = cmp(aSortNum, bSortNum);
+        let pos = cmpN(aSortNum, bSortNum);
         if(pos != 0) {
             return pos;
         }
     }
     
     //elements that can be compared are all equal, test length next
-    return cmp(a.length, b.length);
+    return cmpN(a.length, b.length);
 }
