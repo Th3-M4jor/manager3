@@ -9,6 +9,7 @@
     "build": "parcel build ./static/index.html --no-source-maps --public-url ./"
   },
   "dependencies": {
+    "file-saver": "^2.0.5",
     "mithril": "^2.0.4",
     "safety-match": "^0.4.4",
     "tailwindcss": "^2.1.4"
@@ -19,6 +20,7 @@
     "@parcel/babel-preset-env": "=2.0.0-beta.3.1",
     "@parcel/transformer-postcss": "=2.0.0-beta.3.1",
     "@types/mithril": "^2.0.7",
+    "@types/file-saver": "^2.0.2",
     "autoprefixer": "^10.2.6",
     "parcel": "=2.0.0-beta.3.1",
     "postcss": "^8.3.0",
