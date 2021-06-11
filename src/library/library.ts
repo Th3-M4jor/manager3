@@ -11,6 +11,7 @@ interface PackChip {
     used: number,
 }
 
+type PackDict = { [index: string]: PackChip };
 
 
 export class ChipLibrary {
@@ -55,6 +56,20 @@ export class ChipLibrary {
         return ChipLibrary.instance.chips.size;
     }
 
+    private validateFolderChipAndPush(chip: FolderChip) {
+        if(typeof(chip?.name) !== "string" || typeof(chip?.used) !== "boolean") {
+            throw new Error(`Found an invalid folderchip`);
+        }
+
+        let fldrChip: FolderChip = {
+            name: chip.name,
+            used: chip.used,
+        }
+
+        this.folder.push(fldrChip);
+
+    }
+
     private loadFolder(): number {
 
         let folder = window.localStorage.getItem('folder');
@@ -68,11 +83,16 @@ export class ChipLibrary {
         }
 
         let oldFolder: FolderChip[] = JSON.parse(folder);
+
+        if(!Array.isArray(oldFolder)) {
+            throw new TypeError(`Expected array, found ${typeof (oldFolder)}`);
+        }
+
         for (let chip of oldFolder) {
-            if (this.chips.has(chip.name)) {
-                this.folder.push(chip);
+            if (this.chips.has(chip?.name)) {
+                this.validateFolderChipAndPush(chip);
             } else {
-                alert(`The chip ${chip.name} no longer exists in the library, cannot add it to your folder, you had it marked as ${chip.used ? "used" : "unused"}`);
+                alert(`The chip ${chip?.name} no longer exists in the library, cannot add it to your folder, you had it marked as ${chip?.used ? "used" : "unused"}`);
             }
         }
 
@@ -83,21 +103,45 @@ export class ChipLibrary {
         return this.folder.length;
     }
 
+    /**
+     * 
+     * @param {string} name assumed to already be a valid name for a chip
+     * @param {PackChip} chip
+     * 
+     * @throws if the shape of `chip` is incorrect
+     */
+    private validateAndAddToPack(name: string, chip: PackChip) {
+
+        if(typeof (chip?.owned) !== "number" || typeof (chip?.used) !== "number" || chip.owned < chip.used) {
+            throw new TypeError(`Found an invalid pack chip, ${name}`);
+        }
+
+        let data = {
+            owned: chip.owned,
+            used: chip.used,
+        };
+
+        this.pack.set(name, data);
+
+    }
+
     private loadPack(): number {
         let pack = window.localStorage.getItem('pack');
         if (!pack) {
             return 0;
         }
-        let oldPack = JSON.parse(pack);
+        
+        let oldPack: PackDict = JSON.parse(pack);
+        
         if (typeof (oldPack) !== "object") {
             throw new TypeError(`Expected object, found ${typeof (oldPack)}`);
         }
 
         for (let k in oldPack) {
             if (this.chips.has(k)) {
-                this.pack.set(k, { owned: oldPack[k].owned, used: oldPack[k].used });
+                this.validateAndAddToPack(k, oldPack[k]);
             } else {
-                alert(`The chip ${k} no longer exists in the library, cannot add it to your pack. You owned ${oldPack[k].owned}, of which ${oldPack[k].used} were marked as used`);
+                alert(`The chip ${k} no longer exists in the library, cannot add it to your pack. You owned ${oldPack[k]?.owned}, of which ${oldPack[k]?.used} were marked as used`);
             }
         }
         return this.pack.size;
@@ -118,6 +162,25 @@ export class ChipLibrary {
             this.pack.set(chipName, chip);
             return 1;
         }
+
+    }
+
+    public static saveData() {
+        if(!storageAvailable('localStorage')) return;
+
+        let packObj = Array.from(this.instance.pack).reduce((obj: PackDict, [key, value]) => {
+            obj[key] = value;
+            return obj;
+        }, {})
+
+        let packString = JSON.stringify(packObj);
+        let folderString = JSON.stringify(this.instance.folder);
+        let folderSizeStr = this.FolderSize + "";
+
+        
+        window.localStorage.setItem('folder', folderString);
+        window.localStorage.setItem('pack', packString);
+        window.localStorage.setItem('chipLimit', folderSizeStr);
 
     }
 
