@@ -1,5 +1,7 @@
-import { BattleChip, ChipData } from "./battlechip";
 import { storageAvailable } from "../util/storageavailable";
+import { BattleChip, ChipData } from "./battlechip";
+
+import {throwExpression} from "../util/throwExpression";
 interface FolderChip {
     name: string,
     used: boolean,
@@ -35,8 +37,9 @@ export class ChipLibrary {
             try {
                 ChipLibrary.instance.loadFolder();
                 ChipLibrary.instance.loadPack();
+                console.log(`Folder: ${ChipLibrary.instance.folder.length}\nPack: ${ChipLibrary.instance.pack.size}`);
             } catch (e) {
-                alert("There was an error loading your save data, clearing data");
+                alert(`There was an error loading your save data ${(e as Error).message}, clearing data`);
                 window.localStorage.removeItem('folder');
                 window.localStorage.removeItem('pack');
                 window.localStorage.removeItem('chipLimit');
@@ -87,12 +90,12 @@ export class ChipLibrary {
         }
         let oldPack = JSON.parse(pack);
         if (typeof (oldPack) !== "object") {
-            throw new TypeError(`Expected object, found ${typeof(oldPack)}`);
+            throw new TypeError(`Expected object, found ${typeof (oldPack)}`);
         }
 
-        for(let k in oldPack) {
-            if(this.chips.has(k)) {
-                this.pack.set(k, {owned: oldPack[k].owned, used: oldPack[k].used});
+        for (let k in oldPack) {
+            if (this.chips.has(k)) {
+                this.pack.set(k, { owned: oldPack[k].owned, used: oldPack[k].used });
             } else {
                 alert(`The chip ${k} no longer exists in the library, cannot add it to your pack. You owned ${oldPack[k].owned}, of which ${oldPack[k].used} were marked as used`);
             }
@@ -100,19 +103,60 @@ export class ChipLibrary {
         return this.pack.size;
     }
 
-    public static getChip(toGet: string | number): BattleChip {
+    private addToPack(chipName: string, used: boolean = false): number {
+        let packChip = this.pack.get(chipName);
 
-        if (typeof (toGet) == "number") {
-            let name = this.instance.idMap.get(toGet)!;
-            return this.instance.chips.get(name)!;
+        if(packChip) {
+            packChip.owned += 1;
+            packChip.used += (used ? 1 : 0);
+            return packChip.owned;
         } else {
-            return this.instance.chips.get(toGet)!;
+            let chip = {
+                owned: 1,
+                used: (used ? 1 : 0),
+            }
+            this.pack.set(chipName, chip);
+            return 1;
         }
 
     }
 
+    public static removeChipFromPack(chip: string | number): number {
+
+        let name = typeof(chip) == "number" ? this.idToName(chip) : chip;
+
+        let packChip = this.instance.pack.get(name) ?? throwExpression("Unreachable!");
+        packChip.owned -= 1;
+
+        if(packChip.used > 0) {
+            packChip.used -= 1;
+        }
+
+        if(packChip.owned <= 0) {
+            this.instance.pack.delete(name);
+        }
+
+        return packChip.owned;
+    }
+
+    public static getChip(toGet: string | number): BattleChip {
+        let name = typeof(toGet) == "number" ? this.idToName(toGet) : toGet;
+        return this.instance.chips.get(name) ?? throwExpression("Unreachable!");
+    }
+
+    /**
+     * 
+     * @param {string | number} chip the name or id of the chip to add
+     * 
+     * @returns {number} the number of copies of the chip you now have in your pack
+     */
+    public static addChipToPack(chip: string | number): number {
+        let chipName = typeof(chip) == "string" ? chip : this.idToName(chip);
+        return this.instance.addToPack(chipName);
+    }
+
     public static idToName(toGet: number): string {
-        return this.instance.idMap.get(toGet)!;
+        return this.instance.idMap.get(toGet) ?? throwExpression("No chip with that ID");
     }
 
     public static values() {
@@ -127,8 +171,33 @@ export class ChipLibrary {
         return [...this.instance.chips.values()];
     }
 
-    public static get size() {
+    public static get Size(): number {
         return this.instance.chips.size;
+    }
+
+    public static get Pack(): [string, PackChip][] {
+        return [...this.instance.pack.entries()]
+    }
+
+    public static get Folder(): FolderChip[] {
+        return this.instance.folder;
+    }
+
+    public static get FolderSize() {
+        return this.instance.folderSize;
+    }
+
+    /**
+     * Will not go below 12 or above 30
+     */
+    public static set FolderSize(val: number) {
+        if(val < 12) {
+            this.instance.folderSize = 12;
+        } else if(val > 30) {
+            this.instance.folderSize = 30;
+        } else {
+            this.instance.folderSize = val;
+        }
     }
 
 }
