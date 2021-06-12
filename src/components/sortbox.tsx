@@ -56,11 +56,11 @@ export function sortBattleChipByElement(a: BattleChip, b: BattleChip): number {
 }
 
 export function sortBattleChipByMaxDmg(a: BattleChip, b: BattleChip): number {
-    return (-cmpN(a.MaxDmg, b.MaxDmg)) || cmpS(a.name, b.name);
+    return (-cmpN(a.maxDmg, b.maxDmg)) || cmpS(a.name, b.name);
 }
 
 export function sortBattleChipByAvgDmg(a: BattleChip, b: BattleChip): number {
-    return (-cmpN(a.AvgDmg, b.AvgDmg)) || cmpS(a.name, b.name);
+    return (-cmpN(a.avgDmg, b.avgDmg)) || cmpS(a.name, b.name);
 }
 
 export function sortBattleChipBySkill(a: BattleChip, b: BattleChip): number {

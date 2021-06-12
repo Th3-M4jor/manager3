@@ -11,19 +11,16 @@ type ClassAndCallback = [string, (e: any) => void];
 function changeToFolder(_: any) {
     let topStream = top.getTopStream();
     topStream(top.TopLvlMsg.ChangeTab(top.Tabs.Folder));
-    topStream(top.TopLvlMsg.ChangeChipDesc(undefined));
 }
 
 function changeToPack(_: any) {
     let topStream = top.getTopStream();
     topStream(top.TopLvlMsg.ChangeTab(top.Tabs.Pack));
-    topStream(top.TopLvlMsg.ChangeChipDesc(undefined));
 }
 
 function changeToLibrary(_: any) {
     let topStream = top.getTopStream();
     topStream(top.TopLvlMsg.ChangeTab(top.Tabs.Library));
-    topStream(top.TopLvlMsg.ChangeChipDesc(undefined));
 }
 
 function dontRedraw(e: any) {
@@ -72,8 +69,7 @@ export class NavTabs extends MitrhilTsxComponent<navTabProps> {
         let [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback]] = activeTab.match(noGroupNavTabMatcher);
         return (
             <>
-            <div class="hidden sm:block sm:col-span-1 debug"/>
-            <div class="col-span-3 px-6 nav-tab-group debug">
+            <div class="col-span-3 sm:col-span-4 md:col-span-5 px-6 nav-tab-group debug">
                 <button onclick={fldrCallback} class={fldrClass}>Folder</button>
                 <button onclick={packCallback} class={packClass}>Pack</button>
                 <button onclick={libCallback} class={libClass}>Library</button>

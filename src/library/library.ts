@@ -26,10 +26,10 @@ export class ChipLibrary {
         ChipLibrary.instance.chips.clear();
         ChipLibrary.instance.idMap.clear();
 
-        data.forEach((chipData, idx) => {
+        data.forEach((chipData) => {
             //increment so that id's start at 1
-            let chip = new BattleChip(idx + 1, chipData);
-            ChipLibrary.instance.idMap.set(idx + 1, chip.name);
+            let chip = new BattleChip(chipData);
+            ChipLibrary.instance.idMap.set(chip.id, chip.name);
             ChipLibrary.instance.chips.set(chip.name, chip);
         });
 

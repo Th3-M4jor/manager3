@@ -15,7 +15,6 @@ export type TabName = MemberType<typeof Tabs>;
 export const TopLvlMsg = makeTaggedUnion({
     ChangeTab: (name: TabName) => name,
     SetMsg: (msg: string) => msg,
-    ChangeChipDesc: (id: number | undefined) => id,
     JoinGroup: none,
     LeaveGroup: none,
     GroupsUpdated: none,

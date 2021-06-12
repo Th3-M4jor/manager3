@@ -20,7 +20,7 @@ import { ChipDesc } from "./components/chipdesc";
 
 
 async function main() {
-    let response = await fetch("/manager/chips.json");
+    let response = await fetch("/bnb/backend/fetch/chips");
     let body: ChipData[] = await response.json();
     ChipLibrary.init(body);
 
@@ -32,7 +32,6 @@ class Manager extends MitrhilTsxComponent {
     private topMsg: string;
     private msgClearHandle: number | undefined;
     private activeTab: top.TabName;
-    private chipDescId: number | undefined;
     
     constructor(attrs: m.CVnode) {
         super(attrs);
@@ -52,7 +51,6 @@ class Manager extends MitrhilTsxComponent {
             JoinGroup: () => {},
             LeaveGroup: () => {},
             SetMsg: (msg) => {this.setTopMsg(msg)},
-            ChangeChipDesc: (id) => {this.chipDescId = id},
         });
     }
 
@@ -84,12 +82,12 @@ class Manager extends MitrhilTsxComponent {
                 <div class="outermostDiv">
                     <TopBar tabName={this.tabToString()} msg={this.topMsg}/>
                     <div style="background-color: #4abdb5;" class="p-2.5">
-                        <div class="grid grid-cols-4 gap-0 sm:grid-cols-5">
+                        <div class="grid gap-0 grid-cols-4 sm:grid-cols-5 md:grid-cols-6">
                             <NavTabs activeTab={this.activeTab}/>
                             <Folder active={this.activeTab.variant == "Folder"} inFolderGroup={false}/>
                             <Pack active={this.activeTab.variant == "Pack"}/>
                             <Library active={this.activeTab.variant == "Library"}/>
-                            <ChipDesc displayChip={this.chipDescId}/>
+                            
                         </div>
                     </div>
                 </div>

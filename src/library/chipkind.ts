@@ -71,6 +71,17 @@ export function chipTypeToSortNum(val: ChipType): number {
     return val.match(chipTypeToSortNumMatcher);
 }
 
+const stdChipTypeToBgCssMatcher = {
+    Trap: () => "chipDescBackgroundSupprt",
+    Summon: () => "chipDescBackgroundSupprt",
+    Support: () => "chipDescBackgroundSupprt",
+    _: () => "chipDescBackgroundStd"
+};
+
+export function stdChipTypeToBgCss(val: ChipType): string {
+    return val.match(stdChipTypeToBgCssMatcher);
+}
+
 export const ChipClass = makeTaggedUnion({
     Standard: none,
     Mega: none,

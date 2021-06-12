@@ -9,6 +9,7 @@ import * as sort from "./sortbox";
 
 import * as top from "../TopLvlMsg";
 
+import { ChipDesc } from "./chipdesc";
 import { LibraryChip } from "./chips/LibChip";
 export interface libraryProps {
     active: boolean;
@@ -19,12 +20,19 @@ export class Library extends MitrhilTsxComponent<libraryProps> {
     private sortMethod: sort.SortOption;
     private chips: BattleChip[];
     private filterby: string;
+    private activeChipId: number | null;
+    private chipMouseoverHandler: (e: Event) => void;
 
     constructor(attrs: m.CVnode<libraryProps>) {
         super(attrs);
         this.sortMethod = sort.SortOption.Name;
         this.chips = ChipLibrary.array();
         this.filterby = "";
+        this.activeChipId = null;
+        this.chipMouseoverHandler = (e: Event) => {
+            let id = +(e.currentTarget as HTMLDivElement).id.substr(2);
+            this.activeChipId = id;
+        };
         this.sortChips();
     }
 
@@ -47,19 +55,19 @@ export class Library extends MitrhilTsxComponent<libraryProps> {
 
         return (
             <div class="chip-top-row Chip z-20">
-                <div class="w-4/10 md:w-4/12 px-0 whitespace-nowrap select-none">
+                <div class="w-4/12 md:w-4/12 px-0 whitespace-nowrap select-none">
                     {"NAME"}
                 </div>
-                <div class="w-2/10 md:w-2/12 px-0 select-none">
+                <div class="w-2/12 md:w-2/12 px-0 select-none">
                     {"SKILL"}
                 </div>
-                <div class="hidden md:block md:w-2/12 px-0 whitespace-nowrap select-none">
+                <div class="w-2/12 md:w-2/12 px-0 whitespace-nowrap select-none">
                     {"RANGE"}
                 </div>
-                <div class="w-2/10 md:w-2/12 px-0 whitespace-nowrap select-none">
+                <div class="w-2/12 md:w-2/12 px-0 whitespace-nowrap select-none">
                     {"DMG"}
                 </div>
-                <div class="w-2/10 md:w-2/12 px-0 whitespace-nowrap select-none">
+                <div class="w-2/12 md:w-2/12 px-0 whitespace-nowrap select-none">
                     {"ELEM"}
                 </div>
             </div>
@@ -82,11 +90,11 @@ export class Library extends MitrhilTsxComponent<libraryProps> {
     private renderChips(): JSX.Element[] | JSX.Element {
 
         if (!this.filterby) {
-            return this.chips.map((c) => <LibraryChip chip={c} key={c.name + "_L"} />);
+            return this.chips.map((c) => <LibraryChip chip={c} key={c.name + "_L"} onmouseover={this.chipMouseoverHandler}/>);
         } else {
             let chips = this.chips.reduce((filtered: JSX.Element[], c) => {
                 if (c.name.toLowerCase().startsWith(this.filterby)) {
-                    filtered.push(<LibraryChip chip={c} key={c.name + "_L"} />);
+                    filtered.push(<LibraryChip chip={c} key={c.name + "_L"} onmouseover={this.chipMouseoverHandler}/>);
                 }
                 return filtered;
             }, []);
@@ -113,11 +121,20 @@ export class Library extends MitrhilTsxComponent<libraryProps> {
     view(vnode: CVnode<libraryProps>): JSX.Element {
 
 
-        let [col1CSS, col2CSS, libContainerCss] = vnode.attrs.active ? ["hidden sm:block col-span-1 px-0", "col-span-3 px-0 z-10", "Folder activeFolder"] : ["hidden", "hidden", "Folder"];
+        //let [col1CSS, col2CSS, libContainerCss] = vnode.attrs.active ? ["hidden sm:block col-span-1 px-0", "col-span-3 px-0 z-10", "Folder activeFolder"] : ["hidden", "hidden", "Folder"];
+
+        let [col1CSS, col2CSS, libContainerCss] = vnode.attrs.active ? ["col-span-3 sm:col-span-4 md:col-span-5 px-0 z-10", "col-span-1 flex flex-col px-0", "Folder activeFolder"] : ["hidden", "hidden", "Folder"];
 
         return (
             <>
                 <div class={col1CSS}>
+                    <div class={libContainerCss}>
+                        {this.viewTopRow()}
+                        {this.renderChips()}
+                    </div>
+                </div>
+                <div class={col2CSS}>
+                    <ChipDesc displayChip={this.activeChipId}/>
                     <sort.SortBox currentMethod={this.sortMethod} onChange={(e) => {
                         this.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         this.sortChips();
@@ -125,14 +142,10 @@ export class Library extends MitrhilTsxComponent<libraryProps> {
                     }} />
                     {this.buildSearchBox()}
                 </div>
-                <div class={col2CSS}>
-                    <div class={libContainerCss}>
-                        {this.viewTopRow()}
-                        {this.renderChips()}
-                    </div>
-                </div>
             </>
         );
 
     }
 }
+
+// <ChipDesc displayChip={this.chipDescId}/>

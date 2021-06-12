@@ -9,32 +9,16 @@ import * as top from "../TopLvlMsg";
 import { isnumeric } from "../util/isnumeric";
 
 export interface chipDescProps {
-    displayChip: number | undefined;
-}
-
-
-function scrollIntervalHandler() {
-    let scrollDiv = document.getElementById("ScrollTextDiv");
-
-    if(scrollDiv) {
-        let clientHeight = scrollDiv.clientHeight;
-        let totalHeight = scrollDiv.scrollHeight;
-        let maxScroll = totalHeight = clientHeight;
-        if (maxScroll - 10 <= 0) return;
-        scrollDiv.scrollTop += 1;
-    }
-
+    displayChip: number | null;
 }
 
 export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
 
     private animationCounter: number;
-    private scrollIntervalHandle: number | undefined;
 
     constructor(vnode: CVnode<chipDescProps>) {
         super(vnode);
         this.animationCounter = 0;
-        this.scrollIntervalHandle = undefined;
     }
 
     private genHitsDiv(chip: BattleChip): JSX.Element | null {
@@ -63,25 +47,46 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
 
     }
 
-    private spawnScrollInterval() {
-        this.scrollIntervalHandle = window.setInterval(scrollIntervalHandler, 75);
+    private elemRow(chip: BattleChip): JSX.Element {
+        return (
+            <>
+                <div class="debug col-span-1 text-left">
+                    elem:
+                </div>
+                <div class="debug col-span-1">
+                    {chip.renderElements()}
+                </div>
+            </>
+        );
     }
 
-    private stopScrollInterval() {
-        window.clearInterval(this.scrollIntervalHandle);
-        this.scrollIntervalHandle = undefined;
+    private dmgRow(chip: BattleChip): JSX.Element {
+
+        if (chip.damage) {
+            return (
+                <>
+                    <div class="debug col-span-1 text-left">
+                        dmg:
+                    </div>
+                    <div class="debug col-span-1">
+                        {chip.dmgStr}
+                    </div>
+                </>
+            );
+        }
+        return (
+            <>
+            </>    
+        );
     }
 
-    oncreate(_: CVnode<chipDescProps>) {
-        this.spawnScrollInterval();
-    }
 
     viewWithChip(chipId: number): JSX.Element {
-        
+
         let chip = ChipLibrary.getChip(chipId)
 
-        let background = "col-span-1 debug " + chip.backgroundCss;
-        
+        let background = "h-1/2 debug " + chip.backgroundCss;
+
         let chipAnimClass = (this.animationCounter & 1) ? "chipWindowOne" : "chipWindowTwo";
 
         let fontStyle: string;
@@ -95,14 +100,14 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         }
 
         let outerChipClass = "chipDescText chipDescPadding " + chipAnimClass;
-        let innerChipClass = fontStyle + " chipDescDiv debug";
 
         return (
-            <div class={background} onmouseover={(e: any) => { e.redraw = false; this.stopScrollInterval()}} onmouseout={(e: any) => { e.redraw = false; this.spawnScrollInterval()}}>
+            <div class={background}>
                 <div class={outerChipClass} style="padding: 3px; font-size: 14px;">
-                    {this.chipDescTopRow(chip)}
-                    <div class={innerChipClass} id="ScrollTextDiv">
-                        {chip.description}
+                    <div class="border-b border-black" >{chip.name}</div>
+                    <div class="grid grid-cols-2 gap-0">
+                        {this.elemRow(chip)}
+                        {this.dmgRow(chip)}
                     </div>
                 </div>
             </div>
@@ -110,29 +115,25 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     }
 
     viewNoChip(): JSX.Element {
-        return <div class="col-span-1 chipDescBackgroundStd debug"/>
+        return <div class="h-1/2 chipDescBackgroundStd debug" />
     }
 
 
     onbeforeupdate(vnode: CVnode<chipDescProps>, old: CVnode<chipDescProps>): boolean {
-        
-        if(vnode.attrs.displayChip != old.attrs.displayChip) {
-            this.animationCounter = (this.animationCounter + 1) | 0; //or with zero
+
+        if (vnode.attrs.displayChip != old.attrs.displayChip) {
+            this.animationCounter = (this.animationCounter + 1) | 0; //coerce to signed int
             return true;
         } else {
             return false;
         }
     }
-    
+
     view(vnode: CVnode<chipDescProps>): JSX.Element {
-        
+
         //if(displayChip) return viewWithChip(displayChip) else return viewNoChip();
 
         return vnode.attrs.displayChip ? this.viewWithChip(vnode.attrs.displayChip) : this.viewNoChip();
-        
-    }
 
-    onbeforeremove(_: CVnode<chipDescProps>) {
-        this.stopScrollInterval();
     }
 }

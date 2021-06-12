@@ -1,52 +1,120 @@
-import {Element, elementFromStr, elementArrToHtml} from "./elements";
-import {Range, rangeFromStr} from "./ranges";
-import {ChipClass, ChipType, chipClassFromStr, chipTypeFromStr, chipClassToSortNum, chipTypeToSortNum, chipTypeToShortStr, chipClassMaxInFolder, chipClassToCss, chipClassToBackgroundCss} from "./chipkind";
-import {Skill, skillFromStr, skillToShortStr} from "./skills";
+import { Element, elementFromStr, elementArrToHtml } from "./elements";
+import { Range, rangeFromStr } from "./ranges";
+import { ChipClass, ChipType, chipClassFromStr, chipTypeFromStr, chipClassToSortNum, chipTypeToSortNum, chipTypeToShortStr, chipClassMaxInFolder, chipClassToCss, chipClassToBackgroundCss, stdChipTypeToBgCss } from "./chipkind";
+import { Skill, skillFromStr, skillToShortStr } from "./skills";
+import { ChipEffect, chipEffectFromStr } from "./chipeffect";
 
-export interface ChipData {
-    Name: string,
-    Element: string[],
-    Range: string,
-    Damage: string,
-    Class: string,
-    Type: string,
-    Hits: string,
-    Description: string,
-    Skills: string[],
+
+export interface Dice {
+    dienum: number,
+    dietype: number,
 }
 
-const damageRegex = /(\d+)d(\d+)/;
+export interface BlightData {
+    elem: string,
+    dmg: Dice,
+    duration: Dice,
+}
+
+export interface Blight {
+    elem: Element,
+    dmg: Dice,
+    duration: Dice,
+}
+
+function blightDataToBlight(blight: BlightData): Blight {
+    let element = elementFromStr(blight.elem);
+    return {
+        elem: element,
+        dmg: blight.dmg,
+        duration: blight.duration
+    };
+}
+
+export interface ChipData {
+    id: number,
+    name: string,
+    elem: string[],
+    skill: string[] | null,
+    range: string,
+    hits: string | null,
+    targets: number | null,
+    description: string | null,
+    effect: string[] | null,
+    effduration: number | null,
+    blight: BlightData | null,
+    damage: Dice | null,
+    kind: string,
+    class: string,
+}
+
+/**
+ * First number returned is max damage, second is average damage
+ */
+function calcDmgVals(damage: Dice | null): [number, number] {
+    if (!damage) {
+        return [0, 0];
+    }
+
+    let avgDmg = Math.floor(((damage.dietype / 2) + 0.5) * (damage.dienum));
+    let maxDmg = damage.dienum * damage.dietype;
+    return [maxDmg, avgDmg];
+}
 
 export class BattleChip {
 
-    public readonly name: string;
     public readonly id: number;
+    public readonly name: string;
     public readonly element: Element[];
-    public readonly range: Range;
-    public readonly class: ChipClass;
-    public readonly classSortPos: number;
-    public readonly kind: ChipType;
-    public readonly kindSortPos: number;
-    public readonly hits: string;
-    public readonly description: string;
-    public readonly damage: string;
     public readonly skills: Skill[];
-    private avgDmg: number | undefined;
-    private maxDmg: number | undefined;
+    public readonly range: Range;
+    public readonly hits: string;
+    public readonly targets: number;
+    public readonly description: string;
+    public readonly effect: ChipEffect[];
+    public readonly effduration: number | null;
+    public readonly blight: Blight | null;
+    public readonly damage: Dice | null;
+    public readonly kind: ChipType;
+    public readonly class: ChipClass;
 
-    constructor(id: number, data: ChipData) {
-        this.id = id | 0; //or with zero to ensure it's an int, not a number
-        this.name = data.Name;
-        this.element = data.Element.map(e => elementFromStr(e));
-        this.skills = data.Skills.map(e => skillFromStr(e));
-        this.range = rangeFromStr(data.Range);
-        this.class = chipClassFromStr(data.Class);
-        this.kind = chipTypeFromStr(data.Type);
+    public readonly kindSortPos: number;
+    public readonly classSortPos: number;
+    
+    public readonly avgDmg: number;
+    public readonly maxDmg: number;
+    public readonly dmgStr: string;
+
+    constructor(data: ChipData) {
+        this.id = data.id; //or with zero to ensure it's an int, not a number
+        this.name = data.name;
+        this.element = data.elem.map(e => elementFromStr(e));
+        this.skills = data.skill?.map(e => skillFromStr(e)) ?? [Skill.None];
+        this.range = rangeFromStr(data.range);
+        this.hits = data.hits ?? "0";
+        this.targets = data.targets ?? 0;
+        this.description = data.description ?? "--";
+
+        this.effect = data.effect?.map(e => chipEffectFromStr(e)) ?? [];
+        this.effduration = data.effduration;
+
+        this.blight = data.blight ? blightDataToBlight(data.blight) : null;
+
+        this.class = chipClassFromStr(data.class);
+        this.kind = chipTypeFromStr(data.kind);
         this.classSortPos = chipClassToSortNum(this.class);
         this.kindSortPos = chipTypeToSortNum(this.kind);
-        this.hits = data.Hits;
-        this.description = data.Description;
-        this.damage = data.Damage;
+        
+
+        this.damage = data.damage;
+
+        if(!this.damage) {
+            this.dmgStr = "--";
+        } else {
+            this.dmgStr = `${this.damage.dienum}d${this.damage.dietype}`;
+        }
+
+        [this.maxDmg, this.avgDmg] = calcDmgVals(this.damage);
     }
 
     get Skill(): Skill {
@@ -54,7 +122,7 @@ export class BattleChip {
     }
 
     get SkillAbv(): string {
-        return skillToShortStr(this.skills[0]);
+        return skillToShortStr(this.Skill);
     }
 
     get RangeAbv(): string {
@@ -74,34 +142,11 @@ export class BattleChip {
     }
 
     get backgroundCss(): string {
-        return chipClassToBackgroundCss(this.class);
+        return this.class.variant == "Standard" ? stdChipTypeToBgCss(this.kind) : chipClassToBackgroundCss(this.class);
     }
 
-    get AvgDmg(): number {
-        return this.avgDmg ?? this.calcDmgVals()[1];
-    }
-
-    get MaxDmg(): number {
-        return this.maxDmg ?? this.calcDmgVals()[0];
-    }
-
-    renderElements() : JSX.Element {
+    renderElements(): JSX.Element {
         return elementArrToHtml(this.element);
     }
 
-    /**
-     * First number returned is max damage, second is average damage
-     */
-    private calcDmgVals(): [number, number] {
-        let dice = damageRegex.exec(this.damage);
-        if(!dice) {
-            this.avgDmg = 0;
-            this.maxDmg = 0;
-            return [0, 0];
-        }
-
-        this.avgDmg = Math.floor(((+dice[2] / 2) + 0.5) * (+dice[1]));
-        this.maxDmg = +dice[2] * +dice[1];
-        return [this.maxDmg, this.avgDmg];
-    }
 }
