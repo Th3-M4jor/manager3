@@ -67,10 +67,10 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         if (chip.damage) {
             return (
                 <>
-                    <div class="col-span-1 text-left border-t border-r border-black">
+                    <div class="chipDescLeft">
                         dmg:
                     </div>
-                    <div class="col-span-1 border-t border-black">
+                    <div class="chipDescRight">
                         {chip.dmgStr}
                     </div>
                 </>
@@ -85,10 +85,10 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     private kindRow(chip: BattleChip): JSX.Element {
         return (
             <>
-                <div class="col-span-1 text-left border-t border-r border-black">
+                <div class="chipDescLeft">
                     kind:
                 </div>
-                <div class="col-span-1 border-t border-black">
+                <div class="chipDescRight">
                     {chip.KindAbv}
                 </div>
             </>
@@ -107,10 +107,10 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         } else {
             return (
                 <>
-                    <div class="col-span-1 text-left border-t border-r border-black">
+                    <div class="chipDescLeft">
                         skill:
                     </div>
-                    <div class="col-span-1 border-t border-black">
+                    <div class="chipDescRight">
                         {chip.SkillAbv}
                     </div>
                 </>
@@ -121,10 +121,10 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     private rangeRow(chip: BattleChip): JSX.Element {
         return (
             <>
-                <div class="col-span-1 text-left border-t border-r border-black">
+                <div class="chipDescLeft">
                     range:
                 </div>
-                <div class="col-span-1 border-t border-black">
+                <div class="chipDescRight">
                     {chip.RangeAbv}
                 </div>
             </>
@@ -140,10 +140,10 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         } else {
             return (
                 <>
-                    <div class="col-span-1 text-left border-t border-r border-black">
+                    <div class="chipDescLeft">
                         hits:
                     </div>
-                    <div class="col-span-1 border-t border-black">
+                    <div class="chipDescRight">
                         {chip.hits}
                     </div>
                 </>
@@ -154,10 +154,10 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     private targetsRow(chip: BattleChip): JSX.Element {
         return (
             <>
-                <div class="col-span-1 text-left border-t border-r border-black">
+                <div class="chipDescLeft">
                     trgts:
                 </div>
-                <div class="col-span-1 border-t border-black">
+                <div class="chipDescRight">
                     {chip.targets}
                 </div>
             </>
@@ -172,10 +172,10 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         let effects = chip.effect.map((e) => {
             return (
                 <>
-                    <div class="col-span-1 text-left border-t border-r border-black">
+                    <div class="chipDescLeft">
                         effect:
                     </div>
-                    <div class="col-span-1 border-t border-black">
+                    <div class="chipDescRight">
                         {chipEffectToShortStr(e)}
                     </div>
                 </>
@@ -185,10 +185,10 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         return (
             <>
                 {effects}
-                <div class="col-span-1 text-left border-t border-r border-black">
+                <div class="chipDescLeft">
                     effdur:
                 </div>
-                <div class="col-span-1 border-t border-black">
+                <div class="chipDescRight">
                     {chip.effduration}
                 </div>
             </>
@@ -206,22 +206,22 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
 
         return (
             <>
-                <div class="col-span-1 text-left border-t border-r border-black">
+                <div class="chipDescLeft">
                     blight:
                 </div>
-                <div class="col-span-1 border-t border-black">
+                <div class="chipDescRight">
                     <span class="chipImgBox"><span class={elemClass} /></span>
                 </div>
-                <div class="col-span-1 text-left border-t border-r border-black">
+                <div class="chipDescLeft">
                     bdmg:
                 </div>
-                <div class="col-span-1 border-t border-black">
+                <div class="chipDescRight">
                     {`${chip.blight.dmg.dienum}d${chip.blight.dmg.dietype}`}
                 </div>
-                <div class="col-span-1 text-left border-t border-r border-black">
+                <div class="chipDescLeft">
                     bdur:
                 </div>
-                <div class="col-span-1 border-t border-black">
+                <div class="chipDescRight">
                     {`${chip.blight.duration.dienum}d${chip.blight.duration.dietype}`}
                 </div>
             </>
@@ -234,10 +234,11 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
 
         let chip = ChipLibrary.getChip(chipId)
 
-        let background = "h-1/2 debug " + chip.backgroundCss;
+        let background = "h-1/2 " + chip.backgroundCss;
 
         let chipAnimClass = (this.animationCounter & 1) ? "chipWindowOne" : "chipWindowTwo";
 
+        /*
         let fontStyle: string;
 
         if (chip.description.length > 700) {
@@ -247,6 +248,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         } else {
             fontStyle = "text-base";
         }
+        */
 
         let outerChipClass = "chipDescText chipDescPadding " + chipAnimClass;
 
@@ -271,7 +273,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     }
 
     viewNoChip(): JSX.Element {
-        return <div class="h-1/2 chipDescBackgroundStd debug" />
+        return <div class="h-1/2 chipDescBackgroundStd" />
     }
 
 
