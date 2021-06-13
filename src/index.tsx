@@ -59,7 +59,7 @@ class Manager extends MitrhilTsxComponent {
             this.msgClearHandle = undefined;
         } else {
             window.clearTimeout(this.msgClearHandle);
-            this.msgClearHandle = window.setTimeout(() => {this.topMsg = ""}, 15_000); //15 seconds
+            this.msgClearHandle = window.setTimeout(() => {this.topMsg = ""; m.redraw()}, 15_000); //15 seconds
         }
         this.topMsg = msg;
     }
