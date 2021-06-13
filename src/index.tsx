@@ -87,7 +87,6 @@ class Manager extends MitrhilTsxComponent {
                             <Folder active={this.activeTab.variant == "Folder"} inFolderGroup={false}/>
                             <Pack active={this.activeTab.variant == "Pack"}/>
                             <Library active={this.activeTab.variant == "Library"}/>
-                            
                         </div>
                     </div>
                 </div>

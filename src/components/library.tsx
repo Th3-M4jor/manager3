@@ -114,6 +114,10 @@ export class Library extends MitrhilTsxComponent<libraryProps> {
 
     onbeforeupdate(vnode: CVnode<libraryProps>, old: CVnode<libraryProps>): boolean {
 
+        if(vnode.attrs.active == false && old.attrs.active == true) {
+            this.activeChipId = null;
+        }
+
         return !(vnode.attrs.active == false && old.attrs.active == false);
         //don't update if component is hidden
     }

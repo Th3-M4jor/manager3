@@ -17,6 +17,27 @@ export const ChipEffect = makeTaggedUnion({
     DmgBoost: none,
 });
 
+const chipEffShortStrMatcher = {
+    Stagger: () => "STGR",
+    Blind: () => "BLIND",
+    Confuse: () => "CONF",
+    Lock: () => "LCK",
+    Shield: () => "SHLD",
+    Barrier: () => "BARR",
+    ACPierce: () => "AC PRC",
+    ACDown: () => "AC DN",
+    Weakness: () => "WEAKN",
+    Invisible: () => "INVIS",
+    Paralysis: () => "PARA",
+    Panic: () => "PANIC",
+    Heal: () => "HEAL",
+    DmgBoost: () => "DMG+"
+};
+
+export function chipEffectToShortStr(val: ChipEffect): string {
+    return val.match(chipEffShortStrMatcher);
+}
+
 export type ChipEffect = MemberType<typeof ChipEffect>;
 
 export function chipEffectFromStr(val: string): ChipEffect {

@@ -4,6 +4,8 @@ import stream from "mithril/stream";
 import { MitrhilTsxComponent } from "../JsxNamespace";
 import { BattleChip } from "../library/battlechip";
 import { ChipLibrary } from "../library/library";
+import { chipEffectToShortStr } from "../library/chipeffect";
+import { elementToCssClass } from "../library/elements";
 
 import * as top from "../TopLvlMsg";
 import { isnumeric } from "../util/isnumeric";
@@ -50,10 +52,10 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     private elemRow(chip: BattleChip): JSX.Element {
         return (
             <>
-                <div class="debug col-span-1 text-left">
+                <div class="col-span-1 border-r border-black text-left">
                     elem:
                 </div>
-                <div class="debug col-span-1">
+                <div class="col-span-1">
                     {chip.renderElements()}
                 </div>
             </>
@@ -65,10 +67,10 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         if (chip.damage) {
             return (
                 <>
-                    <div class="debug col-span-1 text-left">
+                    <div class="col-span-1 text-left border-t border-r border-black">
                         dmg:
                     </div>
-                    <div class="debug col-span-1">
+                    <div class="col-span-1 border-t border-black">
                         {chip.dmgStr}
                     </div>
                 </>
@@ -76,8 +78,155 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         }
         return (
             <>
-            </>    
+            </>
         );
+    }
+
+    private kindRow(chip: BattleChip): JSX.Element {
+        return (
+            <>
+                <div class="col-span-1 text-left border-t border-r border-black">
+                    kind:
+                </div>
+                <div class="col-span-1 border-t border-black">
+                    {chip.KindAbv}
+                </div>
+            </>
+        );
+    }
+
+    private skillRow(chip: BattleChip): JSX.Element {
+
+        let skill = chip.Skill;
+
+        if (skill.variant == "None") {
+            return (
+                <>
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <div class="col-span-1 text-left border-t border-r border-black">
+                        skill:
+                    </div>
+                    <div class="col-span-1 border-t border-black">
+                        {chip.SkillAbv}
+                    </div>
+                </>
+            );
+        }
+    }
+
+    private rangeRow(chip: BattleChip): JSX.Element {
+        return (
+            <>
+                <div class="col-span-1 text-left border-t border-r border-black">
+                    range:
+                </div>
+                <div class="col-span-1 border-t border-black">
+                    {chip.RangeAbv}
+                </div>
+            </>
+        );
+    }
+
+    private hitsRow(chip: BattleChip): JSX.Element {
+        if (chip.hits === "0") {
+            return (
+                <>
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <div class="col-span-1 text-left border-t border-r border-black">
+                        hits:
+                    </div>
+                    <div class="col-span-1 border-t border-black">
+                        {chip.hits}
+                    </div>
+                </>
+            );
+        }
+    }
+
+    private targetsRow(chip: BattleChip): JSX.Element {
+        return (
+            <>
+                <div class="col-span-1 text-left border-t border-r border-black">
+                    trgts:
+                </div>
+                <div class="col-span-1 border-t border-black">
+                    {chip.targets}
+                </div>
+            </>
+        );
+    }
+
+    private effectsRows(chip: BattleChip): JSX.Element {
+        if (chip.effect.length == 0) return (
+            <></>
+        );
+
+        let effects = chip.effect.map((e) => {
+            return (
+                <>
+                    <div class="col-span-1 text-left border-t border-r border-black">
+                        effect:
+                    </div>
+                    <div class="col-span-1 border-t border-black">
+                        {chipEffectToShortStr(e)}
+                    </div>
+                </>
+            );
+        })
+
+        return (
+            <>
+                {effects}
+                <div class="col-span-1 text-left border-t border-r border-black">
+                    effdur:
+                </div>
+                <div class="col-span-1 border-t border-black">
+                    {chip.effduration}
+                </div>
+            </>
+        );
+
+
+    }
+
+    private blightRows(chip: BattleChip): JSX.Element {
+        if (!chip.blight) {
+            return (<></>);
+        }
+
+        let elemClass = elementToCssClass(chip.blight.elem);
+
+        return (
+            <>
+                <div class="col-span-1 text-left border-t border-r border-black">
+                    blight:
+                </div>
+                <div class="col-span-1 border-t border-black">
+                    <span class="chipImgBox"><span class={elemClass} /></span>
+                </div>
+                <div class="col-span-1 text-left border-t border-r border-black">
+                    bdmg:
+                </div>
+                <div class="col-span-1 border-t border-black">
+                    {`${chip.blight.dmg.dienum}d${chip.blight.dmg.dietype}`}
+                </div>
+                <div class="col-span-1 text-left border-t border-r border-black">
+                    bdur:
+                </div>
+                <div class="col-span-1 border-t border-black">
+                    {`${chip.blight.duration.dienum}d${chip.blight.duration.dietype}`}
+                </div>
+            </>
+        );
+
     }
 
 
@@ -108,6 +257,13 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
                     <div class="grid grid-cols-2 gap-0">
                         {this.elemRow(chip)}
                         {this.dmgRow(chip)}
+                        {this.kindRow(chip)}
+                        {this.skillRow(chip)}
+                        {this.rangeRow(chip)}
+                        {this.hitsRow(chip)}
+                        {this.targetsRow(chip)}
+                        {this.effectsRows(chip)}
+                        {this.blightRows(chip)}
                     </div>
                 </div>
             </div>
