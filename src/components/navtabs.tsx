@@ -9,18 +9,15 @@ import * as top from "../TopLvlMsg";
 type ClassAndCallback = [string, (e: any) => void];
 
 function changeToFolder(_: any) {
-    let topStream = top.getTopStream();
-    topStream(top.TopLvlMsg.ChangeTab(top.Tabs.Folder));
+    m.route.set("/Folder");
 }
 
 function changeToPack(_: any) {
-    let topStream = top.getTopStream();
-    topStream(top.TopLvlMsg.ChangeTab(top.Tabs.Pack));
+    m.route.set("/Pack");
 }
 
 function changeToLibrary(_: any) {
-    let topStream = top.getTopStream();
-    topStream(top.TopLvlMsg.ChangeTab(top.Tabs.Library));
+    m.route.set("/Library");
 }
 
 function dontRedraw(e: any) {
