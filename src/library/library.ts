@@ -242,6 +242,10 @@ export class ChipLibrary {
         return [...this.instance.pack.entries()]
     }
 
+    public static get PackLength(): number {
+        return this.instance.pack.size;
+    }
+
     public static get Folder(): FolderChip[] {
         return this.instance.folder;
     }
