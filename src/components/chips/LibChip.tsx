@@ -11,6 +11,7 @@ import * as top from "../../TopLvlMsg";
 export interface LibChipProps {
     chip: BattleChip,
     onmouseover: (e: Event) => void;
+    ondoubleclick: (e: Event) => void;
 }
 
 export class LibraryChip extends MitrhilTsxComponent<LibChipProps> {
@@ -18,7 +19,7 @@ export class LibraryChip extends MitrhilTsxComponent<LibChipProps> {
         let chipCss = vnode.attrs.chip.classCss;
         let idVal = "L_" + vnode.attrs.chip.id;
         return (
-            <div class={"select-none chip-row " + chipCss} id={idVal} onmouseover={vnode.attrs.onmouseover}>
+            <div class={"select-none chip-row " + chipCss} id={idVal} onmouseover={vnode.attrs.onmouseover} ondblclick={vnode.attrs.ondoubleclick}>
                 <div class="w-7/24 sm:w-5/24 px-0 whitespace-nowrap select-none debug">
                     {vnode.attrs.chip.name}
                 </div>

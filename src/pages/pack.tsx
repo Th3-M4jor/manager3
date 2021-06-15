@@ -97,7 +97,7 @@ export class Pack extends MitrhilTsxComponent {
     private viewTopRow(): JSX.Element {
         return (
             <div class="chip-top-row Chip z-20">
-                <div class="w-7/24 sm:w-5/24 px-0 whitespace-nowrap select-none debug">
+                <div class="w-6/24 sm:w-5/24 px-0 whitespace-nowrap select-none debug">
                     NAME
                 </div>
                 <div class="w-4/24 sm:w-3/24 px-0 select-none debug">
@@ -106,14 +106,20 @@ export class Pack extends MitrhilTsxComponent {
                 <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none debug">
                     RANGE
                 </div>
-                <div class="w-4/24 sm:w-4/24 px-0 whitespace-nowrap select-none debug">
+                <div class="w-3/24 sm:w-3/24 px-0 whitespace-nowrap select-none debug">
                     DMG
                 </div>
-                <div class="hidden sm:block sm:w-4/24 whitespace-nowrap select-none debug">
+                <div class="hidden sm:block sm:w-3/24 whitespace-nowrap select-none debug">
                     KIND
                 </div>
-                <div class="w-5/24 sm:w-4/24 px-0 whitespace-nowrap select-none debug">
+                <div class="w-3/24 sm:w-3/24 px-0 whitespace-nowrap select-none debug">
                     ELEM
+                </div>
+                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none debug">
+                    O
+                </div>
+                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none mr-1 debug">
+                    U
                 </div>
             </div>
         );

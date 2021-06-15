@@ -211,11 +211,11 @@ export class ChipLibrary {
      * 
      * @param {string | number} chip the name or id of the chip to add
      * 
-     * @returns {number} the number of copies of the chip you now have in your pack
+     * @returns the number of copies of the chip you now have in your pack, and the name of the chip
      */
-    public static addChipToPack(chip: string | number): number {
+    public static addChipToPack(chip: string | number, used: boolean = false): [number, string] {
         let chipName = typeof(chip) == "string" ? chip : this.idToName(chip);
-        return this.instance.addToPack(chipName);
+        return [this.instance.addToPack(chipName, used), chipName];
     }
 
     public static idToName(toGet: number): string {
