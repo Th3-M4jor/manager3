@@ -22,6 +22,7 @@ interface PackChipWithBChip {
     used: number,
 }
 
+//#region PackSortOpts
 function sortByName(a: PackChipWithBChip, b: PackChipWithBChip): number {
     return sort.sortBattleChipByName(a.chip, b.chip);
 }
@@ -53,7 +54,7 @@ function sortByRange(a: PackChipWithBChip, b: PackChipWithBChip): number {
 function sortBySkill(a: PackChipWithBChip, b: PackChipWithBChip): number {
     return sort.sortBattleChipBySkill(a.chip, b.chip);
 }
-
+//#endregion PackSortOpts 
 
 export class Pack extends MitrhilTsxComponent {
     private sortMethod: sort.SortOption;
@@ -153,7 +154,7 @@ export class Pack extends MitrhilTsxComponent {
                 <div class="col-span-1 flex flex-col px-0">
                     <ChipDesc displayChip={this.activeChipId} />
                     <DropMenu class="dropbtn" above>
-                        <button class="dropmenu-btn">
+                        <button class="dropmenu-btn" >
                             TEST
                         </button>
                     </DropMenu>

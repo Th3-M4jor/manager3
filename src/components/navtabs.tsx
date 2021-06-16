@@ -6,21 +6,25 @@ import { MitrhilTsxComponent } from "../JsxNamespace";
 import * as top from "../TopLvlMsg";
 
 //#region callbackstuff
-type ClassAndCallback = [string, (e: any) => void];
+type ClassAndCallback = [string, (e: Event) => void];
 
-function changeToFolder(_: any) {
+function changeToFolder(e: Event) {
+    (e.currentTarget as HTMLElement)?.blur();
     m.route.set("/Folder");
 }
 
-function changeToPack(_: any) {
+function changeToPack(e: Event) {
+    (e.currentTarget as HTMLElement)?.blur();
     m.route.set("/Pack");
 }
 
-function changeToLibrary(_: any) {
+function changeToLibrary(e: Event) {
+    (e.currentTarget as HTMLElement)?.blur();
     m.route.set("/Library");
 }
 
-function dontRedraw(e: any) {
+function dontRedraw(e: Event) {
+    //@ts-ignore
     e.redraw = false;
 }
 
