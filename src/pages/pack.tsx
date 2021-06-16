@@ -7,6 +7,7 @@ import { BattleChip } from "../library/battlechip";
 import { ChipLibrary } from "../library/library";
 
 import * as sort from "../components/sortbox";
+import { DropMenu } from "../components/dropmenu";
 import { ChipDesc } from "../components/chipdesc";
 import { PackChip } from "../components/chips/PackChip";
 
@@ -151,6 +152,11 @@ export class Pack extends MitrhilTsxComponent {
                 </div>
                 <div class="col-span-1 flex flex-col px-0">
                     <ChipDesc displayChip={this.activeChipId} />
+                    <DropMenu class="dropbtn" above>
+                        <button class="dropmenu-btn">
+                            TEST
+                        </button>
+                    </DropMenu>
                     <sort.SortBox currentMethod={this.sortMethod} onChange={(e) => {
                         this.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         (e.target as HTMLSelectElement).blur(); //unfocus element automatically after changing sort method

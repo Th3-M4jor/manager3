@@ -234,7 +234,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
 
         let chip = ChipLibrary.getChip(chipId)
 
-        let background = "h-1/2 " + chip.backgroundCss;
+        let background = "h-3/4 " + chip.backgroundCss;
 
         let chipAnimClass = (this.animationCounter & 1) ? "chipWindowOne" : "chipWindowTwo";
 
@@ -250,7 +250,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         }
         */
 
-        let outerChipClass = "chipDescText chipDescPadding " + chipAnimClass;
+        let outerChipClass = "chipDescText chipDescPadding debug " + chipAnimClass;
 
         return (
             <div class={background}>
@@ -267,13 +267,16 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
                         {this.effectsRows(chip)}
                         {this.blightRows(chip)}
                     </div>
+                    <div class="border-t border-black">
+                        {chip.description}
+                    </div>
                 </div>
             </div>
         );
     }
 
     viewNoChip(): JSX.Element {
-        return <div class="h-1/2 chipDescBackgroundStd" />
+        return <div class="h-3/4 chipDescBackgroundStd" />
     }
 
 

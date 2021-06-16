@@ -59,3 +59,27 @@
     transform: translate(0px, 6px);
     */
 }
+
+.dropbtn {
+    @apply bg-white hover:bg-hover-yellow mt-3 ml-1;
+    width: 95%;
+    height: calc(1.5em + .75rem + 2px);
+}
+
+.dropdown {
+    @apply relative inline-block;
+}
+
+.dropdown-content {
+    @apply hidden absolute z-10;
+    width: 95%;
+}
+
+.dropdown:hover .dropdown-content {
+    @apply block;
+}
+
+.dropmenu-btn {
+    @apply ml-1 bg-white hover:bg-red-500;
+    width: 15vw;
+}
