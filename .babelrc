@@ -1,5 +1,4 @@
 {
-    "presets": [["@parcel/babel-preset-env", {"targets": ["last 2 versions", "not dead", "not ie 11", "> 1.0%"]}]],
     "plugins": [
         "@parcel/babel-plugin-transform-runtime",
         [

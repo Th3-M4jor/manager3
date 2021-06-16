@@ -97,28 +97,28 @@ export class Pack extends MitrhilTsxComponent {
     private viewTopRow(): JSX.Element {
         return (
             <div class="chip-top-row Chip z-20">
-                <div class="w-6/24 sm:w-5/24 px-0 whitespace-nowrap select-none debug">
+                <div class="w-6/24 sm:w-5/24 px-0 whitespace-nowrap select-none">
                     NAME
                 </div>
-                <div class="w-4/24 sm:w-3/24 px-0 select-none debug">
+                <div class="w-4/24 sm:w-3/24 px-0 select-none">
                     SKILL
                 </div>
-                <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none debug">
+                <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
                     RANGE
                 </div>
-                <div class="w-3/24 sm:w-3/24 px-0 whitespace-nowrap select-none debug">
+                <div class="w-3/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
                     DMG
                 </div>
-                <div class="hidden sm:block sm:w-3/24 whitespace-nowrap select-none debug">
+                <div class="hidden sm:block sm:w-3/24 whitespace-nowrap select-none">
                     KIND
                 </div>
-                <div class="w-3/24 sm:w-3/24 px-0 whitespace-nowrap select-none debug">
+                <div class="w-3/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
                     ELEM
                 </div>
-                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none debug">
+                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none">
                     O
                 </div>
-                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none mr-1 debug">
+                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none">
                     U
                 </div>
             </div>

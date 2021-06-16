@@ -22,28 +22,28 @@ export class PackChip extends MitrhilTsxComponent<PackChipProps> {
 
         return (
             <div class={"select-none chip-row " + chipCss} id={idVal} onmouseover={vnode.attrs.onmouseover}>
-                <div class="w-6/24 sm:w-5/24 px-0 whitespace-nowrap select-none debug">
+                <div class="w-6/24 sm:w-5/24 px-0 whitespace-nowrap select-none">
                     {vnode.attrs.chip.name}
                 </div>
-                <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none debug">
+                <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
                     {vnode.attrs.chip.SkillAbv}
                 </div>
-                <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none debug">
+                <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
                     {vnode.attrs.chip.RangeAbv}
                 </div>
-                <div class="w-3/24 sm:w-3/24 px-0 whitespace-nowrap select-none debug">
+                <div class="w-3/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
                     {vnode.attrs.chip.dmgStr}
                 </div>
-                <div class="hidden sm:block sm:w-3/24 px-0 whitespace-nowrap select-none debug">
+                <div class="hidden sm:block sm:w-3/24 px-0 whitespace-nowrap select-none">
                     {vnode.attrs.chip.KindAbv}
                 </div>
-                <div class="w-3/24 sm:w-3/24 px-0 whitespace-nowrap select-none debug">
+                <div class="w-3/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
                     {vnode.attrs.chip.renderElements()}
                 </div>
-                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none debug">
+                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none">
                     {vnode.attrs.owned}
                 </div>
-                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none mr-1 debug">
+                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none">
                     {vnode.attrs.used}
                 </div>
             </div>
