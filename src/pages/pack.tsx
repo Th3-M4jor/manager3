@@ -56,6 +56,15 @@ function sortBySkill(a: PackChipWithBChip, b: PackChipWithBChip): number {
 }
 //#endregion PackSortOpts 
 
+
+function jackOutClicked() {
+    let count = ChipLibrary.jackOut();
+
+    let msg = `${count} ${count == 1 ? "chip has" : "chips have"} has been marked as unused`;
+    
+    top.setTopMsg(msg);
+}
+
 export class Pack extends MitrhilTsxComponent {
     private sortMethod: sort.SortOption;
     private activeChipId: number | null;
@@ -153,12 +162,15 @@ export class Pack extends MitrhilTsxComponent {
                 </div>
                 <div class="col-span-1 flex flex-col px-0">
                     <ChipDesc displayChip={this.activeChipId} />
-                    <DropMenu class="dropbtn" above>
-                        <button class="dropmenu-btn" >
-                            TEST
+                    <DropMenu class="dropbtn">
+                        <button class="dropmenu-btn" onclick={ChipLibrary.eraseData}>
+                            ERASE DATA
+                        </button>
+                        <button class="dropmenu-btn" onclick={jackOutClicked}>
+                            JACK OUT
                         </button>
                     </DropMenu>
-                    <sort.SortBox currentMethod={this.sortMethod} onChange={(e) => {
+                    <sort.SortBox currentMethod={this.sortMethod} includeOwned onChange={(e) => {
                         this.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         (e.target as HTMLSelectElement).blur(); //unfocus element automatically after changing sort method
                     }} />
