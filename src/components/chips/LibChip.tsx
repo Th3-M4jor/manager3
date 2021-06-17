@@ -1,12 +1,7 @@
-import m, { CVnode, Vnode } from "mithril";
-import stream from "mithril/stream";
-//import "./fragment-polyfix";
+import m, { CVnode } from "mithril";
 import { MitrhilTsxComponent } from "../../JsxNamespace";
 
 import {BattleChip} from "../../library/battlechip";
-import {ChipLibrary} from "../../library/library";
-
-import * as top from "../../TopLvlMsg";
 
 export interface LibChipProps {
     chip: BattleChip,

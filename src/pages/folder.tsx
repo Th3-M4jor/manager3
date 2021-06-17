@@ -1,6 +1,4 @@
-import m, { CVnode, Vnode } from "mithril";
-import stream from "mithril/stream";
-//import "./fragment-polyfix";
+import m, { CVnode } from "mithril";
 import { MitrhilTsxComponent } from "../JsxNamespace";
 
 import * as top from "../TopLvlMsg";

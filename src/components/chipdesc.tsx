@@ -1,14 +1,10 @@
 import m, { CVnode, Vnode } from "mithril";
-import stream from "mithril/stream";
-//import "./fragment-polyfix";
+
 import { MitrhilTsxComponent } from "../JsxNamespace";
 import { BattleChip } from "../library/battlechip";
 import { ChipLibrary } from "../library/library";
 import { chipEffectToShortStr } from "../library/chipeffect";
 import { elementToCssClass } from "../library/elements";
-
-import * as top from "../TopLvlMsg";
-import { isnumeric } from "../util/isnumeric";
 
 export interface chipDescProps {
     displayChip: number | null;
@@ -23,6 +19,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         this.animationCounter = 0;
     }
 
+    /*
     private genHitsDiv(chip: BattleChip): JSX.Element | null {
         let hits = isnumeric(chip.hits) ? +chip.hits : -1;
 
@@ -48,6 +45,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         );
 
     }
+    */
 
     private elemRow(chip: BattleChip): JSX.Element {
         return (

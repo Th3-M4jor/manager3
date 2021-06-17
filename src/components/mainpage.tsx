@@ -1,4 +1,4 @@
-import m, { CVnode, Vnode } from "mithril";
+import m, { CVnode } from "mithril";
 
 import { MitrhilTsxComponent } from "../JsxNamespace";
 

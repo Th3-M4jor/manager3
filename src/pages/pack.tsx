@@ -1,6 +1,5 @@
-import m, { CVnode, Vnode } from "mithril";
-import stream from "mithril/stream";
-//import "./fragment-polyfix";
+import m, { CVnode } from "mithril";
+
 import { MitrhilTsxComponent } from "../JsxNamespace";
 
 import { BattleChip } from "../library/battlechip";
@@ -147,8 +146,17 @@ export class Pack extends MitrhilTsxComponent {
 
         let chips = this.getSortedChips();
 
+        /*
         return chips.map(packChip => <PackChip chip={packChip.chip} key={packChip.chip + "_P"} onmouseover={this.chipMouseoverHandler} owned={packChip.owned} used={packChip.used} />);
+        */
+       let packChip = chips[0];
 
+       let pack: JSX.Element[] = [];
+       pack.length = 100;
+
+       pack.fill(<PackChip chip={packChip.chip} onmouseover={this.chipMouseoverHandler} owned={packChip.owned} used={packChip.used}/>);
+
+       return pack;
     }
 
     view(vnode: CVnode): JSX.Element {

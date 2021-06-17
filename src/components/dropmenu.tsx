@@ -1,6 +1,5 @@
-import m, { CVnode, Vnode } from "mithril";
-import stream from "mithril/stream";
-//import "./fragment-polyfix";
+import m from "mithril";
+
 import { MitrhilTsxComponent } from "../JsxNamespace";
 
 export interface DropMenuProps {

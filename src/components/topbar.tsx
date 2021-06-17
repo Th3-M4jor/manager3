@@ -1,6 +1,5 @@
 import m, { CVnode, Vnode } from "mithril";
-import stream from "mithril/stream";
-//import "./fragment-polyfix";
+
 import { MitrhilTsxComponent } from "../JsxNamespace";
 import { BattleChip, ChipData } from "../library/battlechip";
 import { ChipLibrary } from "../library/library";

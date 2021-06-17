@@ -1,4 +1,4 @@
-import m, { CVnode, Vnode } from "mithril";
+import m, { CVnode } from "mithril";
 
 import { MitrhilTsxComponent } from "../JsxNamespace";
 
@@ -9,8 +9,6 @@ import * as sort from "../components/sortbox";
 
 import * as top from "../TopLvlMsg";
 
-import { TopBar } from "../components/topbar";
-import { NavTabs } from "../components/navtabs";
 import { ChipDesc } from "../components/chipdesc";
 
 import { LibraryChip } from "../components/chips/LibChip";
@@ -98,6 +96,7 @@ export class Library extends MitrhilTsxComponent {
 
     private renderChips(): JSX.Element[] | JSX.Element {
 
+        /*
         if (!this.filterby) {
             return this.chips.map((c) => <LibraryChip chip={c} key={c.name + "_L"} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler}/>);
         } else {
@@ -119,6 +118,15 @@ export class Library extends MitrhilTsxComponent {
             }
 
         }
+        */
+
+        let lib: JSX.Element[] = [];
+        lib.length = 300;
+        let chip = this.chips[0];
+
+        lib.fill(<LibraryChip chip={chip} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler}/>);
+
+        return lib;
     }
 
     view(vnode: CVnode): JSX.Element {
