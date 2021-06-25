@@ -13,8 +13,8 @@ export interface PackChipProps {
 
 export class PackChip extends MitrhilTsxComponent<PackChipProps> {
     view(vnode: CVnode<PackChipProps>): JSX.Element {
-        let chipCss = vnode.attrs.owned <= vnode.attrs.used ? "UsedChip" : vnode.attrs.chip.classCss;
-        let idVal = "P_" + vnode.attrs.chip.id;
+        const chipCss = vnode.attrs.owned <= vnode.attrs.used ? "UsedChip" : vnode.attrs.chip.classCss;
+        const idVal = "P_" + vnode.attrs.chip.id;
 
         return (
             <div class={"select-none chip-row " + chipCss} id={idVal} onmouseover={vnode.attrs.onmouseover}>

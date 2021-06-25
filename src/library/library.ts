@@ -40,7 +40,7 @@ export class ChipLibrary {
     /**
      * The max number of chips allowed in a folder
      */
-    private folderSize: number = 12;
+    private folderSize = 12;
 
     public static initFromChips(data: BattleChip[]): number {
         ChipLibrary.instance.chips.clear();
@@ -61,7 +61,7 @@ export class ChipLibrary {
         ChipLibrary.instance.idMap.clear();
 
         data.forEach((chipData) => {
-            let chip = new BattleChip(chipData);
+            const chip = new BattleChip(chipData);
             ChipLibrary.instance.idMap.set(chip.id, chip.name);
             ChipLibrary.instance.chips.set(chip.name, chip);
         });
@@ -77,7 +77,7 @@ export class ChipLibrary {
             try {
                 ChipLibrary.instance.loadFolder();
                 ChipLibrary.instance.loadPack();
-                console.log(`Folder: ${ChipLibrary.instance.folder.length}\nPack: ${ChipLibrary.instance.pack.size}`);
+                //console.log(`Folder: ${ChipLibrary.instance.folder.length}\nPack: ${ChipLibrary.instance.pack.size}`);
             } catch (e) {
                 alert(`There was an error loading your save data ${(e as Error).message}, clearing data`);
                 window.localStorage.removeItem('folder');
@@ -98,7 +98,7 @@ export class ChipLibrary {
             throw new Error(`Found an invalid folderchip`);
         }
 
-        let fldrChip: FolderChip = {
+        const fldrChip: FolderChip = {
             name: chip.name,
             used: chip.used,
         }
@@ -109,8 +109,8 @@ export class ChipLibrary {
 
     private loadFolder(): number {
 
-        let folder = window.localStorage.getItem('folder');
-        let chipLimit = window.localStorage.getItem('chipLimit');
+        const folder = window.localStorage.getItem('folder');
+        const chipLimit = window.localStorage.getItem('chipLimit');
         if (chipLimit && +chipLimit > 0) {
             this.folderSize = +chipLimit;
         }
@@ -119,13 +119,13 @@ export class ChipLibrary {
             return 0;
         }
 
-        let oldFolder: FolderChip[] = JSON.parse(folder);
+        const oldFolder: FolderChip[] = JSON.parse(folder);
 
         if(!Array.isArray(oldFolder)) {
             throw new TypeError(`Expected array, found ${typeof (oldFolder)}`);
         }
 
-        for (let chip of oldFolder) {
+        for (const chip of oldFolder) {
             if (this.chips.has(chip?.name)) {
                 this.validateFolderChipAndPush(chip);
             } else {
@@ -153,7 +153,7 @@ export class ChipLibrary {
             throw new TypeError(`Found an invalid pack chip, ${name}`);
         }
 
-        let data = {
+        const data = {
             owned: chip.owned,
             used: chip.used,
         };
@@ -163,18 +163,18 @@ export class ChipLibrary {
     }
 
     private loadPack(): number {
-        let pack = window.localStorage.getItem('pack');
+        const pack = window.localStorage.getItem('pack');
         if (!pack) {
             return 0;
         }
         
-        let oldPack: PackDict = JSON.parse(pack);
+        const oldPack: PackDict = JSON.parse(pack);
         
         if (typeof (oldPack) !== "object") {
             throw new TypeError(`Expected object, found ${typeof (oldPack)}`);
         }
 
-        for (let k in oldPack) {
+        for (const k in oldPack) {
             if (this.chips.has(k)) {
                 this.validateAndAddToPack(k, oldPack[k]);
             } else {
@@ -184,15 +184,15 @@ export class ChipLibrary {
         return this.pack.size;
     }
 
-    private addToPack(chipName: string, used: boolean = false): number {
-        let packChip = this.pack.get(chipName);
+    private addToPack(chipName: string, used = false): number {
+        const packChip = this.pack.get(chipName);
 
         if(packChip) {
             packChip.owned += 1;
             packChip.used += (used ? 1 : 0);
             return packChip.owned;
         } else {
-            let chip = {
+            const chip = {
                 owned: 1,
                 used: (used ? 1 : 0),
             }
@@ -202,17 +202,17 @@ export class ChipLibrary {
 
     }
 
-    public static saveData() {
+    public static saveData(): void {
         if(!storageAvailable('localStorage')) return;
 
-        let packObj = Array.from(ChipLibrary.instance.pack).reduce((obj: PackDict, [key, value]) => {
+        const packObj = Array.from(ChipLibrary.instance.pack).reduce((obj: PackDict, [key, value]) => {
             obj[key] = value;
             return obj;
         }, {})
 
-        let packString = JSON.stringify(packObj);
-        let folderString = JSON.stringify(ChipLibrary.instance.folder);
-        let folderSizeStr = this.FolderSize + "";
+        const packString = JSON.stringify(packObj);
+        const folderString = JSON.stringify(ChipLibrary.instance.folder);
+        const folderSizeStr = this.FolderSize + "";
 
         
         window.localStorage.setItem('folder', folderString);
@@ -223,9 +223,9 @@ export class ChipLibrary {
 
     public static removeChipFromPack(chip: string | number): number {
 
-        let name = typeof(chip) == "number" ? this.idToName(chip) : chip;
+        const name = typeof(chip) == "number" ? this.idToName(chip) : chip;
 
-        let packChip = ChipLibrary.instance.pack.get(name) ?? throwExpression("Unreachable!");
+        const packChip = ChipLibrary.instance.pack.get(name) ?? throwExpression("Unreachable!");
         packChip.owned -= 1;
 
         if(packChip.used > 0) {
@@ -240,11 +240,11 @@ export class ChipLibrary {
     }
 
     public static getChip(toGet: string | number): BattleChip {
-        let name = typeof(toGet) == "number" ? this.idToName(toGet) : toGet;
+        const name = typeof(toGet) == "number" ? this.idToName(toGet) : toGet;
         return ChipLibrary.instance.chips.get(name) ?? throwExpression("Unreachable!");
     }
 
-    public static eraseData() {
+    public static eraseData(): void {
         ChipLibrary.instance.folder = [];
         ChipLibrary.instance.pack.clear();
         ChipLibrary.instance.folderSize = 12;
@@ -265,12 +265,12 @@ export class ChipLibrary {
     public static jackOut(): number {
         let usedCt = 0;
         
-        for(let chip of ChipLibrary.instance.folder) {
+        for(const chip of ChipLibrary.instance.folder) {
             usedCt += chip.used ? 1 : 0;
             chip.used = false;
         }
 
-        for(let [_, chip] of ChipLibrary.instance.pack) {
+        for(const [_, chip] of ChipLibrary.instance.pack) {
             usedCt += chip.used;
             chip.used = 0;
         }
@@ -284,8 +284,8 @@ export class ChipLibrary {
      * 
      * @returns the number of copies of the chip you now have in your pack, and the name of the chip
      */
-    public static addChipToPack(chip: string | number, used: boolean = false): [number, string] {
-        let chipName = typeof(chip) == "string" ? chip : this.idToName(chip);
+    public static addChipToPack(chip: string | number, used = false): [number, string] {
+        const chipName = typeof(chip) == "string" ? chip : this.idToName(chip);
         return [ChipLibrary.instance.addToPack(chipName, used), chipName];
     }
 
@@ -293,11 +293,11 @@ export class ChipLibrary {
         return ChipLibrary.instance.idMap.get(toGet) ?? throwExpression("No chip with that ID");
     }
 
-    public static values() {
+    public static values(): IterableIterator<BattleChip> {
         return ChipLibrary.instance.chips.values();
     }
 
-    public static iter() {
+    public static iter(): IterableIterator<[string, BattleChip]> {
         return ChipLibrary.instance.chips.entries();
     }
 
@@ -321,7 +321,7 @@ export class ChipLibrary {
         return ChipLibrary.instance.folder;
     }
 
-    public static get FolderSize() {
+    public static get FolderSize(): number {
         return ChipLibrary.instance.folderSize;
     }
 

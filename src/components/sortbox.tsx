@@ -1,4 +1,4 @@
-import m, { CVnode, Vnode } from "mithril";
+import m, { CVnode } from "mithril";
 //import "./fragment-polyfix";
 import { MitrhilTsxComponent } from "../JsxNamespace";
 
@@ -84,7 +84,7 @@ interface SortBoxProps {
 export class SortBox extends MitrhilTsxComponent<SortBoxProps> {
 
     private makeOptions(includeOwned: boolean | undefined): JSX.Element[] {
-        let opts = [
+        const opts = [
             <option value="Name">
                 Name
             </option>,

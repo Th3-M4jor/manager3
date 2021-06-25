@@ -57,9 +57,9 @@ function sortBySkill(a: PackChipWithBChip, b: PackChipWithBChip): number {
 
 
 function jackOutClicked() {
-    let count = ChipLibrary.jackOut();
+    const count = ChipLibrary.jackOut();
 
-    let msg = `${count} ${count == 1 ? "chip has" : "chips have"} has been marked as unused`;
+    const msg = `${count} ${count == 1 ? "chip has" : "chips have"} has been marked as unused`;
     
     top.setTopMsg(msg);
 }
@@ -74,14 +74,14 @@ export class Pack extends MitrhilTsxComponent {
         this.sortMethod = sort.SortOption.Name;
         this.activeChipId = null;
         this.chipMouseoverHandler = (e: Event) => {
-            let id = +(e.currentTarget as HTMLDivElement).id.substr(2);
+            const id = +(e.currentTarget as HTMLDivElement).id.substr(2);
             this.activeChipId = id;
         }
     }
 
     private getSortedChips(): PackChipWithBChip[] {
-        let pack: PackChipWithBChip[] = ChipLibrary.Pack.map(([name, data]) => {
-            let chip = ChipLibrary.getChip(name);
+        const pack: PackChipWithBChip[] = ChipLibrary.Pack.map(([name, data]) => {
+            const chip = ChipLibrary.getChip(name);
             return {
                 chip: chip,
                 owned: data.owned,
@@ -89,7 +89,7 @@ export class Pack extends MitrhilTsxComponent {
             }
         });
 
-        let sortFunc: (a: PackChipWithBChip, b: PackChipWithBChip) => number = this.sortMethod.match({
+        const sortFunc: (a: PackChipWithBChip, b: PackChipWithBChip) => number = this.sortMethod.match({
             AverageDamage: () => sortByAvgDmg,
             Element: () => sortByElem,
             Kind: () => sortByKind,
@@ -144,14 +144,14 @@ export class Pack extends MitrhilTsxComponent {
             );
         }
 
-        let chips = this.getSortedChips();
+        const chips = this.getSortedChips();
 
         /*
         return chips.map(packChip => <PackChip chip={packChip.chip} key={packChip.chip + "_P"} onmouseover={this.chipMouseoverHandler} owned={packChip.owned} used={packChip.used} />);
         */
-       let packChip = chips[0];
+       const packChip = chips[0];
 
-       let pack: JSX.Element[] = [];
+       const pack: JSX.Element[] = [];
        pack.length = 100;
 
        pack.fill(<PackChip chip={packChip.chip} onmouseover={this.chipMouseoverHandler} owned={packChip.owned} used={packChip.used}/>);
@@ -159,7 +159,7 @@ export class Pack extends MitrhilTsxComponent {
        return pack;
     }
 
-    view(vnode: CVnode): JSX.Element {
+    view(_: CVnode): JSX.Element {
         return (
             <>
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 px-0 z-10">

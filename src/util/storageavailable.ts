@@ -3,7 +3,7 @@ export function storageAvailable(type: string): boolean {
     try {
         //@ts-ignore
         storage = window[type];
-        let x = '__storage_test__';
+        const x = '__storage_test__';
         storage.setItem(x, x);
         storage.removeItem(x);
         return true;

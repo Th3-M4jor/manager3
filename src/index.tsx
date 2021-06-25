@@ -2,7 +2,7 @@ import m from "mithril";
 
 import * as top from "./TopLvlMsg";
 
-import { BattleChip, ChipData } from "./library/battlechip";
+import { BattleChip } from "./library/battlechip";
 import { ChipLibrary } from "./library/library";
 
 import {MainPage} from "./components/mainpage";
@@ -15,7 +15,7 @@ import "../static/styles.pcss";
 
 async function main() {
 
-    let chips = await m.request<BattleChip[]>({
+    const chips = await m.request<BattleChip[]>({
         method: "GET",
         url: "/bnb/backend/fetch/chips",
         type: BattleChip
@@ -23,11 +23,6 @@ async function main() {
 
     ChipLibrary.initFromChips(chips);
 
-    //let response = await fetch("/bnb/backend/fetch/chips");
-    //let body: ChipData[] = await response.json();
-    //ChipLibrary.init(body);
-
-    //m.mount(document.body, Manager);
     m.route(document.body, "/Library", {
         "/Library": {
             render: function() {

@@ -1,5 +1,4 @@
-import m, { CVnode, Vnode } from "mithril";
-import stream from "mithril/stream";
+import m from "mithril";
 //import "./fragment-polyfix";
 import { MitrhilTsxComponent } from "../JsxNamespace";
 
@@ -57,7 +56,7 @@ const noGroupNavTabMatcher = {
     Folder: folderActive,
     Pack: packActive,
     Library: libraryActive,
-    GroupFolder: (_: string) => { throw new Error("Unreachable") },
+    GroupFolder: () => { throw new Error("Unreachable") },
 }
 
 export interface navTabProps {
@@ -67,7 +66,7 @@ export interface navTabProps {
 export class NavTabs extends MitrhilTsxComponent<navTabProps> {
 
     noGroupTabs(activeTab: top.TabName): JSX.Element {
-        let [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback]] = activeTab.match(noGroupNavTabMatcher);
+        const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback]] = activeTab.match(noGroupNavTabMatcher);
         return (
             <>
             <div class="col-span-3 sm:col-span-4 md:col-span-5 pl-2 pr-6 nav-tab-group">
@@ -81,7 +80,7 @@ export class NavTabs extends MitrhilTsxComponent<navTabProps> {
 
     }
 
-    view(vnode: m.CVnode<navTabProps>) {
+    view(vnode: m.CVnode<navTabProps>): JSX.Element {
         return this.noGroupTabs(vnode.attrs.activeTab);
     }
 }

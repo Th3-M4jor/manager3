@@ -11,8 +11,8 @@ export interface LibChipProps {
 
 export class LibraryChip extends MitrhilTsxComponent<LibChipProps> {
     view(vnode: CVnode<LibChipProps>): JSX.Element {
-        let chipCss = vnode.attrs.chip.classCss;
-        let idVal = "L_" + vnode.attrs.chip.id;
+        const chipCss = vnode.attrs.chip.classCss;
+        const idVal = "L_" + vnode.attrs.chip.id;
         return (
             <div class={"select-none chip-row " + chipCss} id={idVal} onmouseover={vnode.attrs.onmouseover} ondblclick={vnode.attrs.ondoubleclick}>
                 <div class="w-7/24 sm:w-5/24 px-0 mx-0 whitespace-nowrap select-none">

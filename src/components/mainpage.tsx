@@ -13,7 +13,7 @@ interface MainPageProps {
 export class MainPage extends MitrhilTsxComponent<MainPageProps> {
 
     tabToString(tab: top.TabName): string {
-        let val = tab.match({
+        const val = tab.match({
             Folder: () => { return "Folder" },
             Library: () => { return "Library" },
             Pack: () => { return "Pack" },

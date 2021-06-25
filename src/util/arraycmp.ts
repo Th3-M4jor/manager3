@@ -2,14 +2,14 @@ import {cmpN} from "./cmp";
 
 export function arrCmp<T>(a: T[], b: T[], toNumFn: (val: T) => number): number {
     //find which has shortest length
-    let len = Math.min(a.length, b.length);
+    const len = Math.min(a.length, b.length);
 
     // check each element in order
     for(let i = 0; i < len; i++) {
-        let aSortNum = toNumFn(a[i]);
-        let bSortNum = toNumFn(b[i]);
+        const aSortNum = toNumFn(a[i]);
+        const bSortNum = toNumFn(b[i]);
 
-        let pos = cmpN(aSortNum, bSortNum);
+        const pos = cmpN(aSortNum, bSortNum);
         if(pos != 0) {
             return pos;
         }

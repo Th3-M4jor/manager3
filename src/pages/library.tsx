@@ -28,20 +28,20 @@ export class Library extends MitrhilTsxComponent {
         this.filterby = "";
         this.activeChipId = null;
         this.chipMouseoverHandler = (e: Event) => {
-            let id = +(e.currentTarget as HTMLDivElement).id.substr(2);
+            const id = +(e.currentTarget as HTMLDivElement).id.substr(2);
             this.activeChipId = id;
         };
         this.doubleClickHandler = (e: Event) => {
-            console.log("Chip added to pack");
-            let id = +(e.currentTarget as HTMLDivElement).id.substr(2);
-            let [count, name] = ChipLibrary.addChipToPack(id);
+            //console.log("Chip added to pack");
+            const id = +(e.currentTarget as HTMLDivElement).id.substr(2);
+            const [count, name] = ChipLibrary.addChipToPack(id);
             top.setTopMsg(`You now own ${count} ${count == 1 ? "copy" : "copies"} of ${name}`);
         }
         this.sortChips();
     }
 
     private sortChips() {
-        let sortFunc: (a: BattleChip, b: BattleChip) => number = this.sortMethod.match({
+        const sortFunc: (a: BattleChip, b: BattleChip) => number = this.sortMethod.match({
             AverageDamage: () => sort.sortBattleChipByAvgDmg,
             Element: () => sort.sortBattleChipByElement,
             Kind: () => sort.sortBattleChipByKind,
@@ -87,7 +87,7 @@ export class Library extends MitrhilTsxComponent {
                 <br />
                 <span class="Chip select-none">Search</span>
                 <input type="text" class="chip-search-input" value={this.filterby} oninput={(e: InputEvent) => {
-                    let val = (e.target as HTMLInputElement).value.toLowerCase();
+                    const val = (e.target as HTMLInputElement).value.toLowerCase();
                     this.filterby = val;
                 }} />
             </>
@@ -120,16 +120,16 @@ export class Library extends MitrhilTsxComponent {
         }
         */
 
-        let lib: JSX.Element[] = [];
+        const lib: JSX.Element[] = [];
         lib.length = 300;
-        let chip = this.chips[0];
+        const chip = this.chips[0];
 
         lib.fill(<LibraryChip chip={chip} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler}/>);
 
         return lib;
     }
 
-    view(vnode: CVnode): JSX.Element {
+    view(_: CVnode): JSX.Element {
 
         return (
             <>

@@ -18,12 +18,12 @@ export function getTopMsg(): string {
     return topMsg;
 }
 
-export function setTopMsg(msg: string) {
+export function setTopMsg(msg: string): void {
     if(msg.length == 0) {
         msgClearHandle = undefined;
     } else {
         window.clearTimeout(msgClearHandle);
-        msgClearHandle = window.setTimeout(() => {topMsg = ""; m.redraw()}, 15_000); //15 seconds
+        msgClearHandle = window.setTimeout(() => {topMsg = ""; m.redraw();}, 15_000); //15 seconds
     }
     topMsg = msg;
 }

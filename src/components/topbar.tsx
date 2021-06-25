@@ -1,9 +1,6 @@
-import m, { CVnode, Vnode } from "mithril";
+import m from "mithril";
 
 import { MitrhilTsxComponent } from "../JsxNamespace";
-import { BattleChip, ChipData } from "../library/battlechip";
-import { ChipLibrary } from "../library/library";
-
 export interface TopBarProps {
     msg?: string,
     tabName: string,

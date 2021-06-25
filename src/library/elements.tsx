@@ -89,8 +89,8 @@ export function elementToCssClass(val: Element): string {
 }
 
 export function elementArrToHtml(val: Element[]): JSX.Element {
-    let arr = val.map((e) => {
-        let elemClass = elementToCssClass(e);
+    const arr = val.map((e) => {
+        const elemClass = elementToCssClass(e);
         return (<span class={elemClass}/>);
     });
 

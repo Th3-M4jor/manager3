@@ -1,17 +1,30 @@
 {
-    "root": true,
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-      "ecmaFeatures": {
-        "jsx": true
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "no-console": 2,
+    "@typescript-eslint/ban-ts-comment": 0,
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "vars": "local",
+        "args": "after-used",
+        "varsIgnorePattern": "^_[a-zA-Z]*$|^m$",
+        "argsIgnorePattern": "^_[a-zA-Z]*$"
       }
-    },
-    "plugins": [
-      "@typescript-eslint"
-    ],
-    "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/eslint-recommended",
-      "plugin:@typescript-eslint/recommended"
     ]
   }
+}
