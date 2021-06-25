@@ -46,6 +46,7 @@ export function SortOptFromStr(val: string): SortOption {
     }
 }
 
+//#region sortFns
 export function sortBattleChipByName(a: BattleChip, b: BattleChip): number {
     return cmpN(a.classSortPos, b.classSortPos) || cmpS(a.name, b.name);
 }
@@ -73,7 +74,7 @@ export function sortBattleChipByKind(a: BattleChip, b: BattleChip): number {
 export function sortBattleChipByRange(a: BattleChip, b: BattleChip): number {
     return cmpN(rangeToSortNum(a.range), rangeToSortNum(b.range)) || cmpN(a.classSortPos, b.classSortPos) || cmpS(a.name, b.name);
 }
-
+//#endregion sortFns
 
 interface SortBoxProps {
     includeOwned?: boolean,

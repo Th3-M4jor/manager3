@@ -11,8 +11,8 @@ export const Tabs = makeTaggedUnion({
 
 export type TabName = MemberType<typeof Tabs>;
 
-var topMsg = "";
-var msgClearHandle: number | undefined;
+let topMsg = "";
+let msgClearHandle: number | undefined;
 
 export function getTopMsg(): string {
     return topMsg;

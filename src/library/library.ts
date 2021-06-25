@@ -42,17 +42,36 @@ export class ChipLibrary {
      */
     private folderSize: number = 12;
 
+    public static initFromChips(data: BattleChip[]): number {
+        ChipLibrary.instance.chips.clear();
+        ChipLibrary.instance.idMap.clear();
+
+        data.forEach((chip) => {
+            ChipLibrary.instance.idMap.set(chip.id, chip.name);
+            ChipLibrary.instance.chips.set(chip.name, chip);
+        });
+
+        this.loadSaveData();
+
+        return ChipLibrary.instance.chips.size;
+    }
+
     public static init(data: ChipData[]): number {
         ChipLibrary.instance.chips.clear();
         ChipLibrary.instance.idMap.clear();
 
         data.forEach((chipData) => {
-            //increment so that id's start at 1
             let chip = new BattleChip(chipData);
             ChipLibrary.instance.idMap.set(chip.id, chip.name);
             ChipLibrary.instance.chips.set(chip.name, chip);
         });
 
+        this.loadSaveData();
+
+        return ChipLibrary.instance.chips.size;
+    }
+
+    private static loadSaveData() {
         if (storageAvailable('localStorage')) {
 
             try {
@@ -72,8 +91,6 @@ export class ChipLibrary {
         } else {
             alert("Local storage is not available, it is used to backup your folder and pack periodically");
         }
-
-        return ChipLibrary.instance.chips.size;
     }
 
     private validateFolderChipAndPush(chip: FolderChip) {

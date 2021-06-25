@@ -1,4 +1,4 @@
-import m, { CVnode, Vnode } from "mithril";
+import m, { CVnode } from "mithril";
 
 import { MitrhilTsxComponent } from "../JsxNamespace";
 import { BattleChip } from "../library/battlechip";
@@ -95,9 +95,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
 
     private skillRow(chip: BattleChip): JSX.Element {
 
-        let skill = chip.Skill;
-
-        if (skill.variant == "None") {
+        if (chip.Skill.variant == "None") {
             return (
                 <>
                 </>
@@ -167,7 +165,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
             <></>
         );
 
-        let effects = chip.effect.map((e) => {
+        const effects = chip.effect.map((e) => {
             return (
                 <>
                     <div class="chipDescLeft">
@@ -200,7 +198,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
             return (<></>);
         }
 
-        let elemClass = elementToCssClass(chip.blight.elem);
+        const elemClass = elementToCssClass(chip.blight.elem);
 
         return (
             <>
@@ -230,11 +228,11 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
 
     viewWithChip(chipId: number): JSX.Element {
 
-        let chip = ChipLibrary.getChip(chipId)
+        const chip = ChipLibrary.getChip(chipId)
 
-        let background = "h-3/4 " + chip.backgroundCss;
+        const background = "h-3/4 " + chip.backgroundCss;
 
-        let chipAnimClass = (this.animationCounter & 1) ? "chipWindowOne" : "chipWindowTwo";
+        const chipAnimClass = (this.animationCounter & 1) ? "chipWindowOne" : "chipWindowTwo";
 
         /*
         let fontStyle: string;
@@ -248,7 +246,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         }
         */
 
-        let outerChipClass = "chipDescText chipDescPadding debug " + chipAnimClass;
+        const outerChipClass = "chipDescText chipDescPadding debug " + chipAnimClass;
 
         return (
             <div class={background}>

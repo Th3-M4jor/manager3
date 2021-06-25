@@ -1,6 +1,6 @@
 import m from "mithril";
 
-export abstract class MitrhilTsxComponent<A = {}>
+export abstract class MitrhilTsxComponent<A = Record<string, never>>
   implements m.ClassComponent<A> {
   private __props: A & { key?: string | number };
 
@@ -24,6 +24,9 @@ export abstract class MitrhilTsxComponent<A = {}>
 
 }
 
+
+
+/* eslint-disable */
 declare global {
   namespace JSX {
     interface Element extends m.Vnode<any, any> {}
@@ -39,3 +42,4 @@ declare global {
     }
   }
 }
+/* eslint-enable */
