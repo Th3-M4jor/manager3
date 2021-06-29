@@ -1,5 +1,7 @@
 import m from "mithril";
 
+import "./fragment-polyfix";
+
 import * as top from "./TopLvlMsg";
 
 import { BattleChip } from "./library/battlechip";

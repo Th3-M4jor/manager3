@@ -2,3 +2,4 @@ node_modules
 dist
 .parcel-cache
 .proxyrc.json
+parcel-bundle-reports
