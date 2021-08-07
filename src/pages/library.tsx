@@ -96,13 +96,13 @@ export class Library extends MitrhilTsxComponent {
 
     private renderChips(): JSX.Element[] | JSX.Element {
 
-        /*
+
         if (!this.filterby) {
-            return this.chips.map((c) => <LibraryChip chip={c} key={c.name + "_L"} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler}/>);
+            return this.chips.map((c) => <LibraryChip chip={c} key={c.name + "_L"} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler} />);
         } else {
-            let chips = this.chips.reduce((filtered: JSX.Element[], c) => {
+            const chips = this.chips.reduce((filtered: JSX.Element[], c) => {
                 if (c.name.toLowerCase().startsWith(this.filterby)) {
-                    filtered.push(<LibraryChip chip={c} key={c.name + "_L"} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler}/>);
+                    filtered.push(<LibraryChip chip={c} key={c.name + "_L"} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler} />);
                 }
                 return filtered;
             }, []);
@@ -118,8 +118,8 @@ export class Library extends MitrhilTsxComponent {
             }
 
         }
-        */
 
+        /*
         const lib: JSX.Element[] = [];
         lib.length = 300;
         const chip = this.chips[0];
@@ -127,6 +127,7 @@ export class Library extends MitrhilTsxComponent {
         lib.fill(<LibraryChip chip={chip} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler}/>);
 
         return lib;
+        */
     }
 
     view(_: CVnode): JSX.Element {

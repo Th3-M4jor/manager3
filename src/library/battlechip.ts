@@ -80,7 +80,7 @@ export class BattleChip {
 
     public readonly kindSortPos: number;
     public readonly classSortPos: number;
-    
+
     public readonly avgDmg: number;
     public readonly maxDmg: number;
     public readonly dmgStr: string;
@@ -104,11 +104,11 @@ export class BattleChip {
         this.kind = chipTypeFromStr(data.kind);
         this.classSortPos = chipClassToSortNum(this.class);
         this.kindSortPos = chipTypeToSortNum(this.kind);
-        
+
 
         this.damage = data.damage;
 
-        if(!this.damage) {
+        if (!this.damage) {
             this.dmgStr = "--";
         } else {
             this.dmgStr = `${this.damage.dienum}d${this.damage.dietype}`;

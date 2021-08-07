@@ -60,7 +60,7 @@ function jackOutClicked() {
     const count = ChipLibrary.jackOut();
 
     const msg = `${count} ${count == 1 ? "chip has" : "chips have"} has been marked as unused`;
-    
+
     top.setTopMsg(msg);
 }
 
@@ -146,17 +146,18 @@ export class Pack extends MitrhilTsxComponent {
 
         const chips = this.getSortedChips();
 
-        /*
+
         return chips.map(packChip => <PackChip chip={packChip.chip} key={packChip.chip + "_P"} onmouseover={this.chipMouseoverHandler} owned={packChip.owned} used={packChip.used} />);
+        /*
+         const packChip = chips[0];
+ 
+        const pack: JSX.Element[] = [];
+        pack.length = 100;
+ 
+        pack.fill(<PackChip chip={packChip.chip} onmouseover={this.chipMouseoverHandler} owned={packChip.owned} used={packChip.used}/>);
+ 
+        return pack;
         */
-       const packChip = chips[0];
-
-       const pack: JSX.Element[] = [];
-       pack.length = 100;
-
-       pack.fill(<PackChip chip={packChip.chip} onmouseover={this.chipMouseoverHandler} owned={packChip.owned} used={packChip.used}/>);
-
-       return pack;
     }
 
     view(_: CVnode): JSX.Element {
