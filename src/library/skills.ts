@@ -17,39 +17,40 @@ export const Skill = makeTaggedUnion({
 export type Skill = MemberType<typeof Skill>;
 
 export function skillFromStr(val: string): Skill {
+    val = val.toLowerCase();
     switch(val) {
-        case "Perception":
-        case "PER":
+        case "perception":
+        case "per":
             return Skill.Perception;
-        case "Info":
-        case "INF":
+        case "info":
+        case "inf":
             return Skill.Info;
-        case "Tech":
-        case "TCH":
+        case "tech":
+        case "tch":
             return Skill.Tech;
-        case "Strength":
-        case "STR":
+        case "strength":
+        case "str":
             return Skill.Strength;
-        case "Agility":
-        case "AGI":
+        case "agility":
+        case "agi":
             return Skill.Agility;
-        case "Endurance":
-        case "END":
+        case "endurance":
+        case "end":
             return Skill.Endurance;
-        case "Charm":
-        case "CHM":
+        case "charm":
+        case "chm":
             return Skill.Charm;
-        case "Valor":
-        case "VLR":
+        case "valor":
+        case "vlr":
             return Skill.Valor;
-        case "Affinity":
-        case "AFF":
+        case "affinity":
+        case "aff":
             return Skill.Affinity;
-        case "None":
+        case "none":
         case "--":
             return Skill.None;
-        case "Varies":
-        case "VAR":
+        case "varies":
+        case "var":
             return Skill.Varies;
         default:
             throw new TypeError("Bad Skill Name");

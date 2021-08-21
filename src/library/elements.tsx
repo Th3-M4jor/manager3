@@ -19,30 +19,31 @@ export const Element = makeTaggedUnion({
 export type Element = MemberType<typeof Element>;
 
 export function elementFromStr(val: string): Element {
+    val = val.toLowerCase();
     switch(val) {
-        case "Fire":
+        case "fire":
             return Element.Fire;
-        case "Aqua":
+        case "aqua":
             return Element.Aqua;
-        case "Elec":
+        case "elec":
             return Element.Elec;
-        case "Wood":
+        case "wood":
             return Element.Wood;
-        case "Wind":
+        case "wind":
             return Element.Wind;
-        case "Sword":
+        case "sword":
             return Element.Sword;
-        case "Break":
+        case "break":
             return Element.Break;
-        case "Cursor":
+        case "cursor":
             return Element.Cursor;
-        case "Recovery":
+        case "recovery":
             return Element.Recov;
-        case "Invis":
+        case "invis":
             return Element.Invis;
-        case "Object":
+        case "object":
             return Element.Obj;
-        case "Null":
+        case "null":
             return Element.Null;
         default:
             throw new TypeError("Bad element name");

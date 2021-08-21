@@ -15,24 +15,25 @@ export const ChipType = makeTaggedUnion({
 export type ChipType = MemberType<typeof ChipType>;
 
 export function chipTypeFromStr(val: string): ChipType {
+    val = val.toLowerCase();
     switch (val) {
-        case "Burst":
+        case "burst":
             return ChipType.Burst;
-        case "Construct":
+        case "construct":
             return ChipType.Construct;
-        case "Melee":
+        case "melee":
             return ChipType.Melee;
-        case "Projectile":
+        case "projectile":
             return ChipType.Projectile;
-        case "Recovery":
+        case "recovery":
             return ChipType.Recovery;
-        case "Summon":
+        case "summon":
             return ChipType.Summon;
-        case "Support":
+        case "support":
             return ChipType.Support;
-        case "Trap":
+        case "trap":
             return ChipType.Trap;
-        case "Wave":
+        case "wave":
             return ChipType.Wave;
         default:
             throw new TypeError("Bad chiptype name");
@@ -93,16 +94,17 @@ export const ChipClass = makeTaggedUnion({
 export type ChipClass = MemberType<typeof ChipClass>;
 
 export function chipClassFromStr(val: string): ChipClass {
+    val = val.toLowerCase();
     switch (val) {
-        case "Standard":
+        case "standard":
             return ChipClass.Standard;
-        case "Support":
+        case "support":
             return ChipClass.Support;
-        case "Mega":
+        case "mega":
             return ChipClass.Mega;
-        case "Giga":
+        case "giga":
             return ChipClass.Giga;
-        case "Dark":
+        case "dark":
             return ChipClass.Dark;
         default:
             throw new TypeError("Bad chipclass name");

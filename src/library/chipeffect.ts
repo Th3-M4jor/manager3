@@ -7,6 +7,7 @@ export const ChipEffect = makeTaggedUnion({
     Lock: none,
     Shield: none,
     Barrier: none,
+    Aura: none,
     ACPierce: none,
     ACDown: none,
     Weakness: none,
@@ -24,6 +25,7 @@ const chipEffShortStrMatcher = {
     Lock: () => "LCK",
     Shield: () => "SHLD",
     Barrier: () => "BARR",
+    Aura: () => "AURA",
     ACPierce: () => "AC PRC",
     ACDown: () => "AC DN",
     Weakness: () => "WEAKN",
@@ -41,34 +43,37 @@ export function chipEffectToShortStr(val: ChipEffect): string {
 export type ChipEffect = MemberType<typeof ChipEffect>;
 
 export function chipEffectFromStr(val: string): ChipEffect {
+    val = val.toLowerCase();
     switch(val) {
-        case 'Stagger':
+        case 'stagger':
             return ChipEffect.Stagger;
-        case 'Blind':
+        case 'blind':
             return ChipEffect.Blind;
-        case 'Confuse':
+        case 'confuse':
             return ChipEffect.Confuse;
-        case 'Lock':
+        case 'lock':
             return ChipEffect.Lock;
-        case 'Shield':
+        case 'shield':
             return ChipEffect.Shield;
-        case 'Barrier':
+        case 'barrier':
             return ChipEffect.Barrier;
-        case 'ACPierce':
+        case 'aura':
+            return ChipEffect.Aura;
+        case 'ac pierce':
             return ChipEffect.ACPierce;
-        case 'ACDown':
+        case 'ac down':
             return ChipEffect.ACDown;
-        case 'Weakness':
+        case 'weakness':
             return ChipEffect.Weakness; 
-        case 'Invisible':
+        case 'invisible':
             return ChipEffect.Invisible;
-        case 'Paralysis':
+        case 'paralysis':
             return ChipEffect.Paralysis;
-        case 'Panic':
+        case 'panic':
             return ChipEffect.Panic;
-        case 'Heal':
+        case 'heal':
             return ChipEffect.Heal;
-        case 'DmgBoost':
+        case 'dmg boost':
             return ChipEffect.DmgBoost;
         default:
             throw new TypeError(`No ChipEffect with the name ${val}`);

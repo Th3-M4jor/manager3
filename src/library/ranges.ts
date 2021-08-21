@@ -11,16 +11,17 @@ export const Range = makeTaggedUnion({
 export type Range = MemberType<typeof Range>;
 
 export function rangeFromStr(val: string): Range {
+    val = val.toLowerCase();
     switch(val) {
-        case "Varies":
+        case "varies":
             return Range.Var;
-        case "Far":
+        case "far":
             return Range.Far;
-        case "Near":
+        case "near":
             return Range.Near;
-        case "Close":
+        case "close":
             return Range.Close;
-        case "Self":
+        case "self":
             return Range.Self;
         default:
             throw new TypeError("Invalid Range");
