@@ -26,6 +26,8 @@ export function chipTypeFromStr(val: string): ChipType {
         case "projectile":
             return ChipType.Projectile;
         case "recovery":
+        case "recov":
+        case "heal":
             return ChipType.Recovery;
         case "summon":
             return ChipType.Summon;
@@ -81,6 +83,17 @@ const stdChipTypeToBgCssMatcher = {
 
 export function stdChipTypeToBgCss(val: ChipType): string {
     return val.match(stdChipTypeToBgCssMatcher);
+}
+
+const chipTypeToCssMatcher = {
+    Trap: () => "SupportChip",
+    Summon: () => "SupportChip",
+    Support: () => "SupportChip",
+    _: () => "Chip"
+}
+
+export function chipTypeToCss(val: ChipType): string {
+    return val.match(chipTypeToCssMatcher);
 }
 
 export const ChipClass = makeTaggedUnion({

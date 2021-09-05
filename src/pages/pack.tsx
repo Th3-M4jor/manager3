@@ -169,7 +169,7 @@ export class Pack extends MitrhilTsxComponent {
                         {this.renderChips()}
                     </div>
                 </div>
-                <div class="col-span-1 flex flex-col px-0">
+                <div class="col-span-1 flex flex-col px-0 max-h-full">
                     <ChipDesc displayChip={this.activeChipId} />
                     <DropMenu class="dropbtn">
                         <button class="dropmenu-btn" onclick={ChipLibrary.eraseData}>

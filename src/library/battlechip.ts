@@ -1,6 +1,6 @@
 import { Element, elementFromStr, elementArrToHtml } from "./elements";
 import { Range, rangeFromStr } from "./ranges";
-import { ChipClass, ChipType, chipClassFromStr, chipTypeFromStr, chipClassToSortNum, chipTypeToSortNum, chipTypeToShortStr, chipClassMaxInFolder, chipClassToCss, chipClassToBackgroundCss, stdChipTypeToBgCss } from "./chipkind";
+import { ChipClass, ChipType, chipClassFromStr, chipTypeFromStr, chipClassToSortNum, chipTypeToSortNum, chipTypeToShortStr, chipClassMaxInFolder, chipClassToCss, chipClassToBackgroundCss, stdChipTypeToBgCss, chipTypeToCss } from "./chipkind";
 import { Skill, skillFromStr, skillToShortStr } from "./skills";
 import { ChipEffect, chipEffectFromStr } from "./chipeffect";
 
@@ -38,7 +38,7 @@ export interface ChipData {
     skill: string[] | null,
     range: string,
     hits: string | null,
-    targets: number | null,
+    targets: string | null,
     description: string | null,
     effect: string[] | null,
     effduration: number | null,
@@ -69,7 +69,7 @@ export class BattleChip {
     public readonly skills: Skill[];
     public readonly range: Range;
     public readonly hits: string;
-    public readonly targets: number;
+    public readonly targets: string | null;
     public readonly description: string;
     public readonly effect: ChipEffect[];
     public readonly effduration: number | null;
@@ -92,7 +92,7 @@ export class BattleChip {
         this.skills = data.skill?.map(e => skillFromStr(e)) ?? [Skill.None];
         this.range = rangeFromStr(data.range);
         this.hits = data.hits ?? "0";
-        this.targets = data.targets ?? 0;
+        this.targets = data.targets ?? null;
         this.description = data.description ?? "--";
 
         this.effect = data.effect?.map(e => chipEffectFromStr(e)) ?? [];
@@ -138,7 +138,7 @@ export class BattleChip {
     }
 
     get classCss(): string {
-        return chipClassToCss(this.class);
+        return this.class.variant == "Standard" ? chipTypeToCss(this.kind) : chipClassToCss(this.class);
     }
 
     get backgroundCss(): string {

@@ -16,6 +16,7 @@ export const ChipEffect = makeTaggedUnion({
     Panic: none,
     Heal: none,
     DmgBoost: none,
+    Move: none,
 });
 
 const chipEffShortStrMatcher = {
@@ -33,7 +34,8 @@ const chipEffShortStrMatcher = {
     Paralysis: () => "PARA",
     Panic: () => "PANIC",
     Heal: () => "HEAL",
-    DmgBoost: () => "DMG+"
+    DmgBoost: () => "DMG+",
+    Move: () => "MOVE",
 };
 
 export function chipEffectToShortStr(val: ChipEffect): string {
@@ -75,6 +77,8 @@ export function chipEffectFromStr(val: string): ChipEffect {
             return ChipEffect.Heal;
         case 'dmg boost':
             return ChipEffect.DmgBoost;
+        case 'move':
+            return ChipEffect.Move;
         default:
             throw new TypeError(`No ChipEffect with the name ${val}`);
     }

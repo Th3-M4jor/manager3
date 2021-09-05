@@ -38,6 +38,7 @@ export function elementFromStr(val: string): Element {
         case "cursor":
             return Element.Cursor;
         case "recovery":
+        case "recov":
             return Element.Recov;
         case "invis":
             return Element.Invis;

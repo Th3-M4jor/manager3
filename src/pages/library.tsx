@@ -141,7 +141,7 @@ export class Library extends MitrhilTsxComponent {
                         {this.renderChips()}
                     </div>
                 </div>
-                <div class="col-span-1 flex flex-col px-0">
+                <div class="col-span-1 flex flex-col px-0 max-h-full">
                     <ChipDesc displayChip={this.activeChipId} />
                     <sort.SortBox currentMethod={this.sortMethod} onChange={(e) => {
                         this.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);

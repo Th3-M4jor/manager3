@@ -3,49 +3,69 @@ import m, { CVnode } from "mithril";
 import { MitrhilTsxComponent } from "../JsxNamespace";
 import { BattleChip } from "../library/battlechip";
 import { ChipLibrary } from "../library/library";
-import { chipEffectToShortStr } from "../library/chipeffect";
+//import { chipEffectToShortStr } from "../library/chipeffect";
 import { elementToCssClass } from "../library/elements";
 
 export interface chipDescProps {
     displayChip: number | null;
 }
 
+function scrollInterval() {
+    const div = document.getElementById("ScrollTextDiv");
+    if (!div) return;
+    const clientHeight = div.clientHeight;
+    const totalHeight = div.scrollHeight;
+    const scrollPos = div.scrollTop;
+
+    const maxScroll = totalHeight - clientHeight;
+
+    if (maxScroll - 10 <= 0) return;
+
+    div.scrollTop = scrollPos + 1;
+}
+
 export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
 
     private animationCounter: number;
+    private intervalHandle: NodeJS.Timer | null;
+    private mouseOverHandler: (e: MouseEvent) => void;
+    private mouseLeaveHandler: (e: MouseEvent) => void;
+
 
     constructor(vnode: CVnode<chipDescProps>) {
         super(vnode);
         this.animationCounter = 0;
+        this.intervalHandle = null;
+        this.mouseOverHandler = (e: MouseEvent) => {
+            //@ts-ignore
+            e.redraw = false;
+            if (this.intervalHandle) {
+                clearInterval(this.intervalHandle);
+                this.intervalHandle = null;
+            }
+        };
+
+        this.mouseLeaveHandler = (e: MouseEvent) => {
+            //@ts-ignore
+            e.redraw = false;
+            if (!this.intervalHandle) {
+                this.intervalHandle = setInterval(scrollInterval, 75);
+            }
+        };
     }
 
-    /*
-    private genHitsDiv(chip: BattleChip): JSX.Element | null {
-        let hits = isnumeric(chip.hits) ? +chip.hits : -1;
-
-        //if hits is non-zero
-        return hits ? <div class="w-3/10" style="border-left: 1px solid black">{chip.hits}</div> : null;
-
+    oncreate(_vnode: CVnode<chipDescProps>): void {
+        this.intervalHandle = setInterval(scrollInterval, 75);
     }
 
-    private chipDescTopRow(chip: BattleChip): JSX.Element {
-        let hitsDiv = this.genHitsDiv(chip);
-
-        return hitsDiv ? (
-            <div class="flex">
-                <div class="w-3/10" style="border-right: 1px solid black">{chip.KindAbv}</div>
-                <div class="w-4/10">{chip.RangeAbv}</div>
-                {hitsDiv}
-            </div>
-        ) : (
-            <div class="flex">
-                <div class="w-1/2" style="border-right: 1px solid black">{chip.KindAbv}</div>
-                <div class="w-1/2">{chip.RangeAbv}</div>
-            </div>
-        );
-
+    onupdate(_vnode: CVnode<chipDescProps>): void {
+        const div = document.getElementById("ScrollTextDiv");
+        if (div) div.scrollTop = 0;
     }
-    */
+
+    onremove(_vnode: CVnode<chipDescProps>): void {
+        if (this.intervalHandle) clearInterval(this.intervalHandle);
+    }
 
     private elemRow(chip: BattleChip): JSX.Element {
         return (
@@ -148,18 +168,27 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     }
 
     private targetsRow(chip: BattleChip): JSX.Element {
-        return (
-            <>
-                <div class="chipDescLeft">
-                    trgts:
-                </div>
-                <div class="chipDescRight">
-                    {chip.targets}
-                </div>
-            </>
-        );
+
+        if (!chip.targets || chip.targets === "0") {
+            return (
+                <>
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <div class="chipDescLeft">
+                        trgts:
+                    </div>
+                    <div class="chipDescRight">
+                        {chip.targets}
+                    </div>
+                </>
+            );
+        }
     }
 
+    /*
     private effectsRows(chip: BattleChip): JSX.Element {
         if (chip.effect.length == 0) return (
             <></>
@@ -189,9 +218,8 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
                 </div>
             </>
         );
-
-
     }
+    */
 
     private blightRows(chip: BattleChip): JSX.Element {
         if (!chip.blight) {
@@ -246,12 +274,18 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         }
         */
 
-        const outerChipClass = "chipDescText chipDescPadding debug " + chipAnimClass;
+        let fontSizeStyle = "font-size: 14px";
+
+        if (chip.description.length > 700) {
+            fontSizeStyle = "font-size: 12px";
+        }
+
+        const outerChipClass = "chipDescText chipDescPadding max-h-full flex flex-col " + chipAnimClass;
 
         return (
-            <div class={background}>
-                <div class={outerChipClass} style="padding: 3px; font-size: 14px;">
-                    <div class="border-b border-black" >{chip.name}</div>
+            <div class={background} style="max-height: 70vh" onmouseenter={this.mouseOverHandler} onmouseleave={this.mouseLeaveHandler}>
+                <div class={outerChipClass} style="padding: 3px; font-size: 14px; height: 100%">
+                    <div class="border-b border-black">{chip.name}</div>
                     <div class="grid grid-cols-2 gap-0">
                         {this.elemRow(chip)}
                         {this.dmgRow(chip)}
@@ -260,12 +294,13 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
                         {this.rangeRow(chip)}
                         {this.hitsRow(chip)}
                         {this.targetsRow(chip)}
-                        {this.effectsRows(chip)}
                         {this.blightRows(chip)}
                     </div>
-                    <div class="border-t border-black">
+                    <div class="border-t border-black overflow-y-scroll hideScrollBar m-0"
+                        style={fontSizeStyle} id="ScrollTextDiv">
                         {chip.description}
                     </div>
+                    <div class="flex-none" style="height: 12%" />
                 </div>
             </div>
         );

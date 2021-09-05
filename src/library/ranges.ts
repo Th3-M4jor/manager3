@@ -14,6 +14,7 @@ export function rangeFromStr(val: string): Range {
     val = val.toLowerCase();
     switch(val) {
         case "varies":
+        case "var":
             return Range.Var;
         case "far":
             return Range.Far;

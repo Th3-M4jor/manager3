@@ -64,3 +64,13 @@ div {
     color: #FFFFFF;
     font-weight: bold;
 }
+
+/* Chrome, Safari */
+.hideScrollBar::-webkit-scrollbar {
+    display: none;
+}
+
+.hideScrollBar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
