@@ -283,7 +283,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         const outerChipClass = "chipDescText chipDescPadding max-h-full flex flex-col " + chipAnimClass;
 
         return (
-            <div class={background} style="max-height: 70vh" onmouseenter={this.mouseOverHandler} onmouseleave={this.mouseLeaveHandler}>
+            <div class={background} style="max-height: 65vh" onmouseenter={this.mouseOverHandler} onmouseleave={this.mouseLeaveHandler}>
                 <div class={outerChipClass} style="padding: 3px; font-size: 14px; height: 100%">
                     <div class="border-b border-black">{chip.name}</div>
                     <div class="grid grid-cols-2 gap-0">
@@ -307,7 +307,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     }
 
     viewNoChip(): JSX.Element {
-        return <div class="h-3/4 chipDescBackgroundStd" />
+        return <div class="h-3/4 chipDescBackgroundStd" style="max-height: 65vh"/>
     }
 
 

@@ -29,7 +29,7 @@ export class MainPage extends MitrhilTsxComponent<MainPageProps> {
         return (
             <div class="outermostDiv">
                 <TopBar tabName={this.tabToString(vnode.attrs.activeTab)} msg={top.getTopMsg()} />
-                <div style="background-color: #4abdb5;" class="p-2.5">
+                <div style="background-color: #4abdb5" class="p-2.5">
                     <div class="grid gap-0 grid-cols-4 sm:grid-cols-5 md:grid-cols-6">
                         <NavTabs activeTab={vnode.attrs.activeTab} />
                         {vnode.children}

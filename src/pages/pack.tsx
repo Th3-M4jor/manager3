@@ -64,10 +64,35 @@ function jackOutClicked() {
     top.setTopMsg(msg);
 }
 
+async function loadFile(e: Event) {
+    const file = (e.target as HTMLInputElement)?.files?.item(0);
+    const msg = "Are you sure you want to load this file? All current data will be lost";
+
+    if (!file || !window.confirm(msg)) {
+        return;
+    }
+
+    const data = await file.text();
+
+    try {
+        ChipLibrary.importJson(data);
+    } catch (e) {
+        if (e instanceof TypeError) {
+            alert(e.message);
+        } else if (e instanceof SyntaxError) {
+            alert("JSON file was malformed");
+        } else {
+            throw e;
+        }
+    }
+
+}
+
 export class Pack extends MitrhilTsxComponent {
     private sortMethod: sort.SortOption;
     private activeChipId: number | null;
     private chipMouseoverHandler: (e: Event) => void;
+    private addToFolderHandler: (e: Event) => void;
     private contextMenuX: number | null = null;
     private contextMenuY: number | null = null;
     private contextMenuSelectedId: number | null = null;
@@ -84,6 +109,14 @@ export class Pack extends MitrhilTsxComponent {
 
         this.closeMenu = (_e: MouseEvent) => {
             this.hideContextMenu();
+        }
+
+        this.addToFolderHandler = (e: Event) => {
+            const id = +(e.currentTarget as HTMLDivElement).id.substr(2);
+            const name = ChipLibrary.addToFolder(id);
+            if (name) {
+                top.setTopMsg(`A copy of ${name} has been added to your folder`);
+            }
         }
 
     }
@@ -180,7 +213,14 @@ export class Pack extends MitrhilTsxComponent {
         const chips = this.getSortedChips();
 
 
-        return chips.map(packChip => <PackChip chip={packChip.chip} key={packChip.chip + "_P"} onmouseover={this.chipMouseoverHandler} owned={packChip.owned} used={packChip.used} />);
+        return chips.map(packChip => <PackChip
+            chip={packChip.chip}
+            key={packChip.chip.name + "_P"}
+            onmouseover={this.chipMouseoverHandler}
+            addToFolder={this.addToFolderHandler}
+            owned={packChip.owned}
+            used={packChip.used}
+        />);
     }
 
     view(_: CVnode): JSX.Element {
@@ -201,6 +241,16 @@ export class Pack extends MitrhilTsxComponent {
                         <button class="dropmenu-btn" onclick={jackOutClicked}>
                             JACK OUT
                         </button>
+                        <button class="dropmenu-btn" onclick={() => {
+                            document.getElementById("jsonFile")?.click();
+                        }}>
+                            IMPORT JSON
+                        </button>
+                        <button class="dropmenu-btn" onclick={() => {
+                            ChipLibrary.exportJSON();
+                        }}>
+                            EXPORT JSON
+                        </button>
                     </DropMenu>
                     <sort.SortBox currentMethod={this.sortMethod} includeOwned onChange={(e) => {
                         this.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
@@ -208,6 +258,7 @@ export class Pack extends MitrhilTsxComponent {
                     }} />
                 </div>
                 {this.genContextMenu()}
+                <input id="jsonFile" type="file" class="hidden" accept=".json" onchange={loadFile} />
             </>
         );
     }

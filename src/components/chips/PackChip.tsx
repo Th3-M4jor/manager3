@@ -9,6 +9,7 @@ export interface PackChipProps {
     owned: number,
     used: number,
     onmouseover: (e: Event) => void;
+    addToFolder: (e: Event) => void;
 }
 
 export class PackChip extends MitrhilTsxComponent<PackChipProps> {
@@ -17,7 +18,7 @@ export class PackChip extends MitrhilTsxComponent<PackChipProps> {
         const idVal = "P_" + vnode.attrs.chip.id;
 
         return (
-            <div class={"select-none chip-row " + chipCss} id={idVal} onmouseover={vnode.attrs.onmouseover}>
+            <div class={"select-none chip-row " + chipCss} id={idVal} onmouseover={vnode.attrs.onmouseover} ondblclick={vnode.attrs.addToFolder}>
                 <div class="w-6/24 sm:w-5/24 px-0 whitespace-nowrap select-none">
                     {vnode.attrs.chip.name}
                 </div>
