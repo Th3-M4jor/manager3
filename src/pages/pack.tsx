@@ -68,6 +68,10 @@ export class Pack extends MitrhilTsxComponent {
     private sortMethod: sort.SortOption;
     private activeChipId: number | null;
     private chipMouseoverHandler: (e: Event) => void;
+    private contextMenuX: number | null = null;
+    private contextMenuY: number | null = null;
+    private contextMenuSelectedId: number | null = null;
+    private closeMenu: (e: MouseEvent) => void;
 
     constructor(attrs: m.CVnode) {
         super(attrs);
@@ -77,6 +81,35 @@ export class Pack extends MitrhilTsxComponent {
             const id = +(e.currentTarget as HTMLDivElement).id.substr(2);
             this.activeChipId = id;
         }
+
+        this.closeMenu = (_e: MouseEvent) => {
+            this.hideContextMenu();
+        }
+
+    }
+
+    private openContextMenu(e: MouseEvent) {
+
+        const target = document.querySelector(".chip-row:hover");
+        if (!target) {
+            return;
+        }
+        e.preventDefault();
+        this.contextMenuX = e.clientX;
+        this.contextMenuY = e.clientY;
+        this.contextMenuSelectedId = +(target as HTMLDivElement).id.substr(2);
+        window.addEventListener("click", this.closeMenu, { once: true });
+    }
+
+    private hideContextMenu() {
+        this.contextMenuX = null;
+        this.contextMenuY = null;
+        this.contextMenuSelectedId = null;
+        window.removeEventListener("click", this.closeMenu);
+    }
+
+    onremove(_: m.CVnode): void {
+        this.hideContextMenu();
     }
 
     private getSortedChips(): PackChipWithBChip[] {
@@ -148,23 +181,13 @@ export class Pack extends MitrhilTsxComponent {
 
 
         return chips.map(packChip => <PackChip chip={packChip.chip} key={packChip.chip + "_P"} onmouseover={this.chipMouseoverHandler} owned={packChip.owned} used={packChip.used} />);
-        /*
-         const packChip = chips[0];
- 
-        const pack: JSX.Element[] = [];
-        pack.length = 100;
- 
-        pack.fill(<PackChip chip={packChip.chip} onmouseover={this.chipMouseoverHandler} owned={packChip.owned} used={packChip.used}/>);
- 
-        return pack;
-        */
     }
 
     view(_: CVnode): JSX.Element {
         return (
             <>
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 px-0 z-10">
-                    <div class="Folder activeFolder">
+                    <div class="Folder activeFolder" oncontextmenu={(e: MouseEvent) => { this.openContextMenu(e) }}>
                         {this.viewTopRow()}
                         {this.renderChips()}
                     </div>
@@ -184,7 +207,38 @@ export class Pack extends MitrhilTsxComponent {
                         (e.target as HTMLSelectElement).blur(); //unfocus element automatically after changing sort method
                     }} />
                 </div>
+                {this.genContextMenu()}
             </>
         );
+    }
+
+    private genContextMenu(): JSX.Element {
+        if (!this.contextMenuX || !this.contextMenuY) {
+            return <></>;
+        }
+
+        const style = "left: " + this.contextMenuX + "px; top: " + this.contextMenuY + "px;";
+
+        return (
+            <div class="menu" style={style}>
+                <ul class="menu-options">
+                    <li class="menu-option select-none" onclick={() => {
+                        if (this.contextMenuSelectedId != null) {
+                            ChipLibrary.removeChipFromPack(this.contextMenuSelectedId);
+                            const name = ChipLibrary.getChip(this.contextMenuSelectedId).name;
+                            const msg = "Removed a copy of " + name + " from your pack";
+                            top.setTopMsg(msg);
+                        }
+                        this.hideContextMenu();
+                    }}>Remove from pack</li>
+                    <li class="menu-option select-none" onclick={() => {
+                        if (this.contextMenuSelectedId != null) {
+                            ChipLibrary.markChipUnused(this.contextMenuSelectedId);
+                        }
+                        this.hideContextMenu();
+                    }}>Mark copy unused</li>
+                </ul>
+            </div>
+        )
     }
 }

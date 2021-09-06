@@ -244,7 +244,12 @@ export class ChipLibrary {
         return ChipLibrary.instance.chips.get(name) ?? throwExpression("Unreachable!");
     }
 
-    public static eraseData(): void {
+    public static eraseData(confirm = true): void {
+        
+        if(confirm && !window.confirm("Are you sure you want to erase all data?")) {
+            return;
+        }
+        
         ChipLibrary.instance.folder = [];
         ChipLibrary.instance.pack.clear();
         ChipLibrary.instance.folderSize = 12;
@@ -287,6 +292,14 @@ export class ChipLibrary {
     public static addChipToPack(chip: string | number, used = false): [number, string] {
         const chipName = typeof(chip) == "string" ? chip : this.idToName(chip);
         return [ChipLibrary.instance.addToPack(chipName, used), chipName];
+    }
+
+    public static markChipUnused(chip: string | number): void {
+        const chipName = typeof(chip) == "string" ? chip : ChipLibrary.idToName(chip);
+        const chipData = ChipLibrary.instance.pack.get(chipName);
+        if(chipData && chipData.used > 0) {
+            chipData.used -= 1;
+        }
     }
 
     public static idToName(toGet: number): string {
