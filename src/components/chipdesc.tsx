@@ -1,7 +1,7 @@
 import m, { CVnode } from "mithril";
 
 import { MitrhilTsxComponent } from "../JsxNamespace";
-import { BattleChip } from "../library/battlechip";
+import { BattleChip, diceToStr } from "../library/battlechip";
 import { ChipLibrary } from "../library/library";
 //import { chipEffectToShortStr } from "../library/chipeffect";
 import { elementToCssClass } from "../library/elements";
@@ -240,13 +240,13 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
                     bdmg:
                 </div>
                 <div class="chipDescRight">
-                    {`${chip.blight.dmg.dienum}d${chip.blight.dmg.dietype}`}
+                    {diceToStr(chip.blight.dmg)}
                 </div>
                 <div class="chipDescLeft">
                     bdur:
                 </div>
                 <div class="chipDescRight">
-                    {`${chip.blight.duration.dienum}d${chip.blight.duration.dietype}`}
+                    {diceToStr(chip.blight.duration)}
                 </div>
             </>
         );

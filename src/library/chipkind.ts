@@ -75,7 +75,7 @@ export function chipTypeToSortNum(val: ChipType): number {
 }
 
 const stdChipTypeToBgCssMatcher = {
-    Trap: () => "chipDescBackgroundSupprt",
+    Construct: () => "chipDescBackgroundSupprt",
     Summon: () => "chipDescBackgroundSupprt",
     Support: () => "chipDescBackgroundSupprt",
     _: () => "chipDescBackgroundStd"
@@ -86,7 +86,7 @@ export function stdChipTypeToBgCss(val: ChipType): string {
 }
 
 const chipTypeToCssMatcher = {
-    Trap: () => "SupportChip",
+    Construct: () => "SupportChip",
     Summon: () => "SupportChip",
     Support: () => "SupportChip",
     _: () => "Chip"

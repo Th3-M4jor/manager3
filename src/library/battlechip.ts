@@ -31,6 +31,14 @@ function blightDataToBlight(blight: BlightData): Blight {
     };
 }
 
+export function diceToStr(dice: Dice): string {
+    if(dice.dietype <= 1) {
+        return dice.dienum+"";
+    } else {
+        return dice.dienum+"d"+dice.dietype;
+    }
+}
+
 export interface ChipData {
     id: number,
     name: string,
@@ -111,7 +119,7 @@ export class BattleChip {
         if (!this.damage) {
             this.dmgStr = "--";
         } else {
-            this.dmgStr = `${this.damage.dienum}d${this.damage.dietype}`;
+            this.dmgStr = diceToStr(this.damage);
         }
 
         [this.maxDmg, this.avgDmg] = calcDmgVals(this.damage);
