@@ -1,22 +1,12 @@
 import m, { CVnode } from "mithril";
 import { MitrhilTsxComponent } from "../JsxNamespace";
 
-import { BattleChip } from "../library/battlechip";
 import { ChipLibrary, FolderChipTuple } from "../library/library";
 
-import * as sort from "../components/sortbox";
+import { FolderChipWithBChip, sortByName, folderTopRow } from "./folder";
+
 import { ChipDesc } from "../components/chipdesc";
 import { FolderChip } from "../components/chips/FldrChip";
-
-interface FolderChipWithBChip {
-    chip: BattleChip,
-    index: number,
-    used: boolean,
-}
-
-function sortByName(a: FolderChipWithBChip, b: FolderChipWithBChip) {
-    return sort.sortBattleChipByName(a.chip, b.chip);
-}
 
 export class GroupFolder extends MitrhilTsxComponent {
     private chipMouseoverHandler: (e: MouseEvent) => void;
@@ -32,37 +22,6 @@ export class GroupFolder extends MitrhilTsxComponent {
             }
         }
         this.activeChipId = null;
-    }
-
-    private viewTopRow(): JSX.Element {
-        return (
-            <div class="chip-top-row Chip z-20">
-                <div class="w-1/24 sm:w-1/24 px-0 whitespace-nowrap select-none">
-                    #
-                </div>
-                <div class="w-6/24 sm:w-5/24 px-0 whitespace-nowrap select-none">
-                    NAME
-                </div>
-                <div class="w-4/24 sm:w-3/24 px-0 select-none">
-                    SKILL
-                </div>
-                <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
-                    RANGE
-                </div>
-                <div class="w-3/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
-                    DMG
-                </div>
-                <div class="hidden sm:block sm:w-3/24 whitespace-nowrap select-none">
-                    KIND
-                </div>
-                <div class="w-4/24 sm:w-4/24 px-0 whitespace-nowrap select-none">
-                    ELEM
-                </div>
-                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none">
-                    U
-                </div>
-            </div>
-        );
     }
 
     private sortChips(playerFolder: FolderChipTuple[]): FolderChipWithBChip[] {
@@ -118,7 +77,7 @@ export class GroupFolder extends MitrhilTsxComponent {
             <>
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 px-0 z-10">
                     <div class="Folder activeFolder">
-                        {this.viewTopRow()}
+                        {folderTopRow()}
                         {this.renderChips()}
                     </div>
                 </div>
