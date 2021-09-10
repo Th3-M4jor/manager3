@@ -5,7 +5,7 @@
         "jsx": "react",
         "jsxFactory": "m",
         "jsxFragmentFactory": "m.Frag",
-        "module": "ES2015",
+        "module": "ES2020",
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "keyofStringsOnly": true,

@@ -19,7 +19,7 @@ async function main() {
 
     const chips = await m.request<BattleChip[]>({
         method: "GET",
-        url: "/bnb/backend/fetch/chips",
+        url: process.env.BASE_URL + "fetch/chips",
         type: BattleChip
     });
 
@@ -56,12 +56,28 @@ async function main() {
             render: function () {
                 return (
                     <MainPage activeTab={top.Tabs.Folder}>
-                        <Folder inFolderGroup={false} />
+                        <Folder />
+                    </MainPage>
+                );
+            }
+        },
+        "/Group/:playerName": {
+            onmatch: function (args) {
+                const folders = ChipLibrary.GroupFolders;
+                if(!folders || !folders.some(f => f[0] == args.playerName)) {
+                    //@ts-ignore
+                    return m.route.SKIP;
+                }
+            },
+            render: function () {
+                return (
+                    <MainPage activeTab={top.Tabs.GroupFolder(m.route.param("playerName"))}>
+                        <Folder />
                     </MainPage>
                 );
             }
         }
-    })
+    });
 }
 
 main()

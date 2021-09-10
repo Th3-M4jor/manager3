@@ -1,6 +1,7 @@
 import m from "mithril";
 //import "./fragment-polyfix";
 import { MitrhilTsxComponent } from "../JsxNamespace";
+import { ChipLibrary } from "../library/library";
 
 import * as top from "../TopLvlMsg";
 
@@ -20,6 +21,13 @@ function changeToPack(e: Event) {
 function changeToLibrary(e: Event) {
     (e.currentTarget as HTMLElement)?.blur();
     m.route.set("/Library");
+}
+
+function makeChangeToPlayerFn(name: string) : (e: Event) => void {
+    return (e: Event) => {
+        (e.currentTarget as HTMLElement)?.blur();
+        m.route.set("/Group/:playerName", {playerName: name});
+    };
 }
 
 function dontRedraw(e: Event) {
@@ -50,13 +58,22 @@ function libraryActive(): ClassAndCallback[] {
         ["activeNavTab", dontRedraw]
     ];
 }
+
+function noneActive() : ClassAndCallback[] {
+    return [
+        ["inactiveNavTab", changeToFolder],
+        ["inactiveNavTab", changeToPack],
+        ["inactiveNavTab", changeToLibrary]
+    ];
+}
+
 //#endregion callbackStuff
 
-const noGroupNavTabMatcher = {
+const baseNavTabMatcher = {
     Folder: folderActive,
     Pack: packActive,
     Library: libraryActive,
-    GroupFolder: () => { throw new Error("Unreachable") },
+    GroupFolder: noneActive,
 }
 
 export interface navTabProps {
@@ -66,7 +83,7 @@ export interface navTabProps {
 export class NavTabs extends MitrhilTsxComponent<navTabProps> {
 
     noGroupTabs(activeTab: top.TabName): JSX.Element {
-        const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback]] = activeTab.match(noGroupNavTabMatcher);
+        const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback]] = activeTab.match(baseNavTabMatcher);
         return (
             <>
             <div class="col-span-3 sm:col-span-4 md:col-span-5 pl-2 pr-6 nav-tab-group">
@@ -80,7 +97,44 @@ export class NavTabs extends MitrhilTsxComponent<navTabProps> {
 
     }
 
+    withGroupTabs(activeTab: top.TabName): JSX.Element {
+        const folders = ChipLibrary.GroupFolders || [];
+
+        const buttons = folders.map(f => {
+            const name = f[0];
+            
+            //@ts-ignore
+            const [cssClass, callback]: ClassAndCallback = activeTab.match({
+                GroupFolder: (playerName) => playerName == name ? ["activeNavTab", dontRedraw] : ["inactiveNavTab" ,makeChangeToPlayerFn(name)],
+                _: () => ["inactiveNavTab", makeChangeToPlayerFn(name)],
+            });
+            return <button onclick={callback} class={cssClass}>{name.trim().charAt(0).toLocaleUpperCase()}</button>;
+        });
+
+        const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback]] = activeTab.match(baseNavTabMatcher);        
+
+        return (
+            <>
+            <div class="col-span-3 sm:col-span-4 md:col-span-5 pl-2 pr-6 nav-tab-group">
+                <button onclick={fldrCallback} class={fldrClass}>F</button>
+                <button onclick={packCallback} class={packClass}>P</button>
+                <button onclick={libCallback} class={libClass}>L</button>
+                {buttons}
+            </div>
+            <div class="col-span-1"/>
+            </>
+        );
+
+    }
+
     view(vnode: m.CVnode<navTabProps>): JSX.Element {
-        return this.noGroupTabs(vnode.attrs.activeTab);
+        const folders = ChipLibrary.GroupFolders;
+
+        if(!folders || folders.length == 0) {
+            return this.noGroupTabs(vnode.attrs.activeTab);
+        } else {
+            return this.withGroupTabs(vnode.attrs.activeTab);
+        }
+
     }
 }

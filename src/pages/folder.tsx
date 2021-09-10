@@ -11,10 +11,6 @@ import { FolderChip } from "../components/chips/FldrChip";
 
 import * as top from "../TopLvlMsg";
 
-export interface folderProps {
-    inFolderGroup: boolean;
-}
-
 interface FolderChipWithBChip {
     chip: BattleChip,
     index: number,
@@ -59,32 +55,32 @@ function jackOutClicked() {
     top.setTopMsg(msg);
 }
 
-export class Folder extends MitrhilTsxComponent<folderProps> {
+export class Folder extends MitrhilTsxComponent {
     private sortMethod: sort.SortOption;
     private activeChipId: number | null;
     private chipMouseoverHandler: (e: MouseEvent) => void;
     private returnToPack: (e: MouseEvent) => void;
 
-    constructor(attrs: m.CVnode<folderProps>) {
+    constructor(attrs: m.CVnode) {
         super(attrs);
         this.sortMethod = sort.SortOption.Name;
         this.activeChipId = null;
         this.chipMouseoverHandler = (e: MouseEvent) => {
             const idx = (e.currentTarget as HTMLDivElement)?.id.substr(2);
             if (idx) {
-                const name = ChipLibrary.Folder[+idx].name;
+                const name = ChipLibrary.Folder[+idx][0];
                 this.activeChipId = ChipLibrary.getChip(name).id;
             }
         }
         this.returnToPack = (e: MouseEvent) => {
             const id = (e.currentTarget as HTMLDivElement)?.id.substr(2);
             if (id) {
-               const [name, used] =  ChipLibrary.removeChipFromFolder(+id);
-               if (used) {
-                   top.setTopMsg(`A used copy of ${name} has been returned to your pack`);
-               } else {
-                   top.setTopMsg(`A copy of ${name} has been returned to your pack`);
-               }
+                const [name, used] = ChipLibrary.removeChipFromFolder(+id);
+                if (used) {
+                    top.setTopMsg(`A used copy of ${name} has been returned to your pack`);
+                } else {
+                    top.setTopMsg(`A copy of ${name} has been returned to your pack`);
+                }
             }
         }
     }
@@ -121,10 +117,10 @@ export class Folder extends MitrhilTsxComponent<folderProps> {
     }
 
     private getSortedChips(): FolderChipWithBChip[] {
-        const folder: FolderChipWithBChip[] = ChipLibrary.Folder.map((c, idx) => ({
-            chip: ChipLibrary.getChip(c.name),
+        const folder: FolderChipWithBChip[] = ChipLibrary.Folder.map(([name, used], idx) => ({
+            chip: ChipLibrary.getChip(name),
             index: idx,
-            used: c.used,
+            used,
         }));
 
         const sortFunc: (a: FolderChipWithBChip, b: FolderChipWithBChip) => number =
@@ -152,10 +148,11 @@ export class Folder extends MitrhilTsxComponent<folderProps> {
         }
 
         const chips = this.getSortedChips();
-        return chips.map(c =>
+        return chips.map((c, idx) =>
             <FolderChip chip={c.chip}
                 folderIndex={c.index}
                 used={c.used}
+                displayIndex={idx}
                 key={c.chip.name + "_F"}
                 onmouseover={this.chipMouseoverHandler}
                 returnToPack={this.returnToPack}
@@ -164,7 +161,23 @@ export class Folder extends MitrhilTsxComponent<folderProps> {
 
     }
 
-    view(_: CVnode<folderProps>): JSX.Element {
+    private renderGroupBtn(): JSX.Element {
+        if (ChipLibrary.InGroup) {
+            return (
+                <button class="dropmenu-btn" onclick={() => ChipLibrary.leaveGroup()}>
+                    LEAVE GROUP
+                </button>
+            );
+        } else {
+            return (
+                <button class="dropmenu-btn" onclick={() => ChipLibrary.joinGroup("test", "major")}>
+                    JOIN GROUP
+                </button>
+            );
+        }
+    }
+
+    view(_: CVnode): JSX.Element {
         const minFldrSize = ChipLibrary.Folder.length + "";
         const chipLimit = ChipLibrary.FolderSize + "";
         return (
@@ -187,6 +200,7 @@ export class Folder extends MitrhilTsxComponent<folderProps> {
                         <button class="dropmenu-btn" onclick={jackOutClicked}>
                             JACK OUT
                         </button>
+                        {this.renderGroupBtn()}
                     </DropMenu>
                     <sort.SortBox currentMethod={this.sortMethod} onChange={(e) => {
                         this.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);

@@ -8,18 +8,52 @@ export interface FolderChipProps {
     chip: BattleChip,
     folderIndex: number,
     used: boolean,
+    displayIndex: number,
+    groupFolder?: boolean,
     onmouseover: (e: MouseEvent) => void,
-    returnToPack: (e: MouseEvent) => void,
+    returnToPack?: (e: MouseEvent) => void,
 }
 
 export class FolderChip extends MitrhilTsxComponent<FolderChipProps> {
+    
+    private makeInputDiv(vnode: CVnode<FolderChipProps>): JSX.Element {
+        if (!vnode.attrs.groupFolder) {
+            return (
+                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none" ondblclick={(e: MouseEvent) => {e.stopPropagation()}}>
+                    <input
+                        name="chipUsed"
+                        type="checkbox"
+                        checked={vnode.attrs.used}
+                        onclick={(e: MouseEvent) => {
+                            ChipLibrary.Folder[vnode.attrs.folderIndex][1] = !vnode.attrs.used;
+                            ChipLibrary.folderUpdated();
+                            (e.currentTarget as HTMLInputElement)?.blur();
+                        }}
+                    />
+                </div>
+            );
+        } else {
+            return (
+                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none">
+                    <input
+                        name="chipUsed"
+                        type="checkbox"
+                        checked={vnode.attrs.used}
+                        disabled
+                    />
+                </div>
+            );
+        }
+    }
+
+    
     view(vnode: CVnode<FolderChipProps>): JSX.Element {
         const chipCss = vnode.attrs.used ? "UsedChip" : vnode.attrs.chip.classCss;
         const idVal = "F_" + vnode.attrs.folderIndex;
         return (
             <div class={"select-none chip-row " + chipCss} id={idVal} onmouseover={vnode.attrs.onmouseover} ondblclick={vnode.attrs.returnToPack}>
                 <div class="w-1/24 sm:w-1/24 px-0 whitespace-nowrap select-none">
-                    {vnode.attrs.folderIndex + 1}
+                    {vnode.attrs.displayIndex + 1}
                 </div>
                 <div class="w-6/24 sm:w-5/24 px-0 whitespace-nowrap select-none">
                     {vnode.attrs.chip.name}
@@ -39,17 +73,7 @@ export class FolderChip extends MitrhilTsxComponent<FolderChipProps> {
                 <div class="w-4/24 sm:w-4/24 px-0 whitespace-nowrap select-none">
                     {vnode.attrs.chip.renderElements()}
                 </div>
-                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none" ondblclick={(e: MouseEvent) => {e.stopPropagation()}}>
-                    <input
-                        name="chipUsed"
-                        type="checkbox"
-                        checked={vnode.attrs.used}
-                        onclick={(e: MouseEvent) => {
-                            ChipLibrary.Folder[vnode.attrs.folderIndex].used = !vnode.attrs.used;
-                            (e.currentTarget as HTMLInputElement)?.blur();
-                        }}
-                    />
-                </div>
+                {this.makeInputDiv(vnode)}
             </div>
         );
     }
