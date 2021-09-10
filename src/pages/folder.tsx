@@ -60,9 +60,11 @@ export class Folder extends MitrhilTsxComponent {
     private activeChipId: number | null;
     private chipMouseoverHandler: (e: MouseEvent) => void;
     private returnToPack: (e: MouseEvent) => void;
+    private showJoinModal: boolean;
 
     constructor(attrs: m.CVnode) {
         super(attrs);
+        this.showJoinModal = false;
         this.sortMethod = sort.SortOption.Name;
         this.activeChipId = null;
         this.chipMouseoverHandler = (e: MouseEvent) => {
@@ -83,6 +85,54 @@ export class Folder extends MitrhilTsxComponent {
                 }
             }
         }
+    }
+
+    private generateModal(): JSX.Element {
+        if (!this.showJoinModal) {
+            return <></>;
+        }
+
+        const cancelCallback = (_: MouseEvent) => {
+            this.showJoinModal = false;
+        }
+
+        const okCallback = (_: MouseEvent) => {
+            this.showJoinModal = false;
+
+            const groupName = (document.getElementById("groupName") as HTMLInputElement).value.trim();
+            const playerName = (document.getElementById("playerName") as HTMLInputElement).value.trim();
+
+            if (groupName && playerName) {
+                ChipLibrary.joinGroup(groupName, playerName);
+            } else {
+                top.setTopMsg("Please enter a group name and player name");
+            }
+        }
+
+        return (
+            <div class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>JOIN GROUP</h2>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" placeholder="group name" id="groupName" />
+                        <br />
+                        <br />
+                        <input type="text" placeholder="player name" id="playerName" />
+                        <br />
+                    </div>
+                    <div class="modal-footer">
+                        <span class="pl-1">
+                            <button class="ok-button" onclick={okCallback}>Join</button>
+                        </span>
+                        <span class="float-right">
+                            <button class="inactiveNavTab" onclick={cancelCallback}>Cancel</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     private viewTopRow(): JSX.Element {
@@ -170,7 +220,7 @@ export class Folder extends MitrhilTsxComponent {
             );
         } else {
             return (
-                <button class="dropmenu-btn" onclick={() => ChipLibrary.joinGroup("test", "major")}>
+                <button class="dropmenu-btn" onclick={() => this.showJoinModal = true}>
                     JOIN GROUP
                 </button>
             );
@@ -218,6 +268,7 @@ export class Folder extends MitrhilTsxComponent {
                         }}
                     />
                 </div>
+                {this.generateModal()}
             </>
         );
     }
