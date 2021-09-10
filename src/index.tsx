@@ -12,6 +12,7 @@ import { MainPage } from "./components/mainpage";
 import { Library } from "./pages/library";
 import { Pack } from "./pages/pack";
 import { Folder } from "./pages/folder";
+import { GroupFolder } from "./pages/groupFolder";
 
 import "../static/styles.pcss";
 
@@ -72,7 +73,7 @@ async function main() {
             render: function () {
                 return (
                     <MainPage activeTab={top.Tabs.GroupFolder(m.route.param("playerName"))}>
-                        <Folder />
+                        <GroupFolder />
                     </MainPage>
                 );
             }
