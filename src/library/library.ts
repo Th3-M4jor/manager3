@@ -224,6 +224,12 @@ export class ChipLibrary {
     }
 
     public static addToFolder(chip: string | number): string | null {
+
+        if (ChipLibrary.instance.folder.length >= ChipLibrary.instance.folderSize) {
+            alert(`You have reached the maximum number of chips in your folder (${ChipLibrary.instance.folderSize}), please remove some to add more`);
+            return null;
+        }
+
         const chipName = typeof (chip) === "string" ? chip : ChipLibrary.instance.idMap.get(chip);
         if (!chipName) throw new Error("Inconcievable!");
 
@@ -242,6 +248,7 @@ export class ChipLibrary {
 
         if (copyCt >= maxInFolder) {
             alert(`You already have ${maxInFolder} ${maxInFolder == 1 ? "copy" : "copies"} of ${chipName} in your folder`);
+            return null;
         }
 
         if (packChip.used >= packChip.owned) {
@@ -481,8 +488,10 @@ export class ChipLibrary {
                     break;
                 case "updated":
 
-                    // eslint-disable-next-line
-                    console.debug(`${data.length} chips updated`);
+                    if(process.env.NODE_ENV === "development") {
+                        // eslint-disable-next-line
+                        console.debug(`${data.length} chips updated`);
+                    }
 
                     ChipLibrary.groupFolders = data;
                     m.redraw();

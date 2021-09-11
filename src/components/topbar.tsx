@@ -13,7 +13,7 @@ export class TopBar extends MitrhilTsxComponent<TopBarProps> {
                 <span /*style="padding-left: 5px"*/ class="pl-1">
                     {vnode.attrs.tabName}
                 </span>
-                <span /*style="float: right; color: red"*/ class="float-right text-red-600">
+                <span /*style="float: right; color: red"*/ class="topMsgSpan">
                     {vnode.attrs.msg ?? ""}
                 </span>
             </div>

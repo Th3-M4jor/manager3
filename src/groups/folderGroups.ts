@@ -48,37 +48,35 @@ function connect(group: string, name: string): void {
     } else {
         url = "wss://jin-tengai.dev/bnb/backend/dev/socket";
     }
+
     socket = new Socket(url);
     socket.connect();
 
-    /* eslint-disable */
-
     socket.onOpen(() => {
         if (!socket) throw new Error("Socket is null");
-        console.log("Connected to socket");
+        doLog("Connected to socket");
         channel = socket.channel(`room:${group}`, { name: name });
-        channel.on("new_msg", msg => console.log("Got message", msg));
-        channel.on("updated", msg => { console.log("Updated", msg.body); postMessage(["updated", msg.body]); });
-        channel.on("force_close", msg => { console.log("Force close", msg); postMessage(["closed", msg]); });
+        channel.on("new_msg", msg => doLog("Got message", msg));
+        channel.on("updated", msg => { doLog("Updated", msg.body); postMessage(["updated", msg.body]); });
+        channel.on("force_close", msg => { doLog("Force close", msg); postMessage(["closed", msg]); });
 
         channel.join(5000)
-            .receive("ok", resp => { console.log("Joined successfully", resp); postMessage(["ready"]); })
-            .receive("error", ({ reason }) => console.log("failed join", reason))
-            .receive("timeout", () => console.log("Networking issue. Still waiting..."));
+            .receive("ok", resp => { doLog("Joined successfully", resp); postMessage(["ready"]); })
+            .receive("error", ({ reason }) => doLog("failed join", reason))
+            .receive("timeout", () => doLog("Networking issue. Still waiting..."));
     });
 
     socket.onError(() => {
-        console.log("Socket error");
+        doLog("Socket error");
         postMessage(["error"]);
     });
 
     socket.onClose(() => {
-        console.log("Socket closed");
+        doLog("Socket closed");
         postMessage(["closed"]);
         socket = null;
     });
 
-    /* eslint-enable */
 }
 
 function send_ready(data: FolderChipTuple[]): void {
@@ -86,12 +84,11 @@ function send_ready(data: FolderChipTuple[]): void {
         throw new Error("Not connected");
     }
 
-    /* eslint-disable */
+   
     channel.push("ready", { body: data })
-        .receive("ok", (msg) => console.log("created message", msg))
-        .receive("error", (reasons) => console.log("create failed", reasons))
-        .receive("timeout", () => console.log("Networking issue..."));
-    /* eslint-enable */
+        .receive("ok", (msg) => doLog("created message", msg))
+        .receive("error", (reasons) => doLog("create failed", reasons))
+        .receive("timeout", () => doLog("Networking issue..."));
 
 }
 
@@ -100,10 +97,19 @@ function update(): void {
         throw new Error("Not connected");
     }
 
-    /* eslint-disable */
+    
     channel.push("update", { body: folder })
-        .receive("ok", (msg) => console.log("updated message", msg))
-        .receive("error", (reasons) => console.log("update failed", reasons))
-        .receive("timeout", () => console.log("Networking issue..."));
-    /* eslint-enable */
+        .receive("ok", (msg) => doLog("updated message", msg))
+        .receive("error", (reasons) => doLog("update failed", reasons))
+        .receive("timeout", () => doLog("Networking issue..."));
+    
+}
+
+function doLog(msg: string, ...args : unknown[]): void {
+    
+    if (process.env.NODE_ENV !== "production") {
+        //eslint-disable-next-line no-console
+        console.log(msg, ...args);
+    }
+    
 }
