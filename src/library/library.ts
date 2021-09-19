@@ -32,7 +32,7 @@ export class ChipLibrary {
 
     private static groupWorker: Worker | null = null;
 
-    private static groupFolders: [string, FolderChipTuple[]][] | null = null ;
+    private static groupFolders: [string, FolderChipTuple[]][] | null = null;
 
     /**
      * A map of all chips by the name
@@ -470,8 +470,11 @@ export class ChipLibrary {
         return usedCt;
     }
 
-    public static joinGroup(group: string, name: string): void {
+    public static joinGroup(group: string, name: string, spectate = false): void {
         ChipLibrary.groupWorker = new Worker(new URL('../groups/folderGroups.ts', import.meta.url), { type: 'module' });
+
+        const eventKind = spectate ? 'spectate' : 'ready';
+
         ChipLibrary.groupWorker.onmessage = (e) => {
 
             const [msg, data] = e.data;
@@ -484,11 +487,11 @@ export class ChipLibrary {
                     m.redraw();
                     throw new Error(data);
                 case "ready":
-                    ChipLibrary.groupWorker?.postMessage(["ready", ChipLibrary.Folder]);
+                    ChipLibrary.groupWorker?.postMessage([eventKind, ChipLibrary.Folder]);
                     break;
                 case "updated":
 
-                    if(process.env.NODE_ENV === "development") {
+                    if (process.env.NODE_ENV === "development") {
                         // eslint-disable-next-line
                         console.debug(`${data.length} chips updated`);
                     }

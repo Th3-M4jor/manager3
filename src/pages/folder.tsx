@@ -132,9 +132,10 @@ export class Folder extends MitrhilTsxComponent {
 
             const groupName = (document.getElementById("groupName") as HTMLInputElement).value.trim();
             const playerName = (document.getElementById("playerName") as HTMLInputElement).value.trim();
+            const spectator = (document.getElementById("spectator_checkbox") as HTMLInputElement).checked;
 
             if (groupName && playerName) {
-                ChipLibrary.joinGroup(groupName, playerName);
+                ChipLibrary.joinGroup(groupName, playerName, spectator);
             } else {
                 top.setTopMsg("Please enter a group name and player name");
             }
@@ -152,6 +153,8 @@ export class Folder extends MitrhilTsxComponent {
                         <br />
                         <input type="text" placeholder="player name" id="playerName" />
                         <br />
+                        <label for="spectator_checkbox">Join as spectator</label>
+                        <input type="checkbox" id="spectator_checkbox" />
                     </div>
                     <div class="modal-footer">
                         <span class="pl-1">

@@ -5,6 +5,7 @@ const throttle_update = throttle(3000, update);
 
 let socket: Socket | null = null;
 let channel: Channel | null = null;
+let spectator = false;
 
 let folder: FolderChipTuple[] = [];
 
@@ -21,8 +22,13 @@ self.onmessage = function (e) {
             channel = null;
             break;
         case "ready":
+            spectator = false;
             folder = data;
             send_ready(data);
+            break;
+        case "spectate":
+            spectator = true;
+            spectate();
             break;
         case "update":
             folder = data;
@@ -79,12 +85,23 @@ function connect(group: string, name: string): void {
 
 }
 
+function spectate(): void {
+    if (!channel) {
+        throw new Error("Not connected");
+    }
+
+    channel.push("spectate", { body: null })
+        .receive("ok", (msg) => doLog("created message", msg))
+        .receive("error", (reasons) => doLog("create failed", reasons))
+        .receive("timeout", () => doLog("Networking issue..."));
+}
+
 function send_ready(data: FolderChipTuple[]): void {
     if (!channel) {
         throw new Error("Not connected");
     }
 
-   
+
     channel.push("ready", { body: data })
         .receive("ok", (msg) => doLog("created message", msg))
         .receive("error", (reasons) => doLog("create failed", reasons))
@@ -97,19 +114,20 @@ function update(): void {
         throw new Error("Not connected");
     }
 
-    
+    if(spectator) return; //user is a spectator, don't update their folder
+
     channel.push("update", { body: folder })
         .receive("ok", (msg) => doLog("updated message", msg))
         .receive("error", (reasons) => doLog("update failed", reasons))
         .receive("timeout", () => doLog("Networking issue..."));
-    
+
 }
 
-function doLog(msg: string, ...args : unknown[]): void {
-    
+function doLog(msg: string, ...args: unknown[]): void {
+
     if (process.env.NODE_ENV !== "production") {
         //eslint-disable-next-line no-console
         console.log(msg, ...args);
     }
-    
+
 }
