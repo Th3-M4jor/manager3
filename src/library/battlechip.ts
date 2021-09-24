@@ -43,15 +43,15 @@ export interface ChipData {
     id: number,
     name: string,
     elem: string[],
-    skill: string[] | null,
+    skill?: string[],
     range: string,
-    hits: string | null,
-    targets: string | null,
-    description: string | null,
-    effect: string[] | null,
-    effduration: number | null,
-    blight: BlightData | null,
-    damage: Dice | null,
+    hits?: string,
+    targets?: string,
+    description?: string,
+    effect?: string[],
+    effduration?: number,
+    blight?: BlightData,
+    damage?: Dice,
     kind: string,
     class: string,
 }
@@ -104,7 +104,7 @@ export class BattleChip {
         this.description = data.description ?? "--";
 
         this.effect = data.effect?.map(e => chipEffectFromStr(e)) ?? [];
-        this.effduration = data.effduration;
+        this.effduration = data.effduration ?? null;
 
         this.blight = data.blight ? blightDataToBlight(data.blight) : null;
 
@@ -114,7 +114,7 @@ export class BattleChip {
         this.kindSortPos = chipTypeToSortNum(this.kind);
 
 
-        this.damage = data.damage;
+        this.damage = data.damage ?? null;
 
         if (!this.damage) {
             this.dmgStr = "--";
