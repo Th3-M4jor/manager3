@@ -206,7 +206,6 @@ export class Folder extends MitrhilTsxComponent {
                 folderIndex={c.index}
                 used={c.used}
                 displayIndex={idx}
-                key={c.chip.name + "_F"}
                 onmouseover={this.chipMouseoverHandler}
                 returnToPack={this.returnToPack}
             />

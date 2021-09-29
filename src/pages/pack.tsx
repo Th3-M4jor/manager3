@@ -215,7 +215,6 @@ export class Pack extends MitrhilTsxComponent {
 
         return chips.map(packChip => <PackChip
             chip={packChip.chip}
-            key={packChip.chip.name + "_P"}
             onmouseover={this.chipMouseoverHandler}
             addToFolder={this.addToFolderHandler}
             owned={packChip.owned}
