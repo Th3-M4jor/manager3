@@ -15,7 +15,7 @@ export class GroupFolder extends MitrhilTsxComponent {
     constructor(attrs: CVnode) {
         super(attrs);
         this.chipMouseoverHandler = (e: MouseEvent) => {
-            const data = (e.target as HTMLDivElement).dataset;
+            const data = (e.currentTarget as HTMLDivElement).dataset;
             if (!data || !data.id) {
                 return;
             }

@@ -38,7 +38,7 @@ export class Library extends MitrhilTsxComponent {
 
         this.doubleClickHandler = (e: Event) => {
             //console.log("Chip added to pack");
-            const data = (e.target as HTMLDivElement).dataset;
+            const data = (e.currentTarget as HTMLDivElement).dataset;
             if (!data || !data.id) {
                 return;
             }
