@@ -99,21 +99,25 @@ export class Folder extends MitrhilTsxComponent {
         this.sortMethod = sort.SortOption.Name;
         this.activeChipId = null;
         this.chipMouseoverHandler = (e: MouseEvent) => {
-            const idx = (e.currentTarget as HTMLDivElement)?.id.substr(2);
-            if (idx) {
-                const name = ChipLibrary.Folder[+idx][0];
-                this.activeChipId = ChipLibrary.getChip(name).id;
+            const data = (e.currentTarget as HTMLDivElement).dataset;
+            if (!data || !data.id) {
+                return;
             }
+            const id = +data.id;
+            this.activeChipId = id;
         }
         this.returnToPack = (e: MouseEvent) => {
-            const id = (e.currentTarget as HTMLDivElement)?.id.substr(2);
-            if (id) {
-                const [name, used] = ChipLibrary.removeChipFromFolder(+id);
-                if (used) {
-                    top.setTopMsg(`A used copy of ${name} has been returned to your pack`);
-                } else {
-                    top.setTopMsg(`A copy of ${name} has been returned to your pack`);
-                }
+
+            const data = (e.currentTarget as HTMLDivElement).dataset;
+            if (!data || !data.index) {
+                return;
+            }
+            const index = +data.index;
+            const [name, used] = ChipLibrary.removeChipFromFolder(index);
+            if (used) {
+                top.setTopMsg(`A used copy of ${name} has been returned to your pack`);
+            } else {
+                top.setTopMsg(`A copy of ${name} has been returned to your pack`);
             }
         }
     }

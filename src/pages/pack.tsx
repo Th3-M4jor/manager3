@@ -103,7 +103,11 @@ export class Pack extends MitrhilTsxComponent {
         this.sortMethod = sort.SortOption.Name;
         this.activeChipId = null;
         this.chipMouseoverHandler = (e: Event) => {
-            const id = +(e.currentTarget as HTMLDivElement).id.substr(2);
+            const data = (e.currentTarget as HTMLDivElement).dataset;
+            if (!data || !data.id) {
+                return;
+            }
+            const id = +data.id;
             this.activeChipId = id;
         }
 
@@ -112,7 +116,11 @@ export class Pack extends MitrhilTsxComponent {
         }
 
         this.addToFolderHandler = (e: Event) => {
-            const id = +(e.currentTarget as HTMLDivElement).id.substr(2);
+            const data = (e.currentTarget as HTMLDivElement).dataset;
+            if (!data || !data.id) {
+                return;
+            }
+            const id = +data.id;
             const name = ChipLibrary.addToFolder(id);
             if (name) {
                 top.setTopMsg(`A copy of ${name} has been added to your folder`);
@@ -123,14 +131,19 @@ export class Pack extends MitrhilTsxComponent {
 
     private openContextMenu(e: MouseEvent) {
 
-        const target = document.querySelector(".chip-row:hover");
+        const target = document.querySelector<HTMLElement>(".chip-row:hover");
         if (!target) {
+            return;
+        }
+        const data = target.dataset;
+        if (!data || !data.id) {
             return;
         }
         e.preventDefault();
         this.contextMenuX = e.clientX;
         this.contextMenuY = e.clientY;
-        this.contextMenuSelectedId = +(target as HTMLDivElement).id.substr(2);
+        
+        this.contextMenuSelectedId = +data.id;
         window.addEventListener("click", this.closeMenu, { once: true });
     }
 

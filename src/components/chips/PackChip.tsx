@@ -15,10 +15,10 @@ export interface PackChipProps {
 export class PackChip extends MitrhilTsxComponent<PackChipProps> {
     view(vnode: CVnode<PackChipProps>): JSX.Element {
         const chipCss = vnode.attrs.owned <= vnode.attrs.used ? "UsedChip" : vnode.attrs.chip.classCss;
-        const idVal = "P_" + vnode.attrs.chip.id;
+        //const idVal = "P_" + vnode.attrs.chip.id;
 
         return (
-            <div class={"select-none chip-row " + chipCss} id={idVal} onmouseover={vnode.attrs.onmouseover} ondblclick={vnode.attrs.addToFolder}>
+            <div class={"select-none chip-row " + chipCss} data-id={vnode.attrs.chip.id} onmouseover={vnode.attrs.onmouseover} ondblclick={vnode.attrs.addToFolder}>
                 <div class="w-6/24 sm:w-5/24 px-0 whitespace-nowrap select-none">
                     {vnode.attrs.chip.name}
                 </div>

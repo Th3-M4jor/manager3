@@ -12,9 +12,9 @@ export interface LibChipProps {
 export class LibraryChip extends MitrhilTsxComponent<LibChipProps> {
     view(vnode: CVnode<LibChipProps>): JSX.Element {
         const chipCss = vnode.attrs.chip.classCss;
-        const idVal = "L_" + vnode.attrs.chip.id;
+        //const idVal = "L_" + vnode.attrs.chip.id;
         return (
-            <div class={"select-none chip-row " + chipCss} id={idVal} onmouseover={vnode.attrs.onmouseover} ondblclick={vnode.attrs.ondoubleclick}>
+            <div class={"select-none chip-row " + chipCss} data-id={vnode.attrs.chip.id} onmouseover={vnode.attrs.onmouseover} ondblclick={vnode.attrs.ondoubleclick}>
                 <div class="w-7/24 sm:w-5/24 px-0 mx-0 whitespace-nowrap select-none">
                     {vnode.attrs.chip.name}
                 </div>

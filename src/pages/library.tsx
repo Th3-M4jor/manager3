@@ -28,15 +28,25 @@ export class Library extends MitrhilTsxComponent {
         this.filterby = "";
         this.activeChipId = null;
         this.chipMouseoverHandler = (e: Event) => {
-            const id = +(e.currentTarget as HTMLDivElement).id.substr(2);
+            const data = (e.currentTarget as HTMLDivElement).dataset;
+            if (!data || !data.id) {
+                return;
+            }
+            const id = +data.id;
             this.activeChipId = id;
         };
+
         this.doubleClickHandler = (e: Event) => {
             //console.log("Chip added to pack");
-            const id = +(e.currentTarget as HTMLDivElement).id.substr(2);
+            const data = (e.target as HTMLDivElement).dataset;
+            if (!data || !data.id) {
+                return;
+            }
+            const id = +data.id;
             const [count, name] = ChipLibrary.addChipToPack(id);
             top.setTopMsg(`You now own ${count} ${count == 1 ? "copy" : "copies"} of ${name}`);
-        }
+        };
+
         this.sortChips();
     }
 

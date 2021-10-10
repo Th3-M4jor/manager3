@@ -15,11 +15,12 @@ export class GroupFolder extends MitrhilTsxComponent {
     constructor(attrs: CVnode) {
         super(attrs);
         this.chipMouseoverHandler = (e: MouseEvent) => {
-            const idx = (e.currentTarget as HTMLDivElement)?.id.substr(2);
-            if (idx) {
-                const name = ChipLibrary.Folder[+idx][0];
-                this.activeChipId = ChipLibrary.getChip(name).id;
+            const data = (e.target as HTMLDivElement).dataset;
+            if (!data || !data.id) {
+                return;
             }
+            const id = +data.id;
+            this.activeChipId = id;
         }
         this.activeChipId = null;
     }
@@ -64,7 +65,6 @@ export class GroupFolder extends MitrhilTsxComponent {
                 folderIndex={c.index}
                 used={c.used}
                 displayIndex={idx}
-                key={c.chip.name + "_F"}
                 onmouseover={this.chipMouseoverHandler}
                 groupFolder
             />
