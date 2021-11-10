@@ -100,7 +100,7 @@ export class Folder extends MitrhilTsxComponent {
         this.activeChipId = null;
         this.chipMouseoverHandler = (e: MouseEvent) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
-            if (!data || !data.id) {
+            if (!data?.id) {
                 return;
             }
             const id = +data.id;
@@ -109,7 +109,7 @@ export class Folder extends MitrhilTsxComponent {
         this.returnToPack = (e: MouseEvent) => {
 
             const data = (e.currentTarget as HTMLDivElement).dataset;
-            if (!data || !data.index) {
+            if (!data?.index) {
                 return;
             }
             const index = +data.index;

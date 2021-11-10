@@ -29,7 +29,7 @@ export class Library extends MitrhilTsxComponent {
         this.activeChipId = null;
         this.chipMouseoverHandler = (e: Event) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
-            if (!data || !data.id) {
+            if (!data?.id) {
                 return;
             }
             const id = +data.id;
@@ -39,7 +39,7 @@ export class Library extends MitrhilTsxComponent {
         this.doubleClickHandler = (e: Event) => {
             //console.log("Chip added to pack");
             const data = (e.currentTarget as HTMLDivElement).dataset;
-            if (!data || !data.id) {
+            if (!data?.id) {
                 return;
             }
             const id = +data.id;
