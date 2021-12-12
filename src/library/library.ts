@@ -34,6 +34,8 @@ export class ChipLibrary {
 
     private static groupFolders: [string, FolderChipTuple[]][] | null = null;
 
+    private canSave = true;
+
     /**
      * A map of all chips by the name
      */
@@ -96,7 +98,6 @@ export class ChipLibrary {
             try {
                 ChipLibrary.instance.loadFolder();
                 ChipLibrary.instance.loadPack();
-                //console.log(`Folder: ${ChipLibrary.instance.folder.length}\nPack: ${ChipLibrary.instance.pack.size}`);
             } catch (e) {
                 alert(`There was an error loading your save data ${(e as Error).message}, clearing data`);
                 window.localStorage.removeItem('folder');
@@ -114,6 +115,7 @@ export class ChipLibrary {
 
         } else {
             alert("Local storage is not available, it is used to backup your folder and pack periodically");
+            ChipLibrary.instance.canSave = false;
         }
     }
 
@@ -132,7 +134,7 @@ export class ChipLibrary {
 
         const folder = window.localStorage.getItem('folder');
         const chipLimit = window.localStorage.getItem('chipLimit');
-        if (chipLimit && +chipLimit > 0) {
+        if (chipLimit !== null && (+chipLimit) > 0) {
             this.folderSize = +chipLimit;
         }
 
@@ -264,13 +266,15 @@ export class ChipLibrary {
             ChipLibrary.Folder.push([chipName, false]);
         }
 
+        ChipLibrary.instance.changeSinceLastSave = true;
+
         ChipLibrary.folderUpdated();
 
         return chipName;
     }
 
     public static saveData(): void {
-        if (!storageAvailable('localStorage') || !ChipLibrary.instance.changeSinceLastSave) return;
+        if (!ChipLibrary.instance.canSave && !ChipLibrary.instance.changeSinceLastSave) return;
 
         const packObj = Array.from(ChipLibrary.instance.pack).reduce((obj: PackDict, [key, value]) => {
             obj[key] = value;
@@ -339,12 +343,12 @@ export class ChipLibrary {
     }
 
     public static removeChipFromFolder(index: number): FolderChipTuple {
-        const [chip] = ChipLibrary.instance.folder.splice(index, 1);
-        ChipLibrary.instance.addToPack(chip[0], chip[1]);
+        const [[name, used]] = ChipLibrary.instance.folder.splice(index, 1);
+        ChipLibrary.instance.addToPack(name, used);
 
         ChipLibrary.instance.changeSinceLastSave = true;
 
-        return chip;
+        return [name, used];
     }
 
     public static clearFolder(): number {
@@ -601,6 +605,10 @@ export class ChipLibrary {
 
     public static get GroupFolders(): [string, FolderChipTuple[]][] | null {
         return ChipLibrary.groupFolders;
+    }
+
+    public static get ChangeSinceLastSave(): boolean {
+        return ChipLibrary.instance.changeSinceLastSave;
     }
 
 }

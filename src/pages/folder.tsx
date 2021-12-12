@@ -112,6 +112,7 @@ export class Folder extends MitrhilTsxComponent {
             if (!data?.index) {
                 return;
             }
+            
             const index = +data.index;
             const [name, used] = ChipLibrary.removeChipFromFolder(index);
             if (used) {

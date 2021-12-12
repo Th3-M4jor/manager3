@@ -53,7 +53,7 @@ export class FolderChip extends MitrhilTsxComponent<FolderChipProps> {
         return (
             <div
                 class={"select-none chip-row " + chipCss}
-                data-index={vnode.attrs.displayIndex}
+                data-index={vnode.attrs.folderIndex}
                 data-id={vnode.attrs.chip.id}
                 onmouseover={vnode.attrs.onmouseover} ondblclick={vnode.attrs.returnToPack}
             >

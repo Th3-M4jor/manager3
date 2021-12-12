@@ -26,10 +26,11 @@ async function main() {
 
     window.addEventListener("beforeunload", function (e) {
         const confirmationMessage = 'Progress might be lost if you leave without saving an export.';
-
-        (e || window.event).returnValue = confirmationMessage; //Gecko + IE
-        ChipLibrary.saveData();
-        return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+        if (ChipLibrary.ChangeSinceLastSave) {
+            (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+            ChipLibrary.saveData();
+            return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.    
+        }
     });
 
     ChipLibrary.initFromChips(chips);
