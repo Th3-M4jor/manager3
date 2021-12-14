@@ -1,6 +1,18 @@
 import { Socket, Channel } from "phoenix";
 import { throttle } from "throttle-debounce";
 
+interface GroupData {
+    group: string;
+    name: string;
+}
+type ConnectMsg = ["connect", GroupData];
+type DisconnectMsg = ["disconnect"];
+type ReadyMsg = ["ready", FolderChipTuple[]];
+type UpdateMsg = ["update", FolderChipTuple[]];
+type SpectateMsg = ["spectate", FolderChipTuple[]];
+
+type GroupFldrMsg = ConnectMsg | DisconnectMsg | ReadyMsg | UpdateMsg | SpectateMsg;
+
 const throttle_update = throttle(3000, update);
 
 let socket: Socket | null = null;
@@ -9,12 +21,11 @@ let spectator = false;
 
 let folder: FolderChipTuple[] = [];
 
-self.onmessage = function (e) {
-    const [msg, data] = e.data;
+self.onmessage = function (e: MessageEvent<GroupFldrMsg>): void {
 
-    switch (msg) {
+    switch (e.data[0]) {
         case "connect":
-            connect(data.group, data.name);
+            connect(e.data[1].group, e.data[1].name);
             break;
         case "disconnect":
             socket?.disconnect();
@@ -23,15 +34,15 @@ self.onmessage = function (e) {
             break;
         case "ready":
             spectator = false;
-            folder = data;
-            send_ready(data);
+            folder = e.data[1];
+            send_ready(folder);
             break;
         case "spectate":
             spectator = true;
             spectate();
             break;
         case "update":
-            folder = data;
+            folder = e.data[1];
             throttle_update();
             break;
         default:
