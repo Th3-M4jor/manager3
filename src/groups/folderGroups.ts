@@ -85,7 +85,7 @@ function connect(group: string, name: string): void {
 
     socket.onError(() => {
         doLog("Socket error");
-        postMessage(["error"]);
+        postMessage(["error", "Socket error"]);
     });
 
     socket.onClose(() => {

@@ -27,6 +27,7 @@ interface importedData {
     Limit: number
 }
 
+
 export class ChipLibrary {
     public static readonly instance = new ChipLibrary();
 
@@ -479,17 +480,22 @@ export class ChipLibrary {
 
         const eventKind = spectate ? 'spectate' : 'ready';
 
-        ChipLibrary.groupWorker.onmessage = (e) => {
+        type ReadyMsg = ["ready"];
+        type UpdatedMsg = ["updated", [string, FolderChipTuple[]][]];
+        type ErrorMsg = ["error", string];
+        type ClosedMsg = ["closed"];
 
-            const [msg, data] = e.data;
+        type Msg = ReadyMsg | UpdatedMsg | ErrorMsg | ClosedMsg;
 
-            switch (msg) {
+        ChipLibrary.groupWorker.onmessage = (e: MessageEvent<Msg>) => {
+
+            switch (e.data[0]) {
                 case "error":
                     ChipLibrary.groupWorker?.terminate();
                     ChipLibrary.groupWorker = null;
                     ChipLibrary.groupFolders = null;
                     m.redraw();
-                    throw new Error(data);
+                    throw new Error(e.data[1]);
                 case "ready":
                     ChipLibrary.groupWorker?.postMessage([eventKind, ChipLibrary.Folder]);
                     break;
@@ -497,10 +503,10 @@ export class ChipLibrary {
 
                     if (process.env.NODE_ENV === "development") {
                         // eslint-disable-next-line
-                        console.debug(`${data.length} chips updated`);
+                        console.debug(`${e.data[1].length} chips updated`);
                     }
 
-                    ChipLibrary.groupFolders = data;
+                    ChipLibrary.groupFolders = e.data[1];
                     m.redraw();
                     break;
                 case "closed":
