@@ -45,6 +45,10 @@ function sortByRange(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
 function sortBySkill(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
     return sort.sortBattleChipBySkill(a.chip, b.chip);
 }
+
+function sortByCr(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
+    return sort.sortBattleChipByCr(a.chip, b.chip);
+}
 //#endregion FolderSortOpts
 
 export function folderTopRow(): JSX.Element {
@@ -190,6 +194,7 @@ export class Folder extends MitrhilTsxComponent {
                 Name: () => sortByName,
                 Range: () => sortByRange,
                 Skill: () => sortBySkill,
+                Cr: () => sortByCr,
                 _: () => { throw new Error("Invalid sort method") },
             });
 

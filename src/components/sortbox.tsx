@@ -19,6 +19,7 @@ export const SortOption = makeTaggedUnion({
     Kind: none,
     Range: none,
     Owned: none,
+    Cr: none,
 });
 
 export type SortOption = MemberType<typeof SortOption>;
@@ -39,6 +40,8 @@ export function SortOptFromStr(val: string): SortOption {
             return SortOption.Kind;
         case "Range":
             return SortOption.Range;
+        case "Cr":
+            return SortOption.Cr;
         case "Owned":
             return SortOption.Owned;
         default:
@@ -74,6 +77,10 @@ export function sortBattleChipByKind(a: BattleChip, b: BattleChip): number {
 export function sortBattleChipByRange(a: BattleChip, b: BattleChip): number {
     return cmpN(rangeToSortNum(a.range), rangeToSortNum(b.range)) || cmpN(a.classSortPos, b.classSortPos) || cmpS(a.name, b.name);
 }
+
+export function sortBattleChipByCr(a: BattleChip, b: BattleChip): number {
+    return cmpN(a.classSortPos, b.classSortPos) || cmpN(a.cr, b.cr) || cmpS(a.name, b.name);
+}
 //#endregion sortFns
 
 interface SortBoxProps {
@@ -105,6 +112,9 @@ export class SortBox extends MitrhilTsxComponent<SortBoxProps> {
             </option>,
             <option value="Range">
                 Range
+            </option>,
+            <option value="Cr">
+                CR
             </option>,
         ];
 

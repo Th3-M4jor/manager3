@@ -67,6 +67,22 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         if (this.intervalHandle) clearInterval(this.intervalHandle);
     }
 
+    private crRow(chip: BattleChip): JSX.Element {
+        if (chip.class.variant === "Standard" && chip.cr > 0) {
+            return (
+                <>
+                    <div class="chipDescLeft">
+                        cr:
+                    </div>
+                    <div class="chipDescRight">
+                        {chip.cr}
+                    </div>
+                </>
+            );
+        }
+        return <></>;
+    }
+
     private elemRow(chip: BattleChip): JSX.Element {
         return (
             <>
@@ -288,6 +304,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
                     <div class="border-b border-black">{chip.name}</div>
                     <div class="grid grid-cols-2 gap-0">
                         {this.elemRow(chip)}
+                        {this.crRow(chip)}
                         {this.dmgRow(chip)}
                         {this.kindRow(chip)}
                         {this.skillRow(chip)}
@@ -307,7 +324,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     }
 
     viewNoChip(): JSX.Element {
-        return <div class="h-3/4 chipDescBackgroundStd" style="max-height: 65vh"/>
+        return <div class="h-3/4 chipDescBackgroundStd" style="max-height: 65vh" />
     }
 
 

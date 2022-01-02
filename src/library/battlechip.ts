@@ -42,6 +42,7 @@ export function diceToStr(dice: Dice): string {
 export interface ChipData {
     id: number,
     name: string,
+    cr: number,
     elem: string[],
     skill?: string[],
     range: string,
@@ -73,6 +74,7 @@ export class BattleChip {
 
     public readonly id: number;
     public readonly name: string;
+    public readonly cr: number;
     public readonly element: Element[];
     public readonly skills: Skill[];
     public readonly range: Range;
@@ -96,6 +98,7 @@ export class BattleChip {
     constructor(data: ChipData) {
         this.id = data.id; //or with zero to ensure it's an int, not a number
         this.name = data.name;
+        this.cr = data.cr;
         this.element = data.elem.map(e => elementFromStr(e));
         this.skills = data.skill?.map(e => skillFromStr(e)) ?? [Skill.None];
         this.range = rangeFromStr(data.range);

@@ -53,6 +53,10 @@ function sortByRange(a: PackChipWithBChip, b: PackChipWithBChip): number {
 function sortBySkill(a: PackChipWithBChip, b: PackChipWithBChip): number {
     return sort.sortBattleChipBySkill(a.chip, b.chip);
 }
+
+function sortByCr(a: PackChipWithBChip, b: PackChipWithBChip): number {
+    return sort.sortBattleChipByCr(a.chip, b.chip);
+}
 //#endregion PackSortOpts 
 
 
@@ -177,6 +181,7 @@ export class Pack extends MitrhilTsxComponent {
             Owned: () => sortByOwned,
             Range: () => sortByRange,
             Skill: () => sortBySkill,
+            Cr: () => sortByCr,
         });
 
         return pack.sort(sortFunc);

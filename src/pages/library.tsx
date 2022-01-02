@@ -60,6 +60,7 @@ export class Library extends MitrhilTsxComponent {
             Owned: () => { throw new TypeError("Invalid sort method") },
             Range: () => sort.sortBattleChipByRange,
             Skill: () => sort.sortBattleChipBySkill,
+            Cr: () => sort.sortBattleChipByCr,
         });
 
         this.chips.sort(sortFunc);
