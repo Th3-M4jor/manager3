@@ -13,8 +13,12 @@ import { ChipDesc } from "../components/chipdesc";
 
 import { LibraryChip } from "../components/chips/LibChip";
 
+
+let librarySortMethod = sort.SortOption.Name;
+let librarySortDescending = false;
+let libraryScrollPos = 0;
+
 export class Library extends MitrhilTsxComponent {
-    private sortMethod: sort.SortOption;
     private chips: BattleChip[];
     private filterby: string;
     private activeChipId: number | null;
@@ -23,7 +27,6 @@ export class Library extends MitrhilTsxComponent {
 
     constructor(attrs: m.CVnode) {
         super(attrs);
-        this.sortMethod = sort.SortOption.Name;
         this.chips = ChipLibrary.array();
         this.filterby = "";
         this.activeChipId = null;
@@ -51,16 +54,16 @@ export class Library extends MitrhilTsxComponent {
     }
 
     private sortChips() {
-        const sortFunc: (a: BattleChip, b: BattleChip) => number = this.sortMethod.match({
-            AverageDamage: () => sort.sortBattleChipByAvgDmg,
-            Element: () => sort.sortBattleChipByElement,
-            Kind: () => sort.sortBattleChipByKind,
-            MaxDamage: () => sort.sortBattleChipByMaxDmg,
-            Name: () => sort.sortBattleChipByName,
+        const sortFunc: (a: BattleChip, b: BattleChip) => number = librarySortMethod.match({
+            AverageDamage: () => librarySortDescending ? sort.sortBattleChipByAvgDmgDesc : sort.sortBattleChipByAvgDmg,
+            Element: () => librarySortDescending ? sort.sortBattleChipByElementDesc : sort.sortBattleChipByElement,
+            Kind: () => librarySortDescending ? sort.sortBattleChipByKindDesc : sort.sortBattleChipByKind,
+            MaxDamage: () => librarySortDescending ? sort.sortBattleChipByMaxDmgDesc : sort.sortBattleChipByMaxDmg,
+            Name: () => librarySortDescending ? sort.sortBattleChipByNameDesc : sort.sortBattleChipByName,
             Owned: () => { throw new TypeError("Invalid sort method") },
-            Range: () => sort.sortBattleChipByRange,
-            Skill: () => sort.sortBattleChipBySkill,
-            Cr: () => sort.sortBattleChipByCr,
+            Range: () => librarySortDescending ? sort.sortBattleChipByRangeDesc : sort.sortBattleChipByRange,
+            Skill: () => librarySortDescending ? sort.sortBattleChipBySkillDesc : sort.sortBattleChipBySkill,
+            Cr: () => librarySortDescending ? sort.sortBattleChipByCrDesc : sort.sortBattleChipByCr,
         });
 
         this.chips.sort(sortFunc);
@@ -141,6 +144,17 @@ export class Library extends MitrhilTsxComponent {
         */
     }
 
+    oncreate(_: CVnode) {
+        const libBox = document.querySelector(".Folder");
+        if (libBox) {
+            libBox.scrollTop = libraryScrollPos;
+        }
+    }
+
+    onbeforeremove(_: CVnode) {
+        libraryScrollPos = document.querySelector(".Folder")?.scrollTop ?? 0;
+    }
+
     view(_: CVnode): JSX.Element {
 
         return (
@@ -154,10 +168,15 @@ export class Library extends MitrhilTsxComponent {
                 </div>
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
                     <ChipDesc displayChip={this.activeChipId} />
-                    <sort.SortBox currentMethod={this.sortMethod} onChange={(e) => {
-                        this.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
+                    <sort.SortBox currentMethod={librarySortMethod} onSortChange={(e) => {
+                        librarySortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         this.sortChips();
                         (e.target as HTMLSelectElement).blur(); //unfocus element automatically after changing sort method
+                    }} 
+                    descending={librarySortDescending} onDescendingChange={(e) => {
+                        librarySortDescending = (e.target as HTMLInputElement).checked;
+                        this.sortChips();
+                        (e.target as HTMLInputElement).blur(); //unfocus element automatically after changing sort method
                     }} />
                     {this.buildSearchBox()}
                 </div>

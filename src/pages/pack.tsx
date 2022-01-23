@@ -26,37 +26,74 @@ function sortByName(a: PackChipWithBChip, b: PackChipWithBChip): number {
     return sort.sortBattleChipByName(a.chip, b.chip);
 }
 
+function sortByNameDesc(a: PackChipWithBChip, b: PackChipWithBChip): number {
+    return sort.sortBattleChipByNameDesc(a.chip, b.chip);
+}
+
 function sortByOwned(a: PackChipWithBChip, b: PackChipWithBChip): number {
     return cmpN(b.owned, a.owned) || sort.sortBattleChipByName(a.chip, b.chip);
+}
+
+function sortByOwnedDesc(a: PackChipWithBChip, b: PackChipWithBChip): number {
+    return cmpN(a.owned, b.owned) || sort.sortBattleChipByName(a.chip, b.chip);
 }
 
 function sortByAvgDmg(a: PackChipWithBChip, b: PackChipWithBChip): number {
     return sort.sortBattleChipByAvgDmg(a.chip, b.chip);
 }
 
+function sortByAvgDmgDesc(a: PackChipWithBChip, b: PackChipWithBChip): number {
+    return sort.sortBattleChipByAvgDmgDesc(a.chip, b.chip);
+}
+
 function sortByElem(a: PackChipWithBChip, b: PackChipWithBChip): number {
     return sort.sortBattleChipByElement(a.chip, b.chip);
+}
+
+function sortByElemDesc(a: PackChipWithBChip, b: PackChipWithBChip): number {
+    return sort.sortBattleChipByElementDesc(a.chip, b.chip);
 }
 
 function sortByKind(a: PackChipWithBChip, b: PackChipWithBChip): number {
     return sort.sortBattleChipByKind(a.chip, b.chip);
 }
 
+function sortByKindDesc(a: PackChipWithBChip, b: PackChipWithBChip): number {
+    return sort.sortBattleChipByKindDesc(a.chip, b.chip);
+}
+
 function sortByMaxDmg(a: PackChipWithBChip, b: PackChipWithBChip): number {
     return sort.sortBattleChipByMaxDmg(a.chip, b.chip);
+}
+
+function sortByMaxDmgDesc(a: PackChipWithBChip, b: PackChipWithBChip): number {
+    return sort.sortBattleChipByMaxDmgDesc(a.chip, b.chip);
 }
 
 function sortByRange(a: PackChipWithBChip, b: PackChipWithBChip): number {
     return sort.sortBattleChipByRange(a.chip, b.chip);
 }
 
+function sortByRangeDesc(a: PackChipWithBChip, b: PackChipWithBChip): number {
+    return sort.sortBattleChipByRangeDesc(a.chip, b.chip);
+}
+
 function sortBySkill(a: PackChipWithBChip, b: PackChipWithBChip): number {
     return sort.sortBattleChipBySkill(a.chip, b.chip);
+}
+
+function sortBySkillDesc(a: PackChipWithBChip, b: PackChipWithBChip): number {
+    return sort.sortBattleChipBySkillDesc(a.chip, b.chip);
 }
 
 function sortByCr(a: PackChipWithBChip, b: PackChipWithBChip): number {
     return sort.sortBattleChipByCr(a.chip, b.chip);
 }
+
+function sortByCrDesc(a: PackChipWithBChip, b: PackChipWithBChip): number {
+    return sort.sortBattleChipByCrDesc(a.chip, b.chip);
+}
+
 //#endregion PackSortOpts 
 
 
@@ -92,8 +129,12 @@ async function loadFile(e: Event) {
 
 }
 
+let packSortMethod = sort.SortOption.Name;
+let packSortDescending = false;
+let packScrollPos = 0;
+
 export class Pack extends MitrhilTsxComponent {
-    private sortMethod: sort.SortOption;
+    //private sortMethod: sort.SortOption;
     private activeChipId: number | null;
     private chipMouseoverHandler: (e: Event) => void;
     private addToFolderHandler: (e: Event) => void;
@@ -104,7 +145,6 @@ export class Pack extends MitrhilTsxComponent {
 
     constructor(attrs: m.CVnode) {
         super(attrs);
-        this.sortMethod = sort.SortOption.Name;
         this.activeChipId = null;
         this.chipMouseoverHandler = (e: Event) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
@@ -172,16 +212,16 @@ export class Pack extends MitrhilTsxComponent {
             }
         });
 
-        const sortFunc: (a: PackChipWithBChip, b: PackChipWithBChip) => number = this.sortMethod.match({
-            AverageDamage: () => sortByAvgDmg,
-            Element: () => sortByElem,
-            Kind: () => sortByKind,
-            MaxDamage: () => sortByMaxDmg,
-            Name: () => sortByName,
-            Owned: () => sortByOwned,
-            Range: () => sortByRange,
-            Skill: () => sortBySkill,
-            Cr: () => sortByCr,
+        const sortFunc: (a: PackChipWithBChip, b: PackChipWithBChip) => number = packSortMethod.match({
+            AverageDamage: () => packSortDescending ? sortByAvgDmgDesc : sortByAvgDmg,
+            Element: () => packSortDescending ? sortByElemDesc : sortByElem,
+            Kind: () => packSortDescending ? sortByKindDesc : sortByKind,
+            MaxDamage: () => packSortDescending ? sortByMaxDmgDesc : sortByMaxDmg,
+            Name: () => packSortDescending ? sortByNameDesc : sortByName,
+            Owned: () => packSortDescending ? sortByOwnedDesc : sortByOwned,
+            Range: () => packSortDescending ? sortByRangeDesc : sortByRange,
+            Skill: () => packSortDescending ? sortBySkillDesc : sortBySkill,
+            Cr: () => packSortDescending ? sortByCrDesc : sortByCr,
         });
 
         return pack.sort(sortFunc);
@@ -240,6 +280,17 @@ export class Pack extends MitrhilTsxComponent {
         />);
     }
 
+    oncreate(_: CVnode) {
+        const pack = document.querySelector(".Folder");
+        if (pack) {
+            pack.scrollTop = packScrollPos;
+        }
+    }
+
+    onbeforeremove(_: CVnode) {
+        packScrollPos = document.querySelector(".Folder")?.scrollTop ?? 0;
+    }
+
     view(_: CVnode): JSX.Element {
         return (
             <>
@@ -269,10 +320,15 @@ export class Pack extends MitrhilTsxComponent {
                             EXPORT JSON
                         </button>
                     </DropMenu>
-                    <sort.SortBox currentMethod={this.sortMethod} includeOwned onChange={(e) => {
-                        this.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
+                    <sort.SortBox currentMethod={packSortMethod} includeOwned onSortChange={(e) => {
+                        packSortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         (e.target as HTMLSelectElement).blur(); //unfocus element automatically after changing sort method
-                    }} />
+                    }} 
+                    descending={packSortDescending} onDescendingChange={(e) => {
+                        packSortDescending = (e.target as HTMLInputElement).checked;
+                        (e.target as HTMLInputElement).blur();
+                    }}
+                    />
                 </div>
                 {this.genContextMenu()}
                 <input id="jsonFile" type="file" class="hidden" accept=".json" onchange={loadFile} />

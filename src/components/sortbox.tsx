@@ -25,7 +25,7 @@ export const SortOption = makeTaggedUnion({
 export type SortOption = MemberType<typeof SortOption>;
 
 export function SortOptFromStr(val: string): SortOption {
-    switch(val) {
+    switch (val) {
         case "Name":
             return SortOption.Name;
         case "Element":
@@ -54,39 +54,73 @@ export function sortBattleChipByName(a: BattleChip, b: BattleChip): number {
     return cmpN(a.classSortPos, b.classSortPos) || cmpS(a.name, b.name);
 }
 
+export function sortBattleChipByNameDesc(a: BattleChip, b: BattleChip): number {
+    return -sortBattleChipByName(a, b);
+}
+
 export function sortBattleChipByElement(a: BattleChip, b: BattleChip): number {
     return arrCmp(a.element, b.element, elementToSortNum) || cmpN(a.classSortPos, b.classSortPos) || cmpS(a.name, b.name);
+}
+
+export function sortBattleChipByElementDesc(a: BattleChip, b: BattleChip): number {
+    return (-arrCmp(a.element, b.element, elementToSortNum)) || cmpN(a.classSortPos, b.classSortPos) || cmpS(a.name, b.name);
 }
 
 export function sortBattleChipByMaxDmg(a: BattleChip, b: BattleChip): number {
     return (-cmpN(a.maxDmg, b.maxDmg)) || cmpS(a.name, b.name);
 }
 
+export function sortBattleChipByMaxDmgDesc(a: BattleChip, b: BattleChip): number {
+    return cmpN(a.maxDmg, b.maxDmg) || cmpS(a.name, b.name);
+}
+
 export function sortBattleChipByAvgDmg(a: BattleChip, b: BattleChip): number {
     return (-cmpN(a.avgDmg, b.avgDmg)) || cmpS(a.name, b.name);
+}
+
+export function sortBattleChipByAvgDmgDesc(a: BattleChip, b: BattleChip): number {
+    return cmpN(a.avgDmg, b.avgDmg) || cmpS(a.name, b.name);
 }
 
 export function sortBattleChipBySkill(a: BattleChip, b: BattleChip): number {
     return arrCmp(a.skills, b.skills, skillToSortNum) || cmpN(a.classSortPos, b.classSortPos) || cmpS(a.name, b.name);
 }
 
+export function sortBattleChipBySkillDesc(a: BattleChip, b: BattleChip): number {
+    return (-arrCmp(a.skills, b.skills, skillToSortNum)) || cmpN(a.classSortPos, b.classSortPos) || cmpS(a.name, b.name);
+}
+
 export function sortBattleChipByKind(a: BattleChip, b: BattleChip): number {
     return cmpN(a.kindSortPos, b.kindSortPos) || cmpN(a.classSortPos, b.classSortPos) || cmpS(a.name, b.name);
+}
+
+export function sortBattleChipByKindDesc(a: BattleChip, b: BattleChip): number {
+    return (-cmpN(a.kindSortPos, b.kindSortPos)) || cmpN(a.classSortPos, b.classSortPos) || cmpS(a.name, b.name);
 }
 
 export function sortBattleChipByRange(a: BattleChip, b: BattleChip): number {
     return cmpN(rangeToSortNum(a.range), rangeToSortNum(b.range)) || cmpN(a.classSortPos, b.classSortPos) || cmpS(a.name, b.name);
 }
 
+export function sortBattleChipByRangeDesc(a: BattleChip, b: BattleChip): number {
+    return (-cmpN(rangeToSortNum(a.range), rangeToSortNum(b.range))) || cmpN(a.classSortPos, b.classSortPos) || cmpS(a.name, b.name);
+}
+
 export function sortBattleChipByCr(a: BattleChip, b: BattleChip): number {
     return cmpN(a.classSortPos, b.classSortPos) || cmpN(a.cr, b.cr) || cmpS(a.name, b.name);
+}
+
+export function sortBattleChipByCrDesc(a: BattleChip, b: BattleChip): number {
+    return cmpN(a.classSortPos, b.classSortPos) || (-cmpN(a.cr, b.cr)) || cmpS(a.name, b.name);
 }
 //#endregion sortFns
 
 interface SortBoxProps {
     includeOwned?: boolean,
     currentMethod: SortOption,
-    onChange: EventListener;
+    descending: boolean,
+    onDescendingChange: EventListener,
+    onSortChange: EventListener;
 }
 export class SortBox extends MitrhilTsxComponent<SortBoxProps> {
 
@@ -131,12 +165,16 @@ export class SortBox extends MitrhilTsxComponent<SortBoxProps> {
 
     view(vnode: CVnode<SortBoxProps>): JSX.Element {
         return (
-        <>
-        <span class="Chip select-none cursor-pointer">Sort By</span>
-            <select class="chip-sort-select" onchange={vnode.attrs.onChange} value={vnode.attrs.currentMethod.variant}>
-                {this.makeOptions(vnode.attrs.includeOwned)}
-            </select>     
-        </>
+            <>
+                <span class="Chip select-none cursor-pointer">Sort By</span>
+                <select class="chip-sort-select" onchange={vnode.attrs.onSortChange} value={vnode.attrs.currentMethod.variant}>
+                    {this.makeOptions(vnode.attrs.includeOwned)}
+                </select>
+                <span class="Chip select-none cursor-pointer">
+                    Descending &nbsp;
+                    <input name="descending" type="checkbox" checked={vnode.attrs.descending} onclick={vnode.attrs.onDescendingChange} />
+                </span>
+            </>
         );
     }
 }
