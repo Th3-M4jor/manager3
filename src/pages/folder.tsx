@@ -22,64 +22,37 @@ export function sortByName(a: FolderChipWithBChip, b: FolderChipWithBChip): numb
     return sort.sortBattleChipByName(a.chip, b.chip);
 }
 
-function sortByNameDesc(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
-    return sort.sortBattleChipByNameDesc(a.chip, b.chip);
-}
-
 function sortByAvgDmg(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
     return sort.sortBattleChipByAvgDmg(a.chip, b.chip);
-}
-
-function sortByAvgDmgDesc(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
-    return sort.sortBattleChipByAvgDmgDesc(a.chip, b.chip);
 }
 
 function sortByElem(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
     return sort.sortBattleChipByElement(a.chip, b.chip);
 }
 
-function sortByElemDesc(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
-    return sort.sortBattleChipByElementDesc(a.chip, b.chip);
-}
 
 function sortByKind(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
     return sort.sortBattleChipByKind(a.chip, b.chip);
 }
 
-function sortByKindDesc(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
-    return sort.sortBattleChipByKindDesc(a.chip, b.chip);
-}
 
 function sortByMaxDmg(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
     return sort.sortBattleChipByMaxDmg(a.chip, b.chip);
 }
 
-function sortByMaxDmgDesc(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
-    return sort.sortBattleChipByMaxDmgDesc(a.chip, b.chip);
-}
 
 function sortByRange(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
     return sort.sortBattleChipByRange(a.chip, b.chip);
 }
 
-function sortByRangeDesc(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
-    return sort.sortBattleChipByRangeDesc(a.chip, b.chip);
-}
 
 function sortBySkill(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
     return sort.sortBattleChipBySkill(a.chip, b.chip);
 }
 
-function sortBySkillDesc(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
-    return sort.sortBattleChipBySkillDesc(a.chip, b.chip);
-}
 
 function sortByCr(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
     return sort.sortBattleChipByCr(a.chip, b.chip);
-}
-
-function sortByCrDesc(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
-    return sort.sortBattleChipByCrDesc(a.chip, b.chip);
 }
 //#endregion FolderSortOpts
 
@@ -123,7 +96,7 @@ function jackOutClicked() {
 }
 
 let folderSortMethod = sort.SortOption.Name;
-let folderSortDesc = false;
+//let folderSortDesc = false;
 let folderScrollPos = 0;
 
 export class Folder extends MitrhilTsxComponent {
@@ -222,14 +195,14 @@ export class Folder extends MitrhilTsxComponent {
 
         const sortFunc: (a: FolderChipWithBChip, b: FolderChipWithBChip) => number =
             folderSortMethod.match({
-                AverageDamage: () => folderSortDesc ? sortByAvgDmgDesc : sortByAvgDmg,
-                Element: () => folderSortDesc ? sortByElemDesc : sortByElem,
-                Kind: () => folderSortDesc ? sortByKindDesc : sortByKind,
-                MaxDamage: () => folderSortDesc ? sortByMaxDmgDesc : sortByMaxDmg,
-                Name: () => folderSortDesc ? sortByNameDesc : sortByName,
-                Range: () => folderSortDesc ? sortByRangeDesc : sortByRange,
-                Skill: () => folderSortDesc ? sortBySkillDesc : sortBySkill,
-                Cr: () => folderSortDesc ? sortByCrDesc : sortByCr,
+                AverageDamage: () => sortByAvgDmg,
+                Element: () => sortByElem,
+                Kind: () => sortByKind,
+                MaxDamage: () => sortByMaxDmg,
+                Name: () => sortByName,
+                Range: () => sortByRange,
+                Skill: () => sortBySkill,
+                Cr: () => sortByCr,
                 _: () => { throw new Error("Invalid sort method") },
             });
 
@@ -314,11 +287,7 @@ export class Folder extends MitrhilTsxComponent {
                         folderSortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         (e.target as HTMLSelectElement).blur(); //unfocus element automatically after changing sort method
                     }} 
-                        descending={folderSortDesc}
-                        onDescendingChange={(e) => {
-                            folderSortDesc = (e.target as HTMLInputElement).checked;
-                            (e.target as HTMLInputElement).blur(); //unfocus element automatically after changing sort method
-                        }}
+                        hideDesc={true}
                     />
                     <span class="Chip select-none cursor-pointer">Folder Size</span>
                     <input type="number"

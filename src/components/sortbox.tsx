@@ -118,8 +118,9 @@ export function sortBattleChipByCrDesc(a: BattleChip, b: BattleChip): number {
 interface SortBoxProps {
     includeOwned?: boolean,
     currentMethod: SortOption,
-    descending: boolean,
-    onDescendingChange: EventListener,
+    descending?: boolean,
+    hideDesc?: boolean,
+    onDescendingChange?: EventListener,
     onSortChange: EventListener;
 }
 export class SortBox extends MitrhilTsxComponent<SortBoxProps> {
@@ -164,17 +165,29 @@ export class SortBox extends MitrhilTsxComponent<SortBoxProps> {
     }
 
     view(vnode: CVnode<SortBoxProps>): JSX.Element {
-        return (
-            <>
-                <span class="Chip select-none cursor-pointer">Sort By</span>
-                <select class="chip-sort-select" onchange={vnode.attrs.onSortChange} value={vnode.attrs.currentMethod.variant}>
-                    {this.makeOptions(vnode.attrs.includeOwned)}
-                </select>
-                <span class="Chip select-none cursor-pointer">
-                    Descending &nbsp;
-                    <input name="descending" type="checkbox" checked={vnode.attrs.descending} onclick={vnode.attrs.onDescendingChange} />
-                </span>
-            </>
-        );
+        
+        if(vnode.attrs.hideDesc) {
+            return (
+                <>
+                    <span class="Chip select-none cursor-pointer">Sort By</span>
+                    <select class="chip-sort-select" onchange={vnode.attrs.onSortChange} value={vnode.attrs.currentMethod.variant}>
+                        {this.makeOptions(vnode.attrs.includeOwned)}
+                    </select>
+                </>
+            );    
+        } else {
+            return (
+                <>
+                    <span class="Chip select-none cursor-pointer">Sort By</span>
+                    <select class="chip-sort-select" onchange={vnode.attrs.onSortChange} value={vnode.attrs.currentMethod.variant}>
+                        {this.makeOptions(vnode.attrs.includeOwned)}
+                    </select>
+                    <span class="Chip select-none cursor-pointer">
+                        Descending &nbsp;
+                        <input name="descending" type="checkbox" checked={vnode.attrs.descending} onclick={vnode.attrs.onDescendingChange} />
+                    </span>
+                </>
+            );
+        }
     }
 }
