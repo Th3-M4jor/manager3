@@ -65,7 +65,7 @@ function calcDmgVals(damage: Dice | null): [number, number] {
         return [0, 0];
     }
 
-    const avgDmg = Math.floor(((damage.dietype / 2) + 0.5) * (damage.dienum));
+    const avgDmg = ((damage.dietype / 2) + 0.5) * (damage.dienum);
     const maxDmg = damage.dienum * damage.dietype;
     return [maxDmg, avgDmg];
 }
