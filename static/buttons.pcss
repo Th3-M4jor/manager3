@@ -8,7 +8,6 @@
         border-solid border-transparent
         py-1.5 px-3 rounded
         transition-all duration-150;
-    //transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     position: relative;
     flex: 1 1 auto;
     cursor: pointer;
@@ -37,7 +36,6 @@
 .inactiveNavTab {
     @extend %nav-tab;
     @apply bg-white text-blue-700;
-    //background-color: white;
     color: blue;
     border: 1px solid lightgray;
 }
@@ -45,19 +43,10 @@
 .ok-button {
     @extend %nav-tab;
     @apply bg-red-600 text-white;
-    //background-color: red;
-    //color: white;
 }
 
 .nav-tab-group {
     @apply relative inline-flex align-middle translate-y-1.5 -translate-x-px;
-    /*
-    position: relative;
-    display: inline-flex;
-    vertical-align: middle;
-    padding-left: 125px;
-    transform: translate(0px, 6px);
-    */
 }
 
 .dropbtn {

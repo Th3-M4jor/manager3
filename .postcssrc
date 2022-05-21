@@ -1,0 +1,8 @@
+{
+    "map": false,
+    "plugins": {
+        "tailwindcss": true,
+        "postcss-extend": true,
+        "postcss-mixins": true
+    }
+}

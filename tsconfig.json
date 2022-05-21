@@ -4,7 +4,7 @@
         "target": "ES2020",
         "jsx": "react",
         "jsxFactory": "m",
-        "jsxFragmentFactory": "m.Frag",
+        "jsxFragmentFactory": "m.Fragment",
         "module": "ES2020",
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,

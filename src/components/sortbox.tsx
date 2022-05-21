@@ -1,5 +1,5 @@
 import m, { CVnode } from "mithril";
-//import "./fragment-polyfix";
+
 import { MitrhilTsxComponent } from "../JsxNamespace";
 
 import { makeTaggedUnion, none, MemberType } from "safety-match";

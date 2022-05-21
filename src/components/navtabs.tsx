@@ -1,5 +1,5 @@
 import m from "mithril";
-//import "./fragment-polyfix";
+
 import { MitrhilTsxComponent } from "../JsxNamespace";
 import { ChipLibrary } from "../library/library";
 

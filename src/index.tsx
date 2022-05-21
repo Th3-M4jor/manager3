@@ -1,7 +1,5 @@
 import m from "mithril";
 
-import "./fragment-polyfix";
-
 import * as top from "./TopLvlMsg";
 
 import { BattleChip } from "./library/battlechip";
@@ -14,12 +12,13 @@ import { Pack } from "./pages/pack";
 import { Folder } from "./pages/folder";
 import { GroupFolder } from "./pages/groupFolder";
 
-import "../static/styles.pcss";
+import "../static/index.pcss";
 
 async function main() {
 
     const chips = await m.request<BattleChip[]>({
         method: "GET",
+        //@ts-ignore
         url: process.env.BASE_URL + "fetch/chips",
         type: BattleChip
     });

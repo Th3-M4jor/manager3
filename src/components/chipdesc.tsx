@@ -27,7 +27,7 @@ function scrollInterval() {
 export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
 
     private animationCounter: number;
-    private intervalHandle: NodeJS.Timer | null;
+    private intervalHandle: number | null;
     private mouseOverHandler: (e: MouseEvent) => void;
     private mouseLeaveHandler: (e: MouseEvent) => void;
 

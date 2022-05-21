@@ -501,6 +501,7 @@ export class ChipLibrary {
                     break;
                 case "updated":
 
+                    //@ts-ignore
                     if (process.env.NODE_ENV === "development") {
                         // eslint-disable-next-line
                         console.debug(`${e.data[1].length} chips updated`);

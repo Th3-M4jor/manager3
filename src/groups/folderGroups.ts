@@ -60,7 +60,10 @@ function connect(group: string, name: string): void {
         throw new Error("Already connected");
     }
     let url: string;
+    
+    //@ts-ignore
     if (process.env.NODE_ENV === "production") {
+        //@ts-ignore
         url = process.env.BASE_URL + "socket";
     } else {
         url = "wss://jin-tengai.dev/bnb/backend/dev/socket";
@@ -136,6 +139,7 @@ function update(): void {
 
 function doLog(msg: string, ...args: unknown[]): void {
 
+    //@ts-ignore
     if (process.env.NODE_ENV !== "production") {
         //eslint-disable-next-line no-console
         console.log(msg, ...args);
