@@ -59,15 +59,9 @@ function connect(group: string, name: string): void {
     if (socket !== null) {
         throw new Error("Already connected");
     }
-    let url: string;
-    
+
     //@ts-ignore
-    if (process.env.NODE_ENV === "production") {
-        //@ts-ignore
-        url = process.env.BASE_URL + "socket";
-    } else {
-        url = "wss://jin-tengai.dev/bnb/backend/dev/socket";
-    }
+    const url = process.env.SOCKET_URL;
 
     socket = new Socket(url);
     socket.connect();
