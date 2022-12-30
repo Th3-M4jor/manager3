@@ -167,7 +167,7 @@ export class Pack extends MitrhilTsxComponent {
             const id = +data.id;
             const name = ChipLibrary.addToFolder(id);
             if (name) {
-                top.setTopMsg(`A copy of ${name} has been added to your folder`);
+                top.setTopMsg(`A copy of ${name} has been added to ${ChipLibrary.FolderName}`);
             }
         }
 

@@ -25,7 +25,7 @@ export class FolderChip extends MitrhilTsxComponent<FolderChipProps> {
                         type="checkbox"
                         checked={vnode.attrs.used}
                         onclick={(e: MouseEvent) => {
-                            ChipLibrary.Folder[vnode.attrs.folderIndex][1] = !vnode.attrs.used;
+                            ChipLibrary.ActiveFolder[vnode.attrs.folderIndex][1] = !vnode.attrs.used;
                             ChipLibrary.folderUpdated();
                             (e.currentTarget as HTMLInputElement)?.blur();
                         }}

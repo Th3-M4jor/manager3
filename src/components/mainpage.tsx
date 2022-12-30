@@ -5,7 +5,7 @@ import { MitrhilTsxComponent } from "../JsxNamespace";
 import * as top from "../TopLvlMsg";
 import { TopBar } from "../components/topbar";
 import { NavTabs } from "../components/navtabs";
-
+import { ChipLibrary } from "../library/library";
 interface MainPageProps {
     activeTab: top.TabName;
 }
@@ -14,16 +14,15 @@ export class MainPage extends MitrhilTsxComponent<MainPageProps> {
 
     tabToString(tab: top.TabName): string {
         const val = tab.match({
-            Folder: () => { return "Folder" },
+            Folder: () => { return ChipLibrary.FolderName },
             Library: () => { return "Library" },
             Pack: () => { return "Pack" },
             GroupFolder: (name) => {
-                return (name.length > 15 ? name.substr(0, 12) : name) + "'s Folder";
+                return (name.length > 15 ? name.substring(0, 12) : name) + "'s Folder";
             }
         });
         return val;
     }
-
 
     view(vnode: CVnode<MainPageProps>): JSX.Element {
         return (

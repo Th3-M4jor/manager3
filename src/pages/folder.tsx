@@ -187,7 +187,7 @@ export class Folder extends MitrhilTsxComponent {
     }
 
     private getSortedChips(): FolderChipWithBChip[] {
-        const folder: FolderChipWithBChip[] = ChipLibrary.Folder.map(([name, used], idx) => ({
+        const folder: FolderChipWithBChip[] = ChipLibrary.ActiveFolder.map(([name, used], idx) => ({
             chip: ChipLibrary.getChip(name),
             index: idx,
             used,
@@ -210,10 +210,10 @@ export class Folder extends MitrhilTsxComponent {
     }
 
     private renderChips(): JSX.Element[] | JSX.Element {
-        if (!ChipLibrary.Folder.length) {
+        if (!ChipLibrary.ActiveFolder.length) {
             return (
                 <span class="select-none Chip">
-                    Your Folder is Empty!
+                    {ChipLibrary.FolderName} is Empty!
                 </span>
             );
         }
@@ -259,7 +259,7 @@ export class Folder extends MitrhilTsxComponent {
     }
 
     view(_: CVnode): JSX.Element {
-        const minFldrSize = ChipLibrary.Folder.length + "";
+        const minFldrSize = ChipLibrary.MinFolderSize + "";
         const chipLimit = ChipLibrary.FolderSize + "";
         return (
             <>
@@ -272,6 +272,13 @@ export class Folder extends MitrhilTsxComponent {
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
                     <ChipDesc displayChip={this.activeChipId} />
                     <DropMenu class="dropbtn">
+                        <button class="dropmenu-btn" onclick={() => {
+                            ChipLibrary.swapFolder();
+                            const fldrName = ChipLibrary.FolderName;
+                            top.setTopMsg(`Swiched to ${fldrName}`);
+                        }}>
+                            SWAP FOLDER
+                        </button>
                         <button class="dropmenu-btn" onclick={() => {
                             const len = ChipLibrary.clearFolder();
                             top.setTopMsg(`${len} ${len == 1 ? "chip has" : "chips have"} been returned to your pack`);
