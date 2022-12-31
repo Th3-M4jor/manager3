@@ -20,6 +20,11 @@ body {
 	color: #212529;
 	text-align: left;
     background-color: #00637b;
+    height: 100%;
+}
+
+html {
+    height: 100%;
 }
 
 div {
@@ -29,7 +34,7 @@ div {
 .Folder {
     @apply rounded-lg text-center px-0 w-full overflow-y-scroll overflow-x-hidden font-bold text-white text-base;
     font-family: "Lucida Console";
-    height: 87vh;
+    height: calc(100vh - 6.5rem);
     background-color: #00637b;
     scrollbar-width: thin;
 }
