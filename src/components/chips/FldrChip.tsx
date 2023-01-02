@@ -32,18 +32,19 @@ export class FolderChip extends MitrhilTsxComponent<FolderChipProps> {
                     />
                 </div>
             );
-        } else {
-            return (
-                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none">
-                    <input
-                        name="chipUsed"
-                        type="checkbox"
-                        checked={vnode.attrs.used}
-                        disabled
-                    />
-                </div>
-            );
         }
+
+        return (
+            <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none">
+                <input
+                    name="chipUsed"
+                    type="checkbox"
+                    checked={vnode.attrs.used}
+                    disabled
+                />
+            </div>
+        );
+
     }
 
 

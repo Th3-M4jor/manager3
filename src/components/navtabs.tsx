@@ -148,9 +148,8 @@ export class NavTabs extends MitrhilTsxComponent<navTabProps> {
 
         if (!folders || folders.length == 0) {
             return this.noGroupTabs(vnode.attrs.activeTab);
-        } else {
-            return this.withGroupTabs(vnode.attrs.activeTab);
         }
 
+        return this.withGroupTabs(vnode.attrs.activeTab);
     }
 }

@@ -32,11 +32,10 @@ function blightDataToBlight(blight: BlightData): Blight {
 }
 
 export function diceToStr(dice: Dice): string {
-    if(dice.dietype <= 1) {
-        return dice.dienum+"";
-    } else {
-        return dice.dienum+"d"+dice.dietype;
+    if (dice.dietype <= 1) {
+        return dice.dienum + "";
     }
+    return dice.dienum + "d" + dice.dietype;
 }
 
 export interface ChipData {
