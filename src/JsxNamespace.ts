@@ -2,7 +2,7 @@ import m from "mithril";
 
 export abstract class MitrhilTsxComponent<A = Record<string, never>>
   implements m.ClassComponent<A> {
-  private __props: A & { key?: string | number };
+  private __props: A
 
   constructor({ attrs }: m.CVnode<A>) {
     this.__props = attrs;
@@ -24,22 +24,20 @@ export abstract class MitrhilTsxComponent<A = Record<string, never>>
 
 }
 
-
-
-/* eslint-disable */
 declare global {
   namespace JSX {
-    interface Element extends m.Vnode<any, any> {}
-    // // interface Element<A = {}, B = {}> extends m.Vnode<A, B> {}
+    interface Element extends m.Vnode<unknown, unknown> {}
+
     interface IntrinsicElements {
-      [key: string]: any;
+      [key: string]: unknown;
     }
+
     interface IntrinsicAttributes {
-      [key: string]: any;
+      [key: string]: unknown;
     }
+
     interface ElementAttributesProperty {
-      __props: any;
+      __props: unknown;
     }
   }
 }
-/* eslint-enable */

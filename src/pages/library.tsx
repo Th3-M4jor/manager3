@@ -113,35 +113,24 @@ export class Library extends MitrhilTsxComponent {
 
         if (!this.filterby) {
             return this.chips.map((c) => <LibraryChip chip={c} key={c.name + "_L"} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler} />);
-        } else {
-            const chips = this.chips.reduce((filtered: JSX.Element[], c) => {
-                if (c.name.toLowerCase().startsWith(this.filterby)) {
-                    filtered.push(<LibraryChip chip={c} key={c.name + "_L"} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler} />);
-                }
-                return filtered;
-            }, []);
-
-            if (!chips.length) {
-                return (
-                    <span class="select-none Chip">
-                        Nothing matched your search
-                    </span>
-                );
-            } else {
-                return chips;
-            }
-
         }
 
-        /*
-        const lib: JSX.Element[] = [];
-        lib.length = 300;
-        const chip = this.chips[0];
+        const chips = this.chips.reduce((filtered: JSX.Element[], c) => {
+            if (c.name.toLowerCase().startsWith(this.filterby)) {
+                filtered.push(<LibraryChip chip={c} key={c.name + "_L"} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler} />);
+            }
+            return filtered;
+        }, []);
 
-        lib.fill(<LibraryChip chip={chip} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler}/>);
+        if (!chips.length) {
+            return (
+                <span class="select-none Chip">
+                    Nothing matched your search
+                </span>
+            );
+        }
 
-        return lib;
-        */
+        return chips;
     }
 
     oncreate(_: CVnode) {
@@ -172,12 +161,12 @@ export class Library extends MitrhilTsxComponent {
                         librarySortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         this.sortChips();
                         (e.target as HTMLSelectElement).blur(); //unfocus element automatically after changing sort method
-                    }} 
-                    descending={librarySortDescending} onDescendingChange={(e) => {
-                        librarySortDescending = (e.target as HTMLInputElement).checked;
-                        this.sortChips();
-                        (e.target as HTMLInputElement).blur(); //unfocus element automatically after changing sort method
-                    }} />
+                    }}
+                        descending={librarySortDescending} onDescendingChange={(e) => {
+                            librarySortDescending = (e.target as HTMLInputElement).checked;
+                            this.sortChips();
+                            (e.target as HTMLInputElement).blur(); //unfocus element automatically after changing sort method
+                        }} />
                     {this.buildSearchBox()}
                 </div>
             </>

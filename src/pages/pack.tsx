@@ -170,7 +170,6 @@ export class Pack extends MitrhilTsxComponent {
                 top.setTopMsg(`A copy of ${name} has been added to ${ChipLibrary.FolderName}`);
             }
         }
-
     }
 
     private openContextMenu(e: MouseEvent) {
@@ -186,12 +185,12 @@ export class Pack extends MitrhilTsxComponent {
         e.preventDefault();
         this.contextMenuX = e.clientX;
         this.contextMenuY = e.clientY;
-        
+
         this.contextMenuSelectedId = +data.id;
         window.addEventListener("click", this.closeMenu, { once: true });
     }
 
-    private hideContextMenu() {
+    private hideContextMenu(): void {
         this.contextMenuX = null;
         this.contextMenuY = null;
         this.contextMenuSelectedId = null;
@@ -280,6 +279,36 @@ export class Pack extends MitrhilTsxComponent {
         />);
     }
 
+    private dropMenu(): JSX.Element {
+        return (
+            <DropMenu class="dropbtn">
+                <button class="dropmenu-btn" onclick={() => {
+                    ChipLibrary.swapFolder();
+                    const fldrName = ChipLibrary.FolderName;
+                    top.setTopMsg(`Swiched to ${fldrName}`);
+                }}>
+                    SWAP FOLDER
+                </button>
+                <button class="dropmenu-btn" onclick={ChipLibrary.eraseData}>
+                    ERASE DATA
+                </button>
+                <button class="dropmenu-btn" onclick={jackOutClicked}>
+                    JACK OUT
+                </button>
+                <button class="dropmenu-btn" onclick={() => {
+                    document.getElementById("jsonFile")?.click();
+                }}>
+                    IMPORT JSON
+                </button>
+                <button class="dropmenu-btn" onclick={() => {
+                    ChipLibrary.exportJSON();
+                }}>
+                    EXPORT JSON
+                </button>
+            </DropMenu>
+        );
+    }
+
     oncreate(_: CVnode) {
         const pack = document.querySelector(".Folder");
         if (pack) {
@@ -302,32 +331,15 @@ export class Pack extends MitrhilTsxComponent {
                 </div>
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
                     <ChipDesc displayChip={this.activeChipId} />
-                    <DropMenu class="dropbtn">
-                        <button class="dropmenu-btn" onclick={ChipLibrary.eraseData}>
-                            ERASE DATA
-                        </button>
-                        <button class="dropmenu-btn" onclick={jackOutClicked}>
-                            JACK OUT
-                        </button>
-                        <button class="dropmenu-btn" onclick={() => {
-                            document.getElementById("jsonFile")?.click();
-                        }}>
-                            IMPORT JSON
-                        </button>
-                        <button class="dropmenu-btn" onclick={() => {
-                            ChipLibrary.exportJSON();
-                        }}>
-                            EXPORT JSON
-                        </button>
-                    </DropMenu>
+                    {this.dropMenu()}
                     <sort.SortBox currentMethod={packSortMethod} includeOwned onSortChange={(e) => {
                         packSortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         (e.target as HTMLSelectElement).blur(); //unfocus element automatically after changing sort method
-                    }} 
-                    descending={packSortDescending} onDescendingChange={(e) => {
-                        packSortDescending = (e.target as HTMLInputElement).checked;
-                        (e.target as HTMLInputElement).blur();
                     }}
+                        descending={packSortDescending} onDescendingChange={(e) => {
+                            packSortDescending = (e.target as HTMLInputElement).checked;
+                            (e.target as HTMLInputElement).blur();
+                        }}
                     />
                 </div>
                 {this.genContextMenu()}

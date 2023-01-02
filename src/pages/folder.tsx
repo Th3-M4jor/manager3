@@ -124,7 +124,7 @@ export class Folder extends MitrhilTsxComponent {
             if (!data?.index) {
                 return;
             }
-            
+
             const index = +data.index;
             const [name, used] = ChipLibrary.removeChipFromFolder(index);
             if (used) {
@@ -238,13 +238,38 @@ export class Folder extends MitrhilTsxComponent {
                     LEAVE GROUP
                 </button>
             );
-        } else {
-            return (
-                <button class="dropmenu-btn" onclick={() => this.showJoinModal = true}>
-                    JOIN GROUP
-                </button>
-            );
         }
+
+        return (
+            <button class="dropmenu-btn" onclick={() => this.showJoinModal = true}>
+                JOIN GROUP
+            </button>
+        );
+
+    }
+
+    private dropMenu(): JSX.Element {
+        return (
+            <DropMenu class="dropbtn">
+                <button class="dropmenu-btn" onclick={() => {
+                    ChipLibrary.swapFolder();
+                    const fldrName = ChipLibrary.FolderName;
+                    top.setTopMsg(`Swiched to ${fldrName}`);
+                }}>
+                    SWAP FOLDER
+                </button>
+                <button class="dropmenu-btn" onclick={() => {
+                    const len = ChipLibrary.clearFolder();
+                    top.setTopMsg(`${len} ${len == 1 ? "chip has" : "chips have"} been returned to your pack`);
+                }}>
+                    CLEAR FOLDER
+                </button>
+                <button class="dropmenu-btn" onclick={jackOutClicked}>
+                    JACK OUT
+                </button>
+                {this.renderGroupBtn()}
+            </DropMenu>
+        );
     }
 
     oncreate(_: CVnode) {
@@ -271,29 +296,11 @@ export class Folder extends MitrhilTsxComponent {
                 </div>
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
                     <ChipDesc displayChip={this.activeChipId} />
-                    <DropMenu class="dropbtn">
-                        <button class="dropmenu-btn" onclick={() => {
-                            ChipLibrary.swapFolder();
-                            const fldrName = ChipLibrary.FolderName;
-                            top.setTopMsg(`Swiched to ${fldrName}`);
-                        }}>
-                            SWAP FOLDER
-                        </button>
-                        <button class="dropmenu-btn" onclick={() => {
-                            const len = ChipLibrary.clearFolder();
-                            top.setTopMsg(`${len} ${len == 1 ? "chip has" : "chips have"} been returned to your pack`);
-                        }}>
-                            CLEAR FOLDER
-                        </button>
-                        <button class="dropmenu-btn" onclick={jackOutClicked}>
-                            JACK OUT
-                        </button>
-                        {this.renderGroupBtn()}
-                    </DropMenu>
+                    {this.dropMenu()}
                     <sort.SortBox currentMethod={folderSortMethod} onSortChange={(e) => {
                         folderSortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         (e.target as HTMLSelectElement).blur(); //unfocus element automatically after changing sort method
-                    }} 
+                    }}
                         hideDesc={true}
                     />
                     <span class="Chip select-none cursor-pointer">Folder Size</span>

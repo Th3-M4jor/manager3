@@ -17,6 +17,19 @@
   "rules": {
     "no-console": 2,
     "@typescript-eslint/ban-ts-comment": 0,
+    "@typescript-eslint/no-empty-interface": [
+      "error",
+      {
+        "allowSingleExtends": true
+      }
+    ],
+    "@typescript-eslint/no-namespace": [
+      "error",
+      {
+        "allowDeclarations": true,
+        "allowDefinitionFiles": true
+      }
+    ],
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
@@ -25,6 +38,8 @@
         "varsIgnorePattern": "^_[a-zA-Z]*$|^m$",
         "argsIgnorePattern": "^_[a-zA-Z]*$"
       }
-    ]
+    ],
+    "no-else-return": "error",
+    "array-callback-return": "error"
   }
 }
