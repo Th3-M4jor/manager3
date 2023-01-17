@@ -62,6 +62,16 @@ div {
     height: calc(100vh - 6.5rem);
     background-color: #00637b;
     scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+        width: 0.5rem;
+        height: 0.5rem;
+        background-color: #064b5d;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #68919c;
+    }
 }
 
 .tabPaneArea {

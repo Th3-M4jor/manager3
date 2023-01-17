@@ -97,9 +97,8 @@ export class Library extends MitrhilTsxComponent {
     private buildSearchBox(): JSX.Element {
         return (
             <>
-                <br />
-                <span class="Chip select-none">Search</span>
-                <input type="text" class="chip-search-input" value={this.filterby} oninput={(e: InputEvent) => {
+                <label for="chip_search_box" class="Chip select-none">Search</label>
+                <input type="text" placeholder="ChipName" id="chip_search_box" class="chip-search-input" value={this.filterby} oninput={(e: InputEvent) => {
                     const val = (e.target as HTMLInputElement).value.toLowerCase();
                     this.filterby = val;
                 }} />
