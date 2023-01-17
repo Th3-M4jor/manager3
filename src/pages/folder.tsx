@@ -59,9 +59,7 @@ function sortByCr(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
 export function folderTopRow(): JSX.Element {
     return (
         <div class="chip-top-row Chip z-20">
-            <div class="w-1/24 sm:w-1/24 px-0 whitespace-nowrap select-none">
-                #
-            </div>
+            <div class="w-1/24 sm:w-1/24 px-0 whitespace-nowrap select-none"/>
             <div class="w-6/24 sm:w-5/24 px-0 whitespace-nowrap select-none">
                 NAME
             </div>
@@ -95,12 +93,10 @@ function jackOutClicked() {
     top.setTopMsg(msg);
 }
 
-let folderSortMethod = sort.SortOption.Name;
-//let folderSortDesc = false;
-let folderScrollPos = 0;
-
 export class Folder extends MitrhilTsxComponent {
     //private sortMethod: sort.SortOption;
+    private static sortMethod: sort.SortOption = sort.SortOption.Name;
+    private static scrollPos = 0;
     private activeChipId: number | null;
     private chipMouseoverHandler: (e: MouseEvent) => void;
     private returnToPack: (e: MouseEvent) => void;
@@ -167,7 +163,6 @@ export class Folder extends MitrhilTsxComponent {
                     <div class="modal-body">
                         <input type="text" placeholder="group name" id="groupName" />
                         <br />
-                        <br />
                         <input type="text" placeholder="player name" id="playerName" />
                         <br />
                         <label for="spectator_checkbox">Join as spectator</label>
@@ -194,7 +189,7 @@ export class Folder extends MitrhilTsxComponent {
         }));
 
         const sortFunc: (a: FolderChipWithBChip, b: FolderChipWithBChip) => number =
-            folderSortMethod.match({
+            Folder.sortMethod.match({
                 AverageDamage: () => sortByAvgDmg,
                 Element: () => sortByElem,
                 Kind: () => sortByKind,
@@ -275,12 +270,12 @@ export class Folder extends MitrhilTsxComponent {
     oncreate(_: CVnode) {
         const folder = document.querySelector(".Folder");
         if (folder) {
-            folder.scrollTop = folderScrollPos;
+            folder.scrollTop = Folder.scrollPos;
         }
     }
 
     onbeforeremove(_: CVnode) {
-        folderScrollPos = document.querySelector(".Folder")?.scrollTop ?? 0;
+        Folder.scrollPos = document.querySelector(".Folder")?.scrollTop ?? 0;
     }
 
     view(_: CVnode): JSX.Element {
@@ -297,8 +292,8 @@ export class Folder extends MitrhilTsxComponent {
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
                     <ChipDesc displayChip={this.activeChipId} />
                     {this.dropMenu()}
-                    <sort.SortBox currentMethod={folderSortMethod} onSortChange={(e) => {
-                        folderSortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
+                    <sort.SortBox currentMethod={Folder.sortMethod} onSortChange={(e) => {
+                        Folder.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         (e.target as HTMLSelectElement).blur(); //unfocus element automatically after changing sort method
                     }}
                         hideDesc={true}

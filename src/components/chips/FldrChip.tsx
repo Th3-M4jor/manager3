@@ -23,6 +23,7 @@ export class FolderChip extends MitrhilTsxComponent<FolderChipProps> {
                     <input
                         name="chipUsed"
                         type="checkbox"
+                        class = "cursor-pointer"
                         checked={vnode.attrs.used}
                         onclick={(e: MouseEvent) => {
                             ChipLibrary.ActiveFolder[vnode.attrs.folderIndex][1] = !vnode.attrs.used;
@@ -39,6 +40,7 @@ export class FolderChip extends MitrhilTsxComponent<FolderChipProps> {
                 <input
                     name="chipUsed"
                     type="checkbox"
+                    class = "cursor-not-allowed"
                     checked={vnode.attrs.used}
                     disabled
                 />

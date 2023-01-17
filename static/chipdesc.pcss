@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+
+.chipName {
+    font-family: "BN6 Bold";
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
 %chipDescBox {
     @apply rounded-t-2xl bg-no-repeat bg-cover;
     background-size: 100% 100%;
@@ -50,11 +57,17 @@
 }
 
 .chipDescLeft {
-    @apply col-span-1 text-left border-t border-r border-black overflow-hidden text-xs sm:text-sm;
+    @apply col-span-1 text-left border-t border-r border-black overflow-hidden;
 }
 
 .chipDescRight {
     @apply col-span-1 border-t border-black overflow-hidden;
+}
+
+.chipBasicInfo {
+    font-family: "SF3 Bold";
+    font-size: 1.2rem;
+    line-height: 1;
 }
 
 .chipDescDiv {

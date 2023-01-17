@@ -11,6 +11,33 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: "BN5 Bold";
+    src: url("fonts/bn5_font_bold.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "BN5 Thin Mono";
+    src: url("fonts/bn5_font_thin_mono.ttf");
+}
+
+@font-face {
+    font-family: "BN6 Bold";
+    src: url("fonts/bn6_font_bold.ttf");
+}
+
+@font-face {
+    font-family: "SF3 Bold";
+    src: url("fonts/sf3_font_bold.ttf");
+}
+
+@font-face {
+    font-family: "SF3 Small";
+    src: url("fonts/sf3_font_small.ttf");
+}
+
 body {
 	margin: 0;
 	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
@@ -33,7 +60,7 @@ div {
 
 .Folder {
     @apply rounded-lg text-center px-0 w-full overflow-y-scroll overflow-x-hidden font-bold text-white text-base;
-    font-family: "Lucida Console";
+    font-family: "BN6 Bold";
     height: calc(100vh - 6.5rem);
     background-color: #00637b;
     scrollbar-width: thin;
@@ -65,10 +92,11 @@ div {
 
 .topStatusBar {
     background-color: #ffbd18;
-    font-family: Lucida Console;
+    font-family: "BN6 Bold";
+    font-size: 1.5rem;
+    line-height: 1;
     margin: 5px;
     color: #FFFFFF;
-    font-weight: bold;
 }
 
 .topMsgSpan {

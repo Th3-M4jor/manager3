@@ -129,12 +129,10 @@ async function loadFile(e: Event) {
 
 }
 
-let packSortMethod = sort.SortOption.Name;
-let packSortDescending = false;
-let packScrollPos = 0;
-
 export class Pack extends MitrhilTsxComponent {
-    //private sortMethod: sort.SortOption;
+    private static sortMethod: sort.SortOption = sort.SortOption.Name;
+    private static sortDescending = false;
+    private static scrollPos = 0;
     private activeChipId: number | null;
     private chipMouseoverHandler: (e: Event) => void;
     private addToFolderHandler: (e: Event) => void;
@@ -211,16 +209,16 @@ export class Pack extends MitrhilTsxComponent {
             }
         });
 
-        const sortFunc: (a: PackChipWithBChip, b: PackChipWithBChip) => number = packSortMethod.match({
-            AverageDamage: () => packSortDescending ? sortByAvgDmgDesc : sortByAvgDmg,
-            Element: () => packSortDescending ? sortByElemDesc : sortByElem,
-            Kind: () => packSortDescending ? sortByKindDesc : sortByKind,
-            MaxDamage: () => packSortDescending ? sortByMaxDmgDesc : sortByMaxDmg,
-            Name: () => packSortDescending ? sortByNameDesc : sortByName,
-            Owned: () => packSortDescending ? sortByOwnedDesc : sortByOwned,
-            Range: () => packSortDescending ? sortByRangeDesc : sortByRange,
-            Skill: () => packSortDescending ? sortBySkillDesc : sortBySkill,
-            Cr: () => packSortDescending ? sortByCrDesc : sortByCr,
+        const sortFunc: (a: PackChipWithBChip, b: PackChipWithBChip) => number = Pack.sortMethod.match({
+            AverageDamage: () => Pack.sortDescending ? sortByAvgDmgDesc : sortByAvgDmg,
+            Element: () => Pack.sortDescending ? sortByElemDesc : sortByElem,
+            Kind: () => Pack.sortDescending ? sortByKindDesc : sortByKind,
+            MaxDamage: () => Pack.sortDescending ? sortByMaxDmgDesc : sortByMaxDmg,
+            Name: () => Pack.sortDescending ? sortByNameDesc : sortByName,
+            Owned: () => Pack.sortDescending ? sortByOwnedDesc : sortByOwned,
+            Range: () => Pack.sortDescending ? sortByRangeDesc : sortByRange,
+            Skill: () => Pack.sortDescending ? sortBySkillDesc : sortBySkill,
+            Cr: () => Pack.sortDescending ? sortByCrDesc : sortByCr,
         });
 
         return pack.sort(sortFunc);
@@ -312,12 +310,12 @@ export class Pack extends MitrhilTsxComponent {
     oncreate(_: CVnode) {
         const pack = document.querySelector(".Folder");
         if (pack) {
-            pack.scrollTop = packScrollPos;
+            pack.scrollTop = Pack.scrollPos;
         }
     }
 
     onbeforeremove(_: CVnode) {
-        packScrollPos = document.querySelector(".Folder")?.scrollTop ?? 0;
+        Pack.scrollPos = document.querySelector(".Folder")?.scrollTop ?? 0;
     }
 
     view(_: CVnode): JSX.Element {
@@ -332,12 +330,12 @@ export class Pack extends MitrhilTsxComponent {
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
                     <ChipDesc displayChip={this.activeChipId} />
                     {this.dropMenu()}
-                    <sort.SortBox currentMethod={packSortMethod} includeOwned onSortChange={(e) => {
-                        packSortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
+                    <sort.SortBox currentMethod={Pack.sortMethod} includeOwned onSortChange={(e) => {
+                        Pack.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         (e.target as HTMLSelectElement).blur(); //unfocus element automatically after changing sort method
                     }}
-                        descending={packSortDescending} onDescendingChange={(e) => {
-                            packSortDescending = (e.target as HTMLInputElement).checked;
+                        descending={Pack.sortDescending} onDescendingChange={(e) => {
+                            Pack.sortDescending = (e.target as HTMLInputElement).checked;
                             (e.target as HTMLInputElement).blur();
                         }}
                     />

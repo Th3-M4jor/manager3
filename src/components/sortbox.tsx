@@ -169,8 +169,8 @@ export class SortBox extends MitrhilTsxComponent<SortBoxProps> {
         if (vnode.attrs.hideDesc) {
             return (
                 <>
-                    <span class="Chip select-none cursor-pointer">Sort By</span>
-                    <select class="chip-sort-select" onchange={vnode.attrs.onSortChange} value={vnode.attrs.currentMethod.variant}>
+                    <span class="Chip select-none">Sort By</span>
+                    <select class="chip-sort-select cursor-pointer" onchange={vnode.attrs.onSortChange} value={vnode.attrs.currentMethod.variant}>
                         {this.makeOptions(vnode.attrs.includeOwned)}
                     </select>
                 </>
@@ -179,13 +179,13 @@ export class SortBox extends MitrhilTsxComponent<SortBoxProps> {
 
         return (
             <>
-                <span class="Chip select-none cursor-pointer">Sort By</span>
-                <select class="chip-sort-select" onchange={vnode.attrs.onSortChange} value={vnode.attrs.currentMethod.variant}>
+                <span class="Chip select-none">Sort By</span>
+                <select class="chip-sort-select cursor-pointer" onchange={vnode.attrs.onSortChange} value={vnode.attrs.currentMethod.variant}>
                     {this.makeOptions(vnode.attrs.includeOwned)}
                 </select>
-                <span class="Chip select-none cursor-pointer">
-                    Descending &nbsp;
-                    <input name="descending" type="checkbox" checked={vnode.attrs.descending} onclick={vnode.attrs.onDescendingChange} />
+                <span class="Chip select-none">
+                    Descending
+                    <input name="descending" type="checkbox" class="cursor-pointer m-0.5 sm:m-1" checked={vnode.attrs.descending} onclick={vnode.attrs.onDescendingChange} />
                 </span>
             </>
         );

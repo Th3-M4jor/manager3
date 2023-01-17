@@ -95,7 +95,7 @@ export class BattleChip {
     public readonly dmgStr: string;
 
     constructor(data: ChipData) {
-        this.id = data.id; //or with zero to ensure it's an int, not a number
+        this.id = data.id;
         this.name = data.name;
         this.cr = data.cr;
         this.element = data.elem.map(e => elementFromStr(e));

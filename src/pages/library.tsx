@@ -13,17 +13,16 @@ import { ChipDesc } from "../components/chipdesc";
 
 import { LibraryChip } from "../components/chips/LibChip";
 
-
-let librarySortMethod = sort.SortOption.Name;
-let librarySortDescending = false;
-let libraryScrollPos = 0;
-
 export class Library extends MitrhilTsxComponent {
     private chips: BattleChip[];
     private filterby: string;
     private activeChipId: number | null;
     private chipMouseoverHandler: (e: Event) => void;
     private doubleClickHandler: (e: Event) => void;
+
+    protected static librarySortMethod = sort.SortOption.Name;
+    protected static librarySortDescending = false;
+    protected static libraryScrollPos = 0;
 
     constructor(attrs: m.CVnode) {
         super(attrs);
@@ -54,16 +53,16 @@ export class Library extends MitrhilTsxComponent {
     }
 
     private sortChips() {
-        const sortFunc: (a: BattleChip, b: BattleChip) => number = librarySortMethod.match({
-            AverageDamage: () => librarySortDescending ? sort.sortBattleChipByAvgDmgDesc : sort.sortBattleChipByAvgDmg,
-            Element: () => librarySortDescending ? sort.sortBattleChipByElementDesc : sort.sortBattleChipByElement,
-            Kind: () => librarySortDescending ? sort.sortBattleChipByKindDesc : sort.sortBattleChipByKind,
-            MaxDamage: () => librarySortDescending ? sort.sortBattleChipByMaxDmgDesc : sort.sortBattleChipByMaxDmg,
-            Name: () => librarySortDescending ? sort.sortBattleChipByNameDesc : sort.sortBattleChipByName,
+        const sortFunc: (a: BattleChip, b: BattleChip) => number = Library.librarySortMethod.match({
+            AverageDamage: () => Library.librarySortDescending ? sort.sortBattleChipByAvgDmgDesc : sort.sortBattleChipByAvgDmg,
+            Element: () => Library.librarySortDescending ? sort.sortBattleChipByElementDesc : sort.sortBattleChipByElement,
+            Kind: () => Library.librarySortDescending ? sort.sortBattleChipByKindDesc : sort.sortBattleChipByKind,
+            MaxDamage: () => Library.librarySortDescending ? sort.sortBattleChipByMaxDmgDesc : sort.sortBattleChipByMaxDmg,
+            Name: () => Library.librarySortDescending ? sort.sortBattleChipByNameDesc : sort.sortBattleChipByName,
             Owned: () => { throw new TypeError("Invalid sort method") },
-            Range: () => librarySortDescending ? sort.sortBattleChipByRangeDesc : sort.sortBattleChipByRange,
-            Skill: () => librarySortDescending ? sort.sortBattleChipBySkillDesc : sort.sortBattleChipBySkill,
-            Cr: () => librarySortDescending ? sort.sortBattleChipByCrDesc : sort.sortBattleChipByCr,
+            Range: () => Library.librarySortDescending ? sort.sortBattleChipByRangeDesc : sort.sortBattleChipByRange,
+            Skill: () => Library.librarySortDescending ? sort.sortBattleChipBySkillDesc : sort.sortBattleChipBySkill,
+            Cr: () => Library.librarySortDescending ? sort.sortBattleChipByCrDesc : sort.sortBattleChipByCr,
         });
 
         this.chips.sort(sortFunc);
@@ -110,7 +109,6 @@ export class Library extends MitrhilTsxComponent {
 
     private renderChips(): JSX.Element[] | JSX.Element {
 
-
         if (!this.filterby) {
             return this.chips.map((c) => <LibraryChip chip={c} key={c.name + "_L"} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler} />);
         }
@@ -136,12 +134,12 @@ export class Library extends MitrhilTsxComponent {
     oncreate(_: CVnode) {
         const libBox = document.querySelector(".Folder");
         if (libBox) {
-            libBox.scrollTop = libraryScrollPos;
+            libBox.scrollTop = Library.libraryScrollPos;
         }
     }
 
     onbeforeremove(_: CVnode) {
-        libraryScrollPos = document.querySelector(".Folder")?.scrollTop ?? 0;
+        Library.libraryScrollPos = document.querySelector(".Folder")?.scrollTop ?? 0;
     }
 
     view(_: CVnode): JSX.Element {
@@ -157,13 +155,13 @@ export class Library extends MitrhilTsxComponent {
                 </div>
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
                     <ChipDesc displayChip={this.activeChipId} />
-                    <sort.SortBox currentMethod={librarySortMethod} onSortChange={(e) => {
-                        librarySortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
+                    <sort.SortBox currentMethod={Library.librarySortMethod} onSortChange={(e) => {
+                        Library.librarySortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         this.sortChips();
                         (e.target as HTMLSelectElement).blur(); //unfocus element automatically after changing sort method
                     }}
-                        descending={librarySortDescending} onDescendingChange={(e) => {
-                            librarySortDescending = (e.target as HTMLInputElement).checked;
+                        descending={Library.librarySortDescending} onDescendingChange={(e) => {
+                            Library.librarySortDescending = (e.target as HTMLInputElement).checked;
                             this.sortChips();
                             (e.target as HTMLInputElement).blur(); //unfocus element automatically after changing sort method
                         }} />
