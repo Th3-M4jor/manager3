@@ -2,7 +2,7 @@ import m from "mithril";
 
 import * as top from "./TopLvlMsg";
 
-import { BattleChip } from "./library/battlechip";
+import { BattleChip, ChipData } from "./library/battlechip";
 import { ChipLibrary } from "./library/library";
 
 import { MainPage } from "./components/mainpage";
@@ -12,16 +12,14 @@ import { Pack } from "./pages/pack";
 import { Folder } from "./pages/folder";
 import { GroupFolder } from "./pages/groupFolder";
 
-import "../static/index.pcss";
-
 async function main() {
 
-    const chips = await m.request<BattleChip[]>({
-        method: "GET",
+    const res = await fetch(
         //@ts-ignore
-        url: process.env.BASE_URL + "fetch/chips",
-        type: BattleChip
-    });
+        process.env.BASE_URL + "fetch/chips"
+        )
+
+    const chips: BattleChip[] = (await res.json()).map((chip: ChipData) => new BattleChip(chip));
 
     window.addEventListener("beforeunload", function (e) {
         const confirmationMessage = 'Progress might be lost if you leave without saving an export.';
