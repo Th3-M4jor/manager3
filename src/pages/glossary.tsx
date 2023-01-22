@@ -8,7 +8,7 @@ import { ChipDesc, ChipDescDisplay } from "../components/chipdesc";
 
 import { Statuses, statusFromName } from "../library/glossary/statuses";
 
-import { Blights, blightFromName, blightSort } from "../library/glossary/blights";
+import { Blights, blightFromName, blightSort, blightImgCSS } from "../library/glossary/blights";
 
 import { Panels, terrainFromName } from "../library/glossary/terrain";
 
@@ -78,6 +78,9 @@ export class Glossary extends MitrhilTsxComponent {
                 <div class="w-4/24 sm:w-3/24 px-0 select-none">
                     ABBR
                 </div>
+                <div class="w-5/24 sm:w-4/24 px-0 select-none">
+                    KIND
+                </div>
             </div>
         );
     }
@@ -91,6 +94,9 @@ export class Glossary extends MitrhilTsxComponent {
                 <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
                     --
                 </div>
+                <div class="w-5/24 sm:w-4/24 px-0 select-none whitespace-nowrap">
+                    Status
+                </div>
             </div>
         ));
     }
@@ -99,10 +105,15 @@ export class Glossary extends MitrhilTsxComponent {
         return Object.keys(Blights).sort(blightSort).map((blight) => (
             <div class="select-none chip-row Giga" data-name={blight} onmouseover={this.blightMouseoverHandler}>
                 <div class="w-8/24 sm:w-6/24 px-0 mx-0 whitespace-nowrap select-none">
-                    Blight ({blight.charAt(0).toUpperCase() + blight.slice(1)})
+                    {blight.charAt(0).toUpperCase() + blight.slice(1)}
                 </div>
                 <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
-                    --
+                    <span class="chipImgBox">
+                        <span class={blightImgCSS(blight)} />
+                    </span>
+                </div>
+                <div class="w-5/24 sm:w-4/24 px-0 select-none whitespace-nowrap">
+                    Blight
                 </div>
             </div>
         ));
@@ -116,6 +127,9 @@ export class Glossary extends MitrhilTsxComponent {
                 </div>
                 <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
                     --
+                </div>
+                <div class="w-5/24 sm:w-4/24 px-0 select-none whitespace-nowrap">
+                    Terrain
                 </div>
             </div>
         ));
@@ -134,30 +148,39 @@ export class Glossary extends MitrhilTsxComponent {
                     <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
                         {typeAbbr}
                     </div>
+                    <div class="w-5/24 sm:w-4/24 px-0 select-none whitespace-nowrap">
+                        ChipType
+                    </div>
                 </div>
             );
-        }
-        );
+        });
     }
-
 
     private getActiveItemData(): ChipDescDisplay {
 
-        if (this.activeItem.variant === "None") {
-            return ChipDescDisplay.None;
-        }
-
-        const [name, text, css] = this.activeItem.match({
-            Status: (name) => [`${name.charAt(0).toUpperCase()}${name.slice(1)}`, statusFromName(name), "chipDescBackgroundMega"],
-            Terrain: (name) => [`${name.charAt(0).toUpperCase()}${name.slice(1)}`, terrainFromName(name), "chipDescBackgroundStd"],
-            ChipType: (name) => [`${name.charAt(0).toUpperCase()}${name.slice(1)}`, chipTypeFromName(name), chipTypeBgCss(name)],
-            Blight: (name) => [
-                `Blight (${name.charAt(0).toUpperCase()}${name.slice(1)})`, blightFromName(name), "chipDescBackgroundGiga"
-            ],
-            _: () => { throw new TypeError("inconceivable!!") },
+        return this.activeItem.match({
+            Status: (name) => ChipDescDisplay.GlossaryItem(
+                `${name.charAt(0).toUpperCase()}${name.slice(1)}`,
+                "chipDescBackgroundMega",
+                statusFromName(name)
+            ),
+            Terrain: (name) => ChipDescDisplay.GlossaryItem(
+                `${name.charAt(0).toUpperCase()}${name.slice(1)}`,
+                "chipDescBackgroundStd",
+                terrainFromName(name)
+            ),
+            ChipType: (name) => ChipDescDisplay.GlossaryItem(
+                `${name.charAt(0).toUpperCase()}${name.slice(1)}`,
+                chipTypeBgCss(name),
+                chipTypeFromName(name)
+            ),
+            Blight: (name) => ChipDescDisplay.GlossaryItem(
+                `Blight (${name.charAt(0).toUpperCase()}${name.slice(1)})`,
+                "chipDescBackgroundGiga",
+                blightFromName(name)
+            ),
+            None: () => ChipDescDisplay.None,
         });
-
-        return ChipDescDisplay.GlossaryItem(name, css, text)
     }
 
     view(_: CVnode): JSX.Element {

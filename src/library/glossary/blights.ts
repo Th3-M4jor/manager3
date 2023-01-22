@@ -35,7 +35,7 @@ export function blightFromName(name: string): string {
 }
 
 function blightToSortNum(name: string): number {
-    switch(name) {
+    switch (name) {
         case "fire":
             return 0;
         case "aqua":
@@ -58,6 +58,35 @@ function blightToSortNum(name: string): number {
             return 9;
         case "object":
             return 10;
+        default:
+            throw new Error(`Invalid blight name: ${name}`);
+    }
+}
+
+export function blightImgCSS(name: string): string {
+    switch (name) {
+        case "fire":
+            return "fireChip";
+        case "aqua":
+            return "aquaChip";
+        case "elec":
+            return "elecChip";
+        case "wood":
+            return "woodChip";
+        case "wind":
+            return "windChip";
+        case "sword":
+            return "swordChip";
+        case "break":
+            return "breakChip";
+        case "cursor":
+            return "cursorChip";
+        case "recov":
+            return "recovChip";
+        case "invis":
+            return "invisChip";
+        case "object":
+            return "objectChip";
         default:
             throw new Error(`Invalid blight name: ${name}`);
     }
