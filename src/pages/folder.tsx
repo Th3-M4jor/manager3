@@ -6,7 +6,7 @@ import { ChipLibrary } from "../library/library";
 
 import * as sort from "../components/sortbox";
 import { DropMenu } from "../components/dropmenu";
-import { ChipDesc } from "../components/chipdesc";
+import { ChipDesc, ChipDescDisplay } from "../components/chipdesc";
 import { FolderChip } from "../components/chips/FldrChip";
 
 import * as top from "../TopLvlMsg";
@@ -281,6 +281,15 @@ export class Folder extends MitrhilTsxComponent {
     view(_: CVnode): JSX.Element {
         const minFldrSize = ChipLibrary.MinFolderSize + "";
         const chipLimit = ChipLibrary.FolderSize + "";
+
+        let chipDescItem: ChipDescDisplay;
+
+        if (this.activeChipId) {
+            chipDescItem = ChipDescDisplay.ChipId(this.activeChipId);
+        } else {
+            chipDescItem = ChipDescDisplay.None;
+        }
+
         return (
             <>
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 px-0 z-10">
@@ -290,7 +299,7 @@ export class Folder extends MitrhilTsxComponent {
                     </div>
                 </div>
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
-                    <ChipDesc displayChip={this.activeChipId} />
+                    <ChipDesc item={chipDescItem} />
                     {this.dropMenu()}
                     <sort.SortBox currentMethod={Folder.sortMethod} onSortChange={(e) => {
                         Folder.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);

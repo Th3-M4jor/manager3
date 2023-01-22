@@ -23,6 +23,11 @@ function changeToLibrary(e: Event) {
     m.route.set("/Library");
 }
 
+function changeToGlossary(e: Event) {
+    (e.currentTarget as HTMLElement)?.blur();
+    m.route.set("/Glossary");
+}
+
 function makeChangeToPlayerFn(name: string): (e: Event) => void {
     return (e: Event) => {
         (e.currentTarget as HTMLElement)?.blur();
@@ -39,7 +44,8 @@ function folderActive(): ClassAndCallback[] {
     return [
         ["activeNavTab", dontRedraw],
         ["inactiveNavTab", changeToPack],
-        ["inactiveNavTab", changeToLibrary]
+        ["inactiveNavTab", changeToLibrary],
+        ["inactiveNavTab", changeToGlossary]
     ];
 }
 
@@ -47,7 +53,8 @@ function packActive(): ClassAndCallback[] {
     return [
         ["inactiveNavTab", changeToFolder],
         ["activeNavTab", dontRedraw],
-        ["inactiveNavTab", changeToLibrary]
+        ["inactiveNavTab", changeToLibrary],
+        ["inactiveNavTab", changeToGlossary]
     ];
 }
 
@@ -55,6 +62,16 @@ function libraryActive(): ClassAndCallback[] {
     return [
         ["inactiveNavTab", changeToFolder],
         ["inactiveNavTab", changeToPack],
+        ["activeNavTab", dontRedraw],
+        ["inactiveNavTab", changeToGlossary]
+    ];
+}
+
+function glossaryActive(): ClassAndCallback[] {
+    return [
+        ["inactiveNavTab", changeToFolder],
+        ["inactiveNavTab", changeToPack],
+        ["inactiveNavTab", changeToLibrary],
         ["activeNavTab", dontRedraw]
     ];
 }
@@ -63,7 +80,8 @@ function noneActive(): ClassAndCallback[] {
     return [
         ["inactiveNavTab", changeToFolder],
         ["inactiveNavTab", changeToPack],
-        ["inactiveNavTab", changeToLibrary]
+        ["inactiveNavTab", changeToLibrary],
+        ["inactiveNavTab", changeToGlossary]
     ];
 }
 
@@ -73,6 +91,7 @@ const baseNavTabMatcher = {
     Folder: folderActive,
     Pack: packActive,
     Library: libraryActive,
+    Glossary: glossaryActive,
     GroupFolder: noneActive,
 }
 
@@ -83,7 +102,7 @@ export interface navTabProps {
 export class NavTabs extends MitrhilTsxComponent<navTabProps> {
 
     noGroupTabs(activeTab: top.TabName): JSX.Element {
-        const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback]] = activeTab.match(baseNavTabMatcher);
+        const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback], [glossaryClass, glossaryCallback]] = activeTab.match(baseNavTabMatcher);
         return (
             <>
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 pl-2 pr-6 nav-tab-group">
@@ -91,7 +110,9 @@ export class NavTabs extends MitrhilTsxComponent<navTabProps> {
                     <button onclick={packCallback} class={packClass}>Pack</button>
                     <button onclick={libCallback} class={libClass}>Library</button>
                 </div>
-                <div class="col-span-1" />
+                <div class="col-span-1 glossary-tab-group">
+                    <button onclick={glossaryCallback} class={glossaryClass + " w-19/24"}>Glossary</button>
+                </div>
             </>
         );
 
@@ -125,7 +146,7 @@ export class NavTabs extends MitrhilTsxComponent<navTabProps> {
             );
         });
 
-        const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback]] = activeTab.match(baseNavTabMatcher);
+        const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback], , [glossaryClass, glossaryCallback]] = activeTab.match(baseNavTabMatcher);
         const fldr = "Folder".slice(0, maxNameLen);
         const pack = "Pack".slice(0, maxNameLen);
         const lib = "Library".slice(0, maxNameLen);
@@ -137,7 +158,9 @@ export class NavTabs extends MitrhilTsxComponent<navTabProps> {
                     <button onclick={libCallback} class={libClass}>{lib}</button>
                     {buttons}
                 </div>
-                <div class="col-span-1" />
+                <div class="col-span-1 glossary-tab-group">
+                    <button onclick={glossaryCallback} class={glossaryClass + " w-19/24"}>Glossary</button>
+                </div>
             </>
         );
 

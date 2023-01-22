@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "file-saver": "^2.0.5",
-    "mithril": "^2.0.4",
+    "mithril": "MithrilJs/mithril.js#c1fc1de",
     "phoenix": "^1.6.0",
     "safety-match": "^0.4.4",
     "tailwindcss": "^3.0.0",

@@ -1,12 +1,21 @@
 import m, { CVnode } from "mithril";
+import { makeTaggedUnion, none, MemberType } from "safety-match";
 
 import { MitrhilTsxComponent } from "../JsxNamespace";
 import { BattleChip, diceToStr } from "../library/battlechip";
 import { ChipLibrary } from "../library/library";
 import { elementToCssClass } from "../library/elements";
 
+export const ChipDescDisplay = makeTaggedUnion({
+    None: none,
+    ChipId: (id: number) => id,
+    GlossaryItem: (name: string, backgroundCss: string, text: string) => ({ name, backgroundCss, text }),
+});
+
+export type ChipDescDisplay = MemberType<typeof ChipDescDisplay>;
+
 export interface chipDescProps {
-    displayChip: number | null;
+    item: ChipDescDisplay;
 }
 
 // callback function for the scroll interval
@@ -336,6 +345,33 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         );
     }
 
+    private glossaryItem(name: string, backgroundCss: string, text: string): JSX.Element {
+        const background = "h-3/4 " + backgroundCss;
+
+        const chipAnimClass = (this.animationCounter & 1) ? "chipWindowOne" : "chipWindowTwo";
+
+        const outerChipClass = "chipDescText chipDescPadding max-h-full flex flex-col " + chipAnimClass;
+
+        let fontSizeStyle = "font-size: 1rem";
+
+        if (text.length > 500) {
+            fontSizeStyle = "font-size: 0.875rem";
+        }
+
+        return (
+            <div class={background} style="max-height: 65vh" onmouseenter={this.mouseOverHandler} onmouseleave={this.mouseLeaveHandler}>
+                <div class={outerChipClass} style="padding: 3px; height: 100%">
+                    <div class="border-b border-black chipName">{name}</div>
+                    <div class="border-t border-black overflow-y-scroll hideScrollBar m-0"
+                        style={fontSizeStyle} id="ScrollTextDiv">
+                        {text}
+                    </div>
+                    <div class="flex-none" style="height: 12%" />
+                </div>
+            </div>
+        );
+    }
+
     private viewNoChip(): JSX.Element {
         return <div class="h-3/4 chipDescBackgroundStd" style="max-height: 65vh" />
     }
@@ -344,7 +380,27 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     // and ensure that the animation is triggered
     onbeforeupdate(vnode: CVnode<chipDescProps>, old: CVnode<chipDescProps>): boolean {
 
-        if (vnode.attrs.displayChip != old.attrs.displayChip) {
+        // variant is different, so we need to redraw and trigger the animation
+        if (vnode.attrs.item.variant !== old.attrs.item.variant) {
+            this.animationCounter = (this.animationCounter + 1) | 0; //coerce to signed int
+            return true;
+        }
+
+        // variant is the same, need to check if the item is different
+        const oldItem = old.attrs.item.match({
+            None: () => null,
+            ChipId: (id) => id,
+            GlossaryItem: ({name}) => name,
+        });
+
+        const newItem = vnode.attrs.item.match({
+            None: () => null,
+            ChipId: (id) => id,
+            // only compare the name, not the entire item
+            GlossaryItem: ({name}) => name,
+        });
+
+        if (oldItem !== newItem) {
             this.animationCounter = (this.animationCounter + 1) | 0; //coerce to signed int
             return true;
         }
@@ -353,9 +409,10 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     }
 
     view(vnode: CVnode<chipDescProps>): JSX.Element {
-
-        //if(displayChip) return viewWithChip(displayChip) else return viewNoChip();
-        return vnode.attrs.displayChip ? this.viewWithChip(vnode.attrs.displayChip) : this.viewNoChip();
-
+        return vnode.attrs.item.match({
+            None: () => this.viewNoChip(),
+            ChipId: (id) => this.viewWithChip(id),
+            GlossaryItem: ({name, backgroundCss, text}) => this.glossaryItem(name, backgroundCss, text),
+        });
     }
 }

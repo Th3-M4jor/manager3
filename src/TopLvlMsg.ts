@@ -6,6 +6,7 @@ export const Tabs = makeTaggedUnion({
     Library: none,
     Pack: none,
     Folder: none,
+    Glossary: none,
     GroupFolder: (name: string) => name,
 });
 

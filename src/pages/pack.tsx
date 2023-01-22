@@ -7,7 +7,7 @@ import { ChipLibrary } from "../library/library";
 
 import * as sort from "../components/sortbox";
 import { DropMenu } from "../components/dropmenu";
-import { ChipDesc } from "../components/chipdesc";
+import { ChipDesc, ChipDescDisplay } from "../components/chipdesc";
 import { PackChip } from "../components/chips/PackChip";
 
 
@@ -319,6 +319,15 @@ export class Pack extends MitrhilTsxComponent {
     }
 
     view(_: CVnode): JSX.Element {
+
+        let chipDescItem: ChipDescDisplay;
+
+        if (this.activeChipId) {
+            chipDescItem = ChipDescDisplay.ChipId(this.activeChipId);
+        } else {
+            chipDescItem = ChipDescDisplay.None;
+        }
+
         return (
             <>
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 px-0 z-10">
@@ -328,7 +337,7 @@ export class Pack extends MitrhilTsxComponent {
                     </div>
                 </div>
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
-                    <ChipDesc displayChip={this.activeChipId} />
+                    <ChipDesc item={chipDescItem} />
                     {this.dropMenu()}
                     <sort.SortBox currentMethod={Pack.sortMethod} includeOwned onSortChange={(e) => {
                         Pack.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);

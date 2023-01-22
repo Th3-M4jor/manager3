@@ -9,7 +9,7 @@ import * as sort from "../components/sortbox";
 
 import * as top from "../TopLvlMsg";
 
-import { ChipDesc } from "../components/chipdesc";
+import { ChipDesc, ChipDescDisplay } from "../components/chipdesc";
 
 import { LibraryChip } from "../components/chips/LibChip";
 
@@ -143,6 +143,14 @@ export class Library extends MitrhilTsxComponent {
 
     view(_: CVnode): JSX.Element {
 
+        let chipDescItem: ChipDescDisplay;
+
+        if (this.activeChipId) {
+            chipDescItem = ChipDescDisplay.ChipId(this.activeChipId);
+        } else {
+            chipDescItem = ChipDescDisplay.None;
+        }
+
         return (
             <>
 
@@ -153,7 +161,7 @@ export class Library extends MitrhilTsxComponent {
                     </div>
                 </div>
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
-                    <ChipDesc displayChip={this.activeChipId} />
+                    <ChipDesc item={chipDescItem} />
                     <sort.SortBox currentMethod={Library.librarySortMethod} onSortChange={(e) => {
                         Library.librarySortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         this.sortChips();

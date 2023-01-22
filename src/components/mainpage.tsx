@@ -17,6 +17,7 @@ export class MainPage extends MitrhilTsxComponent<MainPageProps> {
             Folder: () => { return ChipLibrary.FolderName },
             Library: () => { return "Library" },
             Pack: () => { return "Pack" },
+            Glossary: () => { return "Glossary" },
             GroupFolder: (name) => {
                 return (name.length > 15 ? name.substring(0, 12) : name) + "'s Folder";
             }

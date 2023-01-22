@@ -10,6 +10,7 @@ import { MainPage } from "./components/mainpage";
 import { Library } from "./pages/library";
 import { Pack } from "./pages/pack";
 import { Folder } from "./pages/folder";
+import { Glossary } from "./pages/glossary";
 import { GroupFolder } from "./pages/groupFolder";
 
 async function main() {
@@ -56,6 +57,15 @@ async function main() {
                 return (
                     <MainPage activeTab={top.Tabs.Folder}>
                         <Folder />
+                    </MainPage>
+                );
+            }
+        },
+        "/Glossary": {
+            render: function () {
+                return (
+                    <MainPage activeTab={top.Tabs.Glossary}>
+                        <Glossary />
                     </MainPage>
                 );
             }

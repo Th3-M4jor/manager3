@@ -5,7 +5,7 @@ import { ChipLibrary, FolderChipTuple } from "../library/library";
 
 import { FolderChipWithBChip, sortByName, folderTopRow } from "./folder";
 
-import { ChipDesc } from "../components/chipdesc";
+import { ChipDesc, ChipDescDisplay } from "../components/chipdesc";
 import { FolderChip } from "../components/chips/FldrChip";
 
 export class GroupFolder extends MitrhilTsxComponent {
@@ -73,6 +73,15 @@ export class GroupFolder extends MitrhilTsxComponent {
     }
 
     view(_: CVnode): JSX.Element {
+
+        let chipDescItem: ChipDescDisplay;
+
+        if (this.activeChipId) {
+            chipDescItem = ChipDescDisplay.ChipId(this.activeChipId);
+        } else {
+            chipDescItem = ChipDescDisplay.None;
+        }
+
         return (
             <>
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 px-0 z-10">
@@ -82,7 +91,7 @@ export class GroupFolder extends MitrhilTsxComponent {
                     </div>
                 </div>
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
-                    <ChipDesc displayChip={this.activeChipId} />
+                    <ChipDesc item={chipDescItem} />
                 </div>
             </>
         );
