@@ -7,8 +7,5 @@
     },
     mangle: {
         toplevel: true,
-        properties: {
-            keep_quoted: "strict",
-        }
     }
 }
