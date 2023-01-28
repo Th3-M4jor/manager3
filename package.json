@@ -12,10 +12,9 @@
     "lint-fix": "eslint . --env browser --ext .ts --ext .tsx --fix"
   },
   "dependencies": {
-    "file-saver": "^2.0.5",
-    "mithril": "MithrilJs/mithril.js#c1fc1de",
+    "mithril": "Th3-M4jor/mithril.js#fix-parceljs-bailout",
     "phoenix": "^1.6.0",
-    "safety-match": "^0.4.4",
+    "safety-match": "Th3-M4jor/safety-match#fix-parceljs-bailout",
     "tailwindcss": "^3.0.0",
     "throttle-debounce": "^5.0.0"
   },

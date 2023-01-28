@@ -1,0 +1,1 @@
+export const GroupWorkerURL = new URL('./folderGroups.ts', import.meta.url);

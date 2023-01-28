@@ -1,11 +1,11 @@
-import { storageAvailable } from "../util/storageavailable";
-import { BattleChip, ChipData } from "./battlechip";
-import { saveAs } from "file-saver";
+import m from "mithril";
 import { makeTaggedUnion, none, MemberType } from "safety-match";
 
-import m from "mithril";
-
+import { storageAvailable } from "../util/storageavailable";
+import { BattleChip, ChipData } from "./battlechip";
 import { throwExpression } from "../util/throwExpression";
+import { GroupWorkerURL } from "../groups/groupWorkerURL";
+
 export interface FolderChip {
     name: string,
     used: boolean,
@@ -394,8 +394,15 @@ export class ChipLibrary {
         const json = JSON.stringify(toSave, null, 4);
 
         const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+        const blobUrl = URL.createObjectURL(blob);
+        
+        const a: HTMLAnchorElement = document.createElement("a");
+        a.download = "pack.json";
+        a.href = blobUrl;
+        a.rel = "noopener";
 
-        saveAs(blob, "pack.json");
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 4e4); //40s
+        setTimeout(() => a.click(), 0);
     }
 
     public static removeChipFromPack(chip: string | number): number {
@@ -597,7 +604,7 @@ export class ChipLibrary {
     }
 
     public static joinGroup(group: string, name: string, spectate = false): void {
-        ChipLibrary.groupWorker = new Worker(new URL('../groups/folderGroups.ts', import.meta.url), { type: 'module' });
+        ChipLibrary.groupWorker = new Worker(GroupWorkerURL, { type: 'module' });
 
         const eventKind = spectate ? 'spectate' : 'ready';
 
