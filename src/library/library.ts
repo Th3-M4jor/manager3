@@ -47,7 +47,7 @@ interface importedData {
 export class ChipLibrary {
     public static readonly instance = new ChipLibrary();
 
-    private static groupWorker: Worker | null = null;
+    private static groupWorker: Signal<Worker | null> = signal(null);
 
     private static readonly groupFolders: Signal<[string, GroupFolderChipTuple[]][] | null> = signal(null);
 
@@ -640,7 +640,7 @@ export class ChipLibrary {
     }
 
     public static joinGroup(group: string, name: string, spectate = false): void {
-        ChipLibrary.groupWorker = new Worker(GroupWorkerURL, { type: 'module' });
+        ChipLibrary.groupWorker.value = new Worker(GroupWorkerURL, { type: 'module' });
 
         const eventKind = spectate ? 'spectate' : 'ready';
 
@@ -651,16 +651,16 @@ export class ChipLibrary {
 
         type Msg = ReadyMsg | UpdatedMsg | ErrorMsg | ClosedMsg;
 
-        ChipLibrary.groupWorker.onmessage = (e: MessageEvent<Msg>) => {
+        ChipLibrary.groupWorker.value.onmessage = (e: MessageEvent<Msg>) => {
 
             switch (e.data[0]) {
                 case "error":
-                    ChipLibrary.groupWorker?.terminate();
-                    ChipLibrary.groupWorker = null;
+                    ChipLibrary.groupWorker.value?.terminate();
+                    ChipLibrary.groupWorker.value = null;
                     ChipLibrary.groupFolders.value = null;
                     throw new Error(e.data[1]);
                 case "ready":
-                    ChipLibrary.groupWorker?.postMessage([eventKind, ChipLibrary.ActiveFolderAsGroupTuple()]);
+                    ChipLibrary.groupWorker.value?.postMessage([eventKind, ChipLibrary.ActiveFolderAsGroupTuple()]);
                     break;
                 case "updated":
 
@@ -673,16 +673,16 @@ export class ChipLibrary {
                     ChipLibrary.groupFolders.value = e.data[1];
                     break;
                 case "closed":
-                    ChipLibrary.groupWorker?.terminate();
-                    ChipLibrary.groupWorker = null;
+                    ChipLibrary.groupWorker.value?.terminate();
+                    ChipLibrary.groupWorker.value = null;
                     ChipLibrary.groupFolders.value = null;
             }
         }
-        ChipLibrary.groupWorker.postMessage(["connect", { group: group, name: name }]);
+        ChipLibrary.groupWorker.value.postMessage(["connect", { group: group, name: name }]);
     }
 
     public static leaveGroup(): void {
-        ChipLibrary.groupWorker?.postMessage(["disconnect"]);
+        ChipLibrary.groupWorker.value?.postMessage(["disconnect"]);
     }
 
     public static folderUpdated(): void {
@@ -690,7 +690,7 @@ export class ChipLibrary {
         if (!ChipLibrary.groupWorker) {
             return;
         }
-        ChipLibrary.groupWorker.postMessage(["update", ChipLibrary.ActiveFolderAsGroupTuple()]);
+        ChipLibrary.groupWorker.value?.postMessage(["update", ChipLibrary.ActiveFolderAsGroupTuple()]);
     }
 
     /**
@@ -796,7 +796,7 @@ export class ChipLibrary {
     }
 
     public static get InGroup(): boolean {
-        return !!ChipLibrary.groupWorker;
+        return !!ChipLibrary.groupWorker.value;
     }
 
     public static get GroupFolders(): ReadonlyArray<[string, GroupFolderChipTuple[]]> | null {

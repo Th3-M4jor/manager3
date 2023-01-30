@@ -133,7 +133,7 @@ export class Folder extends Component<Record<string, never>, FolderState> {
 
             const index = +data.index;
             const [name, used] = ChipLibrary.removeChipFromFolder(index);
-            if (used) {
+            if (used.value) {
                 top.setTopMsg(`A used copy of ${name} has been returned to your pack`);
             } else {
                 top.setTopMsg(`A copy of ${name} has been returned to your pack`);
@@ -177,7 +177,7 @@ export class Folder extends Component<Record<string, never>, FolderState> {
                         <input type="text" placeholder="player name" id="playerName" ref={this.playerNameRef} />
                         <br />
                         <label for="spectator_checkbox">Join as spectator</label>
-                        <input type="checkbox" id="spectator_checkbox" ref={this.playerNameRef}/>
+                        <input type="checkbox" id="spectator_checkbox" ref={this.spectatorRef}/>
                     </div>
                     <div class="modal-footer">
                         <span class="pl-1">

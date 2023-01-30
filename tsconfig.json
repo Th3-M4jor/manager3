@@ -19,5 +19,9 @@
             "ES2020",
         ],
         "removeComments": true,
+        "paths": {
+            "react": ["./node_modules/preact/compat/"],
+            "react-dom": ["./node_modules/preact/compat/"]
+        }
     }
 }

@@ -15,8 +15,8 @@ const topMsg = signal("");
 let msgClearHandle: number | undefined;
 const activeTab: Signal<TabName> = initActiveTab();
 
-export function getTopMsg(): string {
-    return topMsg.value;
+export function getTopMsg(): Signal<string> {
+    return topMsg;
 }
 
 export function setTopMsg(msg: string): void {

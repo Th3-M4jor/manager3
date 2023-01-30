@@ -25,6 +25,8 @@
     "@parcel/transformer-css": "^2.0.0",
     "@parcel/transformer-image": "^2.0.0",
     "@parcel/transformer-inline-string": "^2.8.2",
+    "@parcel/compressor-brotli": "^2.8.2",
+    "@parcel/compressor-gzip": "^2.8.2",
     "@types/file-saver": "^2.0.3",
     "@types/phoenix": "^1.5.2",
     "@types/throttle-debounce": "^5.0.0",
