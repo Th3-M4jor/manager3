@@ -1,6 +1,4 @@
-import m, { CVnode } from "mithril";
-
-import { MitrhilTsxComponent } from "../JsxNamespace";
+import { Component, JSX, createRef } from "preact";
 
 import { BattleChip } from "../library/battlechip";
 import { ChipLibrary } from "../library/library";
@@ -12,30 +10,36 @@ import * as top from "../TopLvlMsg";
 import { ChipDesc, ChipDescDisplay } from "../components/chipdesc";
 
 import { LibraryChip } from "../components/chips/LibChip";
+interface LibraryState {
+    activeChipId: number | null;
+    filterby: string;
+    chips: BattleChip[];
+}
 
-export class Library extends MitrhilTsxComponent {
-    private chips: BattleChip[];
-    private filterby: string;
-    private activeChipId: number | null;
+export class Library extends Component<Record<string, never>, LibraryState> {
     private chipMouseoverHandler: (e: Event) => void;
     private doubleClickHandler: (e: Event) => void;
+    private libraryDivRef = createRef<HTMLDivElement>();
 
     protected static librarySortMethod = sort.SortOption.Name;
     protected static librarySortDescending = false;
     protected static libraryScrollPos = 0;
 
-    constructor(attrs: m.CVnode) {
-        super(attrs);
-        this.chips = ChipLibrary.array();
-        this.filterby = "";
-        this.activeChipId = null;
+    constructor() {
+        super();
+        this.state = {
+            activeChipId: null,
+            filterby: "",
+            chips: ChipLibrary.array(),
+        }
+
         this.chipMouseoverHandler = (e: Event) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
             if (!data?.id) {
                 return;
             }
             const id = +data.id;
-            this.activeChipId = id;
+            this.setState({ activeChipId: id });
         };
 
         this.doubleClickHandler = (e: Event) => {
@@ -65,10 +69,10 @@ export class Library extends MitrhilTsxComponent {
             Cr: () => Library.librarySortDescending ? sort.sortBattleChipByCrDesc : sort.sortBattleChipByCr,
         });
 
-        this.chips.sort(sortFunc);
+        this.setState({chips: this.state.chips.sort(sortFunc)});
     }
 
-    private viewTopRow(): JSX.Element {
+    private viewTopRow() {
 
         return (
             <div class="chip-top-row Chip z-20">
@@ -94,26 +98,26 @@ export class Library extends MitrhilTsxComponent {
         );
     }
 
-    private buildSearchBox(): JSX.Element {
+    private buildSearchBox() {
         return (
             <>
                 <label for="chip_search_box" class="Chip select-none">Search</label>
-                <input type="text" placeholder="ChipName" id="chip_search_box" class="chip-search-input" value={this.filterby} oninput={(e: InputEvent) => {
+                <input type="text" placeholder="ChipName" id="chip_search_box" class="chip-search-input" value={this.state.filterby} onInput={(e) => {
                     const val = (e.target as HTMLInputElement).value.toLowerCase();
-                    this.filterby = val;
+                    this.setState({ filterby: val });
                 }} />
             </>
         )
     }
 
-    private renderChips(): JSX.Element[] | JSX.Element {
+    private renderChips() {
 
-        if (!this.filterby) {
-            return this.chips.map((c) => <LibraryChip chip={c} key={c.name + "_L"} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler} />);
+        if (!this.state.filterby) {
+            return this.state.chips.map((c) => <LibraryChip chip={c} key={c.name + "_L"} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler} />);
         }
 
-        const chips = this.chips.reduce((filtered: JSX.Element[], c) => {
-            if (c.name.toLowerCase().startsWith(this.filterby)) {
+        const chips = this.state.chips.reduce((filtered: JSX.Element[], c) => {
+            if (c.name.toLowerCase().startsWith(this.state.filterby)) {
                 filtered.push(<LibraryChip chip={c} key={c.name + "_L"} onmouseover={this.chipMouseoverHandler} ondoubleclick={this.doubleClickHandler} />);
             }
             return filtered;
@@ -130,23 +134,22 @@ export class Library extends MitrhilTsxComponent {
         return chips;
     }
 
-    oncreate(_: CVnode) {
-        const libBox = document.querySelector(".Folder");
-        if (libBox) {
-            libBox.scrollTop = Library.libraryScrollPos;
+    componentDidMount() {
+        if (this.libraryDivRef.current) {
+            this.libraryDivRef.current.scrollTop = Library.libraryScrollPos;
         }
     }
 
-    onbeforeremove(_: CVnode) {
-        Library.libraryScrollPos = document.querySelector(".Folder")?.scrollTop ?? 0;
+    componentWillUnmount() {
+        Library.libraryScrollPos = this.libraryDivRef.current?.scrollTop ?? 0;
     }
 
-    view(_: CVnode): JSX.Element {
+    render(): JSX.Element {
 
         let chipDescItem: ChipDescDisplay;
 
-        if (this.activeChipId) {
-            chipDescItem = ChipDescDisplay.ChipId(this.activeChipId);
+        if (this.state.activeChipId) {
+            chipDescItem = ChipDescDisplay.ChipId(this.state.activeChipId);
         } else {
             chipDescItem = ChipDescDisplay.None;
         }
@@ -155,7 +158,7 @@ export class Library extends MitrhilTsxComponent {
             <>
 
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 px-0 z-10">
-                    <div class="Folder activeFolder">
+                    <div class="Folder activeFolder" ref={this.libraryDivRef}>
                         {this.viewTopRow()}
                         {this.renderChips()}
                     </div>

@@ -1,8 +1,6 @@
-import m, { CVnode } from "mithril";
+import { Component } from "preact";
 
 import { makeTaggedUnion, MemberType, none } from "safety-match";
-
-import { MitrhilTsxComponent } from "../JsxNamespace";
 
 import { ChipDesc, ChipDescDisplay } from "../components/chipdesc";
 
@@ -24,22 +22,30 @@ const ActiveGlossaryItem = makeTaggedUnion({
 
 type ActiveGlossaryItem = MemberType<typeof ActiveGlossaryItem>;
 
-export class Glossary extends MitrhilTsxComponent {
+interface GlossaryState {
+    activeItem: ActiveGlossaryItem;
+}
+
+export class Glossary extends Component<Record<string, never>, GlossaryState> {
     private statusMouseoverHandler: (e: MouseEvent) => void;
     private blightMouseoverHandler: (e: MouseEvent) => void;
     private terrainMouseoverHandler: (e: MouseEvent) => void;
     private chipTypeMouseoverHandler: (e: MouseEvent) => void;
-    private activeItem: ActiveGlossaryItem = ActiveGlossaryItem.None;
+    
 
-    constructor(attrs: CVnode) {
-        super(attrs);
+    constructor() {
+        super();
+        this.state = {
+            activeItem: ActiveGlossaryItem.None,
+        }
+
         this.statusMouseoverHandler = (e: MouseEvent) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
             if (!data || !data.name) {
                 return;
             }
 
-            this.activeItem = ActiveGlossaryItem.Status(data.name);
+            this.setState({ activeItem: ActiveGlossaryItem.Status(data.name) });
         }
 
         this.blightMouseoverHandler = (e: MouseEvent) => {
@@ -48,8 +54,7 @@ export class Glossary extends MitrhilTsxComponent {
                 return;
             }
 
-            this.activeItem = ActiveGlossaryItem.Blight(data.name);
-
+            this.setState({ activeItem: ActiveGlossaryItem.Blight(data.name) });
         }
         this.terrainMouseoverHandler = (e: MouseEvent) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
@@ -57,7 +62,7 @@ export class Glossary extends MitrhilTsxComponent {
                 return;
             }
 
-            this.activeItem = ActiveGlossaryItem.Terrain(data.name);
+            this.setState({ activeItem: ActiveGlossaryItem.Terrain(data.name) });
         }
         this.chipTypeMouseoverHandler = (e: MouseEvent) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
@@ -65,11 +70,11 @@ export class Glossary extends MitrhilTsxComponent {
                 return;
             }
 
-            this.activeItem = ActiveGlossaryItem.ChipType(data.name);
+            this.setState({ activeItem: ActiveGlossaryItem.ChipType(data.name) });
         }
     }
 
-    private viewTopRow(): JSX.Element {
+    private viewTopRow() {
         return (
             <div class="chip-top-row Chip z-20">
                 <div class="w-8/24 sm:w-6/24 px-0 whitespace-nowrap select-none">
@@ -85,9 +90,9 @@ export class Glossary extends MitrhilTsxComponent {
         );
     }
 
-    private renderStatuses(): JSX.Element[] {
+    private renderStatuses() {
         return Object.keys(Statuses).map((status) => (
-            <div class="select-none chip-row Mega" data-name={status} onmouseover={this.statusMouseoverHandler}>
+            <div class="select-none chip-row Mega" data-name={status} onMouseOver={this.statusMouseoverHandler}>
                 <div class="w-8/24 sm:w-6/24 px-0 mx-0 whitespace-nowrap select-none">
                     {status.charAt(0).toUpperCase() + status.slice(1)}
                 </div>
@@ -101,9 +106,9 @@ export class Glossary extends MitrhilTsxComponent {
         ));
     }
 
-    private renderBlights(): JSX.Element[] {
+    private renderBlights() {
         return Object.keys(Blights).sort(blightSort).map((blight) => (
-            <div class="select-none chip-row Giga" data-name={blight} onmouseover={this.blightMouseoverHandler}>
+            <div class="select-none chip-row Giga" data-name={blight} onMouseOver={this.blightMouseoverHandler}>
                 <div class="w-8/24 sm:w-6/24 px-0 mx-0 whitespace-nowrap select-none">
                     {blight.charAt(0).toUpperCase() + blight.slice(1)}
                 </div>
@@ -119,9 +124,9 @@ export class Glossary extends MitrhilTsxComponent {
         ));
     }
 
-    private renderPanels(): JSX.Element[] {
+    private renderPanels() {
         return Object.keys(Panels).map((panel) => (
-            <div class="select-none chip-row Chip" data-name={panel} onmouseover={this.terrainMouseoverHandler}>
+            <div class="select-none chip-row Chip" data-name={panel} onMouseOver={this.terrainMouseoverHandler}>
                 <div class="w-8/24 sm:w-6/24 px-0 mx-0 whitespace-nowrap select-none">
                     {panel.charAt(0).toUpperCase() + panel.slice(1)}
                 </div>
@@ -135,13 +140,13 @@ export class Glossary extends MitrhilTsxComponent {
         ));
     }
 
-    private renderChipTypes(): JSX.Element[] {
+    private renderChipTypes() {
         return Object.keys(ChipTypes).sort(chipTypeSortFunc).map((chipType) => {
             const typeCss = chipTypeFgCss(chipType);
             const typeAbbr = chipTypeToShortStr(chipType);
 
             return (
-                <div class={"select-none chip-row " + typeCss} data-name={chipType} onmouseover={this.chipTypeMouseoverHandler}>
+                <div class={"select-none chip-row " + typeCss} data-name={chipType} onMouseOver={this.chipTypeMouseoverHandler}>
                     <div class="w-8/24 sm:w-6/24 px-0 mx-0 whitespace-nowrap select-none">
                         {chipType.charAt(0).toUpperCase() + chipType.slice(1)}
                     </div>
@@ -158,7 +163,7 @@ export class Glossary extends MitrhilTsxComponent {
 
     private getActiveItemData(): ChipDescDisplay {
 
-        return this.activeItem.match({
+        return this.state.activeItem.match({
             Status: (name) => ChipDescDisplay.GlossaryItem(
                 `${name.charAt(0).toUpperCase()}${name.slice(1)}`,
                 "chipDescBackgroundMega",
@@ -183,7 +188,7 @@ export class Glossary extends MitrhilTsxComponent {
         });
     }
 
-    view(_: CVnode): JSX.Element {
+    render() {
         const activeItemData = this.getActiveItemData();
 
         return (

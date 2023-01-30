@@ -1,4 +1,3 @@
-import m from "mithril";
 import { makeTaggedUnion, none, MemberType } from "safety-match";
 
 export const Element = makeTaggedUnion({
@@ -90,7 +89,7 @@ export function elementToCssClass(val: Element): string {
     return val.match(elementToCssClassMatcher);
 }
 
-export function elementArrToHtml(val: Element[]): JSX.Element {
+export function elementArrToHtml(val: Element[]) {
     const arr = val.map((e) => {
         const elemClass = elementToCssClass(e);
         return (<span class={elemClass}/>);

@@ -1,6 +1,5 @@
-import m from "mithril";
-
-import {makeTaggedUnion, none, MemberType} from "safety-match";
+import { makeTaggedUnion, none, MemberType } from "safety-match";
+import { signal, Signal } from "@preact/signals";
 
 export const Tabs = makeTaggedUnion({
     Library: none,
@@ -12,11 +11,12 @@ export const Tabs = makeTaggedUnion({
 
 export type TabName = MemberType<typeof Tabs>;
 
-let topMsg = "";
+const topMsg = signal("");
 let msgClearHandle: number | undefined;
+const activeTab: Signal<TabName> = signal(Tabs.Library);
 
 export function getTopMsg(): string {
-    return topMsg;
+    return topMsg.value;
 }
 
 export function setTopMsg(msg: string): void {
@@ -24,7 +24,15 @@ export function setTopMsg(msg: string): void {
         msgClearHandle = undefined;
     } else {
         window.clearTimeout(msgClearHandle);
-        msgClearHandle = window.setTimeout(() => {topMsg = ""; m.redraw();}, 15_000); //15 seconds
+        msgClearHandle = window.setTimeout(() => {topMsg.value = "";}, 15_000); //15 seconds
     }
-    topMsg = msg;
+    topMsg.value = msg;
+}
+
+export function getActiveTab(): TabName {
+    return activeTab.value;
+}
+
+export function setActiveTab(tab: TabName): void {
+    activeTab.value = tab;
 }

@@ -1,22 +1,28 @@
-import m from "mithril";
+import * as top from "../TopLvlMsg";
+import { ChipLibrary } from "../library/library";
 
-import { MitrhilTsxComponent } from "../JsxNamespace";
-export interface TopBarProps {
-    msg?: string,
-    tabName: string,
-}
+export function TopBar() {
 
-export class TopBar extends MitrhilTsxComponent<TopBarProps> {
-    view(vnode: m.CVnode<TopBarProps>): JSX.Element {
-        return (
-            <div class="topStatusBar">
-                <span /*style="padding-left: 5px"*/ class="pl-1">
-                    {vnode.attrs.tabName}
-                </span>
-                <span /*style="float: right; color: red"*/ class="topMsgSpan">
-                    {vnode.attrs.msg ?? ""}
-                </span>
-            </div>
-        );
-    }
+    const tabname = top.getActiveTab().match({
+        Folder: () => { return ChipLibrary.FolderName },
+        Library: () => { return "Library" },
+        Pack: () => { return "Pack" },
+        Glossary: () => { return "Glossary" },
+        GroupFolder: (name) => {
+            return (name.length > 15 ? name.substring(0, 12) : name) + "'s Folder";
+        }
+    });
+
+    const topMsg = top.getTopMsg();
+
+    return (
+        <div class="topStatusBar">
+            <span class="pl-1">
+                {tabname}
+            </span>
+            <span class="topMsgSpan">
+                {topMsg ?? ""}
+            </span>
+        </div>
+    );
 }

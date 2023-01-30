@@ -1,6 +1,4 @@
-import m, { CVnode } from "mithril";
-
-import { MitrhilTsxComponent } from "../JsxNamespace";
+import { Component, RenderableProps } from "preact";
 
 import { makeTaggedUnion, none, MemberType } from "safety-match";
 import { BattleChip } from "../library/battlechip";
@@ -123,9 +121,9 @@ interface SortBoxProps {
     onDescendingChange?: EventListener,
     onSortChange: EventListener;
 }
-export class SortBox extends MitrhilTsxComponent<SortBoxProps> {
+export class SortBox extends Component<SortBoxProps> {
 
-    private makeOptions(includeOwned: boolean | undefined): JSX.Element[] {
+    private makeOptions(includeOwned: boolean | undefined) {
         const opts = [
             <option value="Name">
                 Name
@@ -164,14 +162,14 @@ export class SortBox extends MitrhilTsxComponent<SortBoxProps> {
         return opts;
     }
 
-    view(vnode: CVnode<SortBoxProps>): JSX.Element {
+    render(props: RenderableProps<SortBoxProps>) {
 
-        if (vnode.attrs.hideDesc) {
+        if (props.hideDesc) {
             return (
                 <>
                     <label for="chip_sort_select" class="Chip select-none">Sort By</label>
-                    <select id="chip_sort_select" class="chip-sort-select cursor-pointer" onchange={vnode.attrs.onSortChange} value={vnode.attrs.currentMethod.variant}>
-                        {this.makeOptions(vnode.attrs.includeOwned)}
+                    <select id="chip_sort_select" class="chip-sort-select cursor-pointer" onChange={props.onSortChange} value={props.currentMethod.variant}>
+                        {this.makeOptions(props.includeOwned)}
                     </select>
                 </>
             );
@@ -180,12 +178,12 @@ export class SortBox extends MitrhilTsxComponent<SortBoxProps> {
         return (
             <>
                 <label for="chip_sort_select" class="Chip select-none">Sort By</label>
-                <select id="chip_sort_select" class="chip-sort-select cursor-pointer" onchange={vnode.attrs.onSortChange} value={vnode.attrs.currentMethod.variant}>
-                    {this.makeOptions(vnode.attrs.includeOwned)}
+                <select id="chip_sort_select" class="chip-sort-select cursor-pointer" onChange={props.onSortChange} value={props.currentMethod.variant}>
+                    {this.makeOptions(props.includeOwned)}
                 </select>
                 <span class="Chip select-none">
                     <label for="descending_checkbox">Descending</label>
-                    <input id="descending_checkbox" name="descending" type="checkbox" class="cursor-pointer m-0.5 sm:m-1" checked={vnode.attrs.descending} onclick={vnode.attrs.onDescendingChange} />
+                    <input id="descending_checkbox" name="descending" type="checkbox" class="cursor-pointer m-0.5 sm:m-1" checked={props.descending} onClick={props.onDescendingChange} />
                 </span>
             </>
         );

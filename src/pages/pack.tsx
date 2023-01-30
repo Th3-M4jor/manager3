@@ -1,6 +1,4 @@
-import m, { CVnode } from "mithril";
-
-import { MitrhilTsxComponent } from "../JsxNamespace";
+import { Component, createRef } from "preact";
 
 import { BattleChip } from "../library/battlechip";
 import { ChipLibrary } from "../library/library";
@@ -129,28 +127,39 @@ async function loadFile(e: Event) {
 
 }
 
-export class Pack extends MitrhilTsxComponent {
+interface PackState {
+    activeChipId: number | null;
+    contextMenuX: number | null;
+    contextMenuY: number | null;
+    contextMenuSelectedId: number | null;
+}
+
+export class Pack extends Component<Record<string, never>, PackState> {
     private static sortMethod: sort.SortOption = sort.SortOption.Name;
     private static sortDescending = false;
     private static scrollPos = 0;
-    private activeChipId: number | null;
     private chipMouseoverHandler: (e: Event) => void;
     private addToFolderHandler: (e: Event) => void;
-    private contextMenuX: number | null = null;
-    private contextMenuY: number | null = null;
-    private contextMenuSelectedId: number | null = null;
     private closeMenu: (e: MouseEvent) => void;
+    private packDivRef = createRef<HTMLDivElement>();
 
-    constructor(attrs: m.CVnode) {
-        super(attrs);
-        this.activeChipId = null;
+    constructor() {
+        super();
+
+        this.state = {
+            activeChipId: null,
+            contextMenuX: null,
+            contextMenuY: null,
+            contextMenuSelectedId: null,
+        }
+
         this.chipMouseoverHandler = (e: Event) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
             if (!data || !data.id) {
                 return;
             }
             const id = +data.id;
-            this.activeChipId = id;
+            this.setState({ activeChipId: id });
         }
 
         this.closeMenu = (_e: MouseEvent) => {
@@ -181,21 +190,19 @@ export class Pack extends MitrhilTsxComponent {
             return;
         }
         e.preventDefault();
-        this.contextMenuX = e.clientX;
-        this.contextMenuY = e.clientY;
 
-        this.contextMenuSelectedId = +data.id;
+        this.setState({ contextMenuX: e.clientX, contextMenuY: e.clientY, contextMenuSelectedId: +data.id });
+
         window.addEventListener("click", this.closeMenu, { once: true });
     }
 
     private hideContextMenu(): void {
-        this.contextMenuX = null;
-        this.contextMenuY = null;
-        this.contextMenuSelectedId = null;
+        
+        this.setState({ contextMenuX: null, contextMenuY: null, contextMenuSelectedId: null });
         window.removeEventListener("click", this.closeMenu);
     }
 
-    onremove(_: m.CVnode): void {
+    componentWillUnmount(): void {
         this.hideContextMenu();
     }
 
@@ -225,7 +232,7 @@ export class Pack extends MitrhilTsxComponent {
 
     }
 
-    private viewTopRow(): JSX.Element {
+    private viewTopRow() {
         return (
             <div class="chip-top-row Chip z-20">
                 <div class="w-6/24 sm:w-5/24 px-0 whitespace-nowrap select-none">
@@ -256,7 +263,7 @@ export class Pack extends MitrhilTsxComponent {
         );
     }
 
-    private renderChips(): JSX.Element[] | JSX.Element {
+    private renderChips() {
         if (!ChipLibrary.PackLength) {
             return (
                 <span class="select-none Chip">
@@ -277,28 +284,28 @@ export class Pack extends MitrhilTsxComponent {
         />);
     }
 
-    private dropMenu(): JSX.Element {
+    private dropMenu() {
         return (
             <DropMenu class="dropbtn">
-                <button class="dropmenu-btn" onclick={() => {
+                <button class="dropmenu-btn" onClick={() => {
                     ChipLibrary.swapFolder();
                     const fldrName = ChipLibrary.FolderName;
                     top.setTopMsg(`Swiched to ${fldrName}`);
                 }}>
                     SWAP FOLDER
                 </button>
-                <button class="dropmenu-btn" onclick={ChipLibrary.eraseData}>
+                <button class="dropmenu-btn" onClick={ChipLibrary.eraseData}>
                     ERASE DATA
                 </button>
-                <button class="dropmenu-btn" onclick={jackOutClicked}>
+                <button class="dropmenu-btn" onClick={jackOutClicked}>
                     JACK OUT
                 </button>
-                <button class="dropmenu-btn" onclick={() => {
+                <button class="dropmenu-btn" onClick={() => {
                     document.getElementById("jsonFile")?.click();
                 }}>
                     IMPORT JSON
                 </button>
-                <button class="dropmenu-btn" onclick={() => {
+                <button class="dropmenu-btn" onClick={() => {
                     ChipLibrary.exportJSON();
                 }}>
                     EXPORT JSON
@@ -307,23 +314,22 @@ export class Pack extends MitrhilTsxComponent {
         );
     }
 
-    oncreate(_: CVnode) {
-        const pack = document.querySelector(".Folder");
-        if (pack) {
-            pack.scrollTop = Pack.scrollPos;
+    componentDidMount() {
+        if (this.packDivRef.current) {
+            this.packDivRef.current.scrollTop = Pack.scrollPos;
         }
     }
 
-    onbeforeremove(_: CVnode) {
-        Pack.scrollPos = document.querySelector(".Folder")?.scrollTop ?? 0;
+    componentWillUnMount() {
+        Pack.scrollPos = this.packDivRef.current?.scrollTop ?? 0;
     }
 
-    view(_: CVnode): JSX.Element {
+    render() {
 
         let chipDescItem: ChipDescDisplay;
 
-        if (this.activeChipId) {
-            chipDescItem = ChipDescDisplay.ChipId(this.activeChipId);
+        if (this.state.activeChipId) {
+            chipDescItem = ChipDescDisplay.ChipId(this.state.activeChipId);
         } else {
             chipDescItem = ChipDescDisplay.None;
         }
@@ -331,7 +337,7 @@ export class Pack extends MitrhilTsxComponent {
         return (
             <>
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 px-0 z-10">
-                    <div class="Folder activeFolder" oncontextmenu={(e: MouseEvent) => { this.openContextMenu(e) }}>
+                    <div class="Folder activeFolder" onContextMenu={(e) => { this.openContextMenu(e) }}>
                         {this.viewTopRow()}
                         {this.renderChips()}
                     </div>
@@ -350,33 +356,33 @@ export class Pack extends MitrhilTsxComponent {
                     />
                 </div>
                 {this.genContextMenu()}
-                <input id="jsonFile" type="file" class="hidden" accept=".json" onchange={loadFile} />
+                <input id="jsonFile" type="file" class="hidden" accept=".json" onChange={loadFile} />
             </>
         );
     }
 
-    private genContextMenu(): JSX.Element {
-        if (!this.contextMenuX || !this.contextMenuY) {
+    private genContextMenu() {
+        if (!this.state.contextMenuX || !this.state.contextMenuY) {
             return <></>;
         }
 
-        const style = "left: " + this.contextMenuX + "px; top: " + this.contextMenuY + "px;";
+        const style = `left: ${this.state.contextMenuX}px; top: ${this.state.contextMenuY}px;`;
 
         return (
             <div class="menu" style={style}>
                 <ul class="menu-options">
-                    <li class="menu-option select-none" onclick={() => {
-                        if (this.contextMenuSelectedId != null) {
-                            ChipLibrary.removeChipFromPack(this.contextMenuSelectedId);
-                            const name = ChipLibrary.getChip(this.contextMenuSelectedId).name;
+                    <li class="menu-option select-none" onClick={() => {
+                        if (this.state.contextMenuSelectedId != null) {
+                            ChipLibrary.removeChipFromPack(this.state.contextMenuSelectedId);
+                            const name = ChipLibrary.getChip(this.state.contextMenuSelectedId).name;
                             const msg = "Removed a copy of " + name + " from your pack";
                             top.setTopMsg(msg);
                         }
                         this.hideContextMenu();
                     }}>Remove from pack</li>
-                    <li class="menu-option select-none" onclick={() => {
-                        if (this.contextMenuSelectedId != null) {
-                            ChipLibrary.markChipUnused(this.contextMenuSelectedId);
+                    <li class="menu-option select-none" onClick={() => {
+                        if (this.state.contextMenuSelectedId != null) {
+                            ChipLibrary.markChipUnused(this.state.contextMenuSelectedId);
                         }
                         this.hideContextMenu();
                     }}>Mark copy unused</li>

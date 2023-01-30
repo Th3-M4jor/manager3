@@ -1,28 +1,33 @@
-import m, { CVnode } from "mithril";
-import { MitrhilTsxComponent } from "../JsxNamespace";
+import { Component } from "preact";
 
 import { ChipLibrary, FolderChipTuple } from "../library/library";
+import * as top from "../TopLvlMsg";
 
 import { FolderChipWithBChip, sortByName, folderTopRow } from "./folder";
 
 import { ChipDesc, ChipDescDisplay } from "../components/chipdesc";
 import { FolderChip } from "../components/chips/FldrChip";
 
-export class GroupFolder extends MitrhilTsxComponent {
+interface GroupFolderState {
+    activeChipId: number | null;
+}
+export class GroupFolder extends Component<Record<string, never>, GroupFolderState> {
     private chipMouseoverHandler: (e: MouseEvent) => void;
-    private activeChipId: number | null;
 
-    constructor(attrs: CVnode) {
-        super(attrs);
+    constructor() {
+        super();
+        this.state = {
+            activeChipId: null,
+        }
+
         this.chipMouseoverHandler = (e: MouseEvent) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
             if (!data || !data.id) {
                 return;
             }
             const id = +data.id;
-            this.activeChipId = id;
+            this.setState({ activeChipId: id });
         }
-        this.activeChipId = null;
     }
 
     private sortChips(playerFolder: FolderChipTuple[]): FolderChipWithBChip[] {
@@ -34,19 +39,22 @@ export class GroupFolder extends MitrhilTsxComponent {
 
     }
 
-    private renderChips(): JSX.Element[] | JSX.Element {
-        const playerName = m.route.param("playerName");
+    private renderChips() {
+        const playerName = top.getActiveTab().match({
+            GroupFolder: (name) => name,
+            _: () => { top.setActiveTab(top.Tabs.Library); return "" },
+        })
         const folders = ChipLibrary.GroupFolders;
 
         if (!folders) {
-            m.route.set("/Library");
+            top.setActiveTab(top.Tabs.Library);
             return [];
         }
 
         const playerFolder = folders.find(f => f[0] === playerName);
 
         if (!playerFolder) {
-            m.route.set("/Library");
+            top.setActiveTab(top.Tabs.Library);
             return [];
         }
 
@@ -72,12 +80,12 @@ export class GroupFolder extends MitrhilTsxComponent {
 
     }
 
-    view(_: CVnode): JSX.Element {
+    render() {
 
         let chipDescItem: ChipDescDisplay;
 
-        if (this.activeChipId) {
-            chipDescItem = ChipDescDisplay.ChipId(this.activeChipId);
+        if (this.state.activeChipId) {
+            chipDescItem = ChipDescDisplay.ChipId(this.state.activeChipId);
         } else {
             chipDescItem = ChipDescDisplay.None;
         }

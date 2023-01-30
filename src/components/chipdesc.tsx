@@ -1,7 +1,6 @@
-import m, { CVnode } from "mithril";
+import { Component, RenderableProps } from "preact";
 import { makeTaggedUnion, none, MemberType } from "safety-match";
 
-import { MitrhilTsxComponent } from "../JsxNamespace";
 import { BattleChip, diceToStr } from "../library/battlechip";
 import { ChipLibrary } from "../library/library";
 import { elementToCssClass } from "../library/elements";
@@ -40,7 +39,7 @@ function startInterval() {
     }
 }
 
-export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
+export class ChipDesc extends Component<chipDescProps> {
 
     private animationCounter: number;
     public static intervalHandle: number | null = null;
@@ -48,15 +47,12 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     private mouseOverHandler: (e: MouseEvent) => void;
     private mouseLeaveHandler: (e: MouseEvent) => void;
 
-    constructor(vnode: CVnode<chipDescProps>) {
+    constructor(vnode: chipDescProps) {
         super(vnode);
         this.animationCounter = 0;
 
         // memoize callbacks
-        this.mouseOverHandler = (e: MouseEvent) => {
-            // tell mithril not to redraw
-            //@ts-ignore
-            e.redraw = false;
+        this.mouseOverHandler = (_e: MouseEvent) => {
             if (ChipDesc.intervalHandle) {
                 clearInterval(ChipDesc.intervalHandle);
                 ChipDesc.intervalHandle = null;
@@ -69,10 +65,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
 
         };
 
-        this.mouseLeaveHandler = (e: MouseEvent) => {
-            // tell mithril not to redraw
-            //@ts-ignore
-            e.redraw = false;
+        this.mouseLeaveHandler = (_e: MouseEvent) => {
             if (!ChipDesc.intervalHandle && !ChipDesc.startScrollHandle) {
                 ChipDesc.startScrollHandle = setTimeout(startInterval, 1000);
             }
@@ -81,12 +74,12 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
 
     // set the scroll interval when the component is created
     // to every 75ms
-    oncreate(_vnode: CVnode<chipDescProps>): void {
+    componentDidMount(): void {
         ChipDesc.startScrollHandle = setTimeout(startInterval, 1000);
     }
 
     // when the component is updated, reset the scroll position
-    onupdate(_vnode: CVnode<chipDescProps>): void {
+    componentDidUpdate(): void {
         const div = document.getElementById("ScrollTextDiv");
         if (div) div.scrollTop = 0;
 
@@ -104,12 +97,12 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
     }
 
     // remove the scroll interval when the component is removed
-    onremove(_vnode: CVnode<chipDescProps>): void {
+    componentWillUnmount(): void {
         if (ChipDesc.intervalHandle) clearInterval(ChipDesc.intervalHandle);
         if (ChipDesc.startScrollHandle) clearTimeout(ChipDesc.startScrollHandle);
     }
 
-    private elemClassRows(chip: BattleChip): JSX.Element {
+    private elemClassRows(chip: BattleChip) {
 
         // If is not a standard or support chip, then show the class
         // helps the colorblind
@@ -145,7 +138,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         )
     }
 
-    private crRow(chip: BattleChip): JSX.Element {
+    private crRow(chip: BattleChip) {
         if (chip.class.variant === "Standard" && chip.cr > 0) {
             return (
                 <>
@@ -163,7 +156,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         );
     }
 
-    private dmgRow(chip: BattleChip): JSX.Element {
+    private dmgRow(chip: BattleChip) {
 
         if (chip.damage) {
             return (
@@ -184,7 +177,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         );
     }
 
-    private kindRow(chip: BattleChip): JSX.Element {
+    private kindRow(chip: BattleChip) {
         return (
             <>
                 <div class="chipDescLeft chipBasicInfo">
@@ -197,7 +190,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         );
     }
 
-    private skillRow(chip: BattleChip): JSX.Element {
+    private skillRow(chip: BattleChip) {
 
         if (chip.Skill.variant == "None") {
             return (
@@ -218,7 +211,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         );
     }
 
-    private rangeRow(chip: BattleChip): JSX.Element {
+    private rangeRow(chip: BattleChip) {
         return (
             <>
                 <div class="chipDescLeft chipBasicInfo">
@@ -231,7 +224,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         );
     }
 
-    private hitsRow(chip: BattleChip): JSX.Element {
+    private hitsRow(chip: BattleChip) {
         if (chip.hits === "0") {
             return (
                 <>
@@ -251,7 +244,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         );
     }
 
-    private targetsRow(chip: BattleChip): JSX.Element {
+    private targetsRow(chip: BattleChip) {
 
         if (!chip.targets || chip.targets === "0") {
             return (
@@ -272,7 +265,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         );
     }
 
-    private blightRows(chip: BattleChip): JSX.Element {
+    private blightRows(chip: BattleChip) {
         if (!chip.blight) {
             return (<></>);
         }
@@ -304,7 +297,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
 
     }
 
-    private viewWithChip(chipId: number): JSX.Element {
+    private viewWithChip(chipId: number) {
 
         const chip = ChipLibrary.getChip(chipId)
 
@@ -321,7 +314,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         const outerChipClass = "chipDescText chipDescPadding max-h-full flex flex-col " + chipAnimClass;
 
         return (
-            <div class={background} style="max-height: 65vh" onmouseenter={this.mouseOverHandler} onmouseleave={this.mouseLeaveHandler}>
+            <div class={background} style="max-height: 65vh" onMouseEnter={this.mouseOverHandler} onMouseLeave={this.mouseLeaveHandler}>
                 <div class={outerChipClass} style="padding: 3px; height: 100%">
                     <div class="border-b border-black chipName">{chip.name}</div>
                     <div class="grid grid-cols-2 gap-0">
@@ -345,7 +338,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         );
     }
 
-    private glossaryItem(name: string, backgroundCss: string, text: string): JSX.Element {
+    private glossaryItem(name: string, backgroundCss: string, text: string) {
         const background = "h-3/4 " + backgroundCss;
 
         const chipAnimClass = (this.animationCounter & 1) ? "chipWindowOne" : "chipWindowTwo";
@@ -359,7 +352,7 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         }
 
         return (
-            <div class={background} style="max-height: 65vh" onmouseenter={this.mouseOverHandler} onmouseleave={this.mouseLeaveHandler}>
+            <div class={background} style="max-height: 65vh" onMouseEnter={this.mouseOverHandler} onMouseLeave={this.mouseLeaveHandler}>
                 <div class={outerChipClass} style="padding: 3px; height: 100%">
                     <div class="border-b border-black chipName">{name}</div>
                     <div class="border-t border-black overflow-y-scroll hideScrollBar m-0"
@@ -372,44 +365,12 @@ export class ChipDesc extends MitrhilTsxComponent<chipDescProps> {
         );
     }
 
-    private viewNoChip(): JSX.Element {
+    private viewNoChip() {
         return <div class="h-3/4 chipDescBackgroundStd" style="max-height: 65vh" />
     }
 
-    // leverage mithril's onbeforeupdate to only redraw when the chip changes
-    // and ensure that the animation is triggered
-    onbeforeupdate(vnode: CVnode<chipDescProps>, old: CVnode<chipDescProps>): boolean {
-
-        // variant is different, so we need to redraw and trigger the animation
-        if (vnode.attrs.item.variant !== old.attrs.item.variant) {
-            this.animationCounter = (this.animationCounter + 1) | 0; //coerce to signed int
-            return true;
-        }
-
-        // variant is the same, need to check if the item is different
-        const oldItem = old.attrs.item.match({
-            None: () => null,
-            ChipId: (id) => id,
-            GlossaryItem: ({name}) => name,
-        });
-
-        const newItem = vnode.attrs.item.match({
-            None: () => null,
-            ChipId: (id) => id,
-            // only compare the name, not the entire item
-            GlossaryItem: ({name}) => name,
-        });
-
-        if (oldItem !== newItem) {
-            this.animationCounter = (this.animationCounter + 1) | 0; //coerce to signed int
-            return true;
-        }
-
-        return false;
-    }
-
-    view(vnode: CVnode<chipDescProps>): JSX.Element {
-        return vnode.attrs.item.match({
+    render(props: RenderableProps<chipDescProps>) {
+        return props.item.match({
             None: () => this.viewNoChip(),
             ChipId: (id) => this.viewWithChip(id),
             GlossaryItem: ({name, backgroundCss, text}) => this.glossaryItem(name, backgroundCss, text),

@@ -1,17 +1,9 @@
-import m from "mithril";
-
-import * as top from "./TopLvlMsg";
+import { render } from "preact";
 
 import { BattleChip, ChipData } from "./library/battlechip";
 import { ChipLibrary } from "./library/library";
 
 import { MainPage } from "./components/mainpage";
-
-import { Library } from "./pages/library";
-import { Pack } from "./pages/pack";
-import { Folder } from "./pages/folder";
-import { Glossary } from "./pages/glossary";
-import { GroupFolder } from "./pages/groupFolder";
 
 async function main() {
 
@@ -33,6 +25,9 @@ async function main() {
 
     ChipLibrary.initFromChips(chips);
 
+    render(<MainPage/>, document.body);
+
+    /*
     m.route(document.body, "/Library", {
         "/Library": {
             render: function () {
@@ -87,6 +82,7 @@ async function main() {
             }
         }
     });
+    */
 }
 
 main()
