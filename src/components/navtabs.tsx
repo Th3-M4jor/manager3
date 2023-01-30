@@ -146,7 +146,7 @@ export class NavTabs extends MitrhilTsxComponent<navTabProps> {
             );
         });
 
-        const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback], , [glossaryClass, glossaryCallback]] = activeTab.match(baseNavTabMatcher);
+        const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback], [glossaryClass, glossaryCallback]] = activeTab.match(baseNavTabMatcher);
         const fldr = "Folder".slice(0, maxNameLen);
         const pack = "Pack".slice(0, maxNameLen);
         const lib = "Library".slice(0, maxNameLen);
