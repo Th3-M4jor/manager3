@@ -1,6 +1,6 @@
 import { Component } from "preact";
 
-import { ChipLibrary, FolderChipTuple } from "../library/library";
+import { ChipLibrary, GroupFolderChipTuple } from "../library/library";
 import * as top from "../TopLvlMsg";
 
 import { FolderChipWithBChip, sortByName, folderTopRow } from "./folder";
@@ -30,7 +30,7 @@ export class GroupFolder extends Component<Record<string, never>, GroupFolderSta
         }
     }
 
-    private sortChips(playerFolder: FolderChipTuple[]): FolderChipWithBChip[] {
+    private sortChips(playerFolder: GroupFolderChipTuple[]): FolderChipWithBChip[] {
 
         return playerFolder.map(([name, used], idx) => {
             const chip = ChipLibrary.getChip(name);
@@ -104,5 +104,4 @@ export class GroupFolder extends Component<Record<string, never>, GroupFolderSta
             </>
         );
     }
-
 }

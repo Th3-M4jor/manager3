@@ -26,7 +26,7 @@ export class FolderChip extends Component<FolderChipProps> {
                         class = "cursor-pointer"
                         checked={props.used}
                         onClick={(e: MouseEvent) => {
-                            ChipLibrary.ActiveFolder[props.folderIndex][1] = !props.used;
+                            ChipLibrary.ActiveFolder[props.folderIndex][1].value = !props.used;
                             ChipLibrary.folderUpdated();
                             (e.currentTarget as HTMLInputElement)?.blur();
                         }}

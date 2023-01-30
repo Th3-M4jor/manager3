@@ -37,6 +37,13 @@
     "postcss-mixins": "^9.0.0",
     "typescript": "^4.4.2"
   },
+  "alias": {
+    "react": "preact/compat",
+    "react-dom/test-utils": "preact/test-utils",
+    "react-dom": "preact/compat",
+    "react/jsx-runtime": "preact/jsx-runtime",
+    "preact/jsx-dev-runtime": "preact/jsx-runtime"
+  },
   "browserslist": [
     "> 10.0% in US",
     "not dead"

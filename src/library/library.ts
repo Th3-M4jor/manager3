@@ -1,4 +1,4 @@
-import { Signal, signal } from "@preact/signals";
+import { Signal, signal, batch } from "@preact/signals";
 import { makeTaggedUnion, none, MemberType } from "safety-match";
 
 import { storageAvailable } from "../util/storageavailable";
@@ -14,7 +14,8 @@ export interface FolderChip {
 export type chipName = string;
 export type chipUsed = boolean;
 
-export type FolderChipTuple = [chipName, chipUsed];
+export type FolderChipTuple = [Signal<chipName>, Signal<chipUsed>];
+export type GroupFolderChipTuple = [chipName, chipUsed];
 
 export const ActiveFolder = makeTaggedUnion({
     Folder1: none,
@@ -22,6 +23,11 @@ export const ActiveFolder = makeTaggedUnion({
 });
 
 export type ActiveFolder = MemberType<typeof ActiveFolder>;
+
+interface SignaledPackChip {
+    owned: Signal<number>,
+    used: Signal<number>,
+}
 
 interface PackChip {
     owned: number,
@@ -43,7 +49,7 @@ export class ChipLibrary {
 
     private static groupWorker: Worker | null = null;
 
-    private static readonly groupFolders: Signal<[string, FolderChipTuple[]][] | null> = signal(null);
+    private static readonly groupFolders: Signal<[string, GroupFolderChipTuple[]][] | null> = signal(null);
 
     private canSave = true;
 
@@ -60,14 +66,14 @@ export class ChipLibrary {
     /**
      * The contents of your pack
      */
-    private readonly pack: Signal<Map<string, PackChip>> = signal(new Map());
+    private pack: Map<string, SignaledPackChip> = new Map();
 
     /**
      * An array that holds all chips in your folder
      */
-    private readonly folder: Signal<FolderChipTuple[]> = signal([]);
+    private folder: FolderChipTuple[] = [];
 
-    private readonly folder2: Signal<FolderChipTuple[]> = signal([]);
+    private folder2: FolderChipTuple[] = [];
 
     /**
      * The max number of chips allowed in a folder
@@ -121,10 +127,10 @@ export class ChipLibrary {
                 window.localStorage.removeItem('activeFolder');
                 window.localStorage.removeItem('pack');
                 window.localStorage.removeItem('chipLimit');
-                ChipLibrary.instance.folder.value = [];
-                ChipLibrary.instance.folder2.value = [];
+                ChipLibrary.instance.folder = [];
+                ChipLibrary.instance.folder2 = [];
                 ChipLibrary.instance.folderSize.value = 12;
-                ChipLibrary.instance.pack.value = new Map();
+                ChipLibrary.instance.pack = new Map();
             }
 
             //save chips every 5 minutes
@@ -143,7 +149,7 @@ export class ChipLibrary {
             throw new Error(`Found an invalid folderchip`);
         }
 
-        return [chip.name, chip.used];
+        return [signal(chip.name), signal(chip.used)];
     }
 
     private loadFolder(): number {
@@ -181,13 +187,13 @@ export class ChipLibrary {
             }
         }
 
-        
+
         if (folderArry.length > this.folderSize.value) {
             throw new Error("Folder too big");
         }
-        
-        this.folder.value = folderArry;
-        return this.folder.value.length;
+
+        this.folder = folderArry;
+        return this.folder.length;
     }
 
     private loadFolder2(): number {
@@ -219,8 +225,8 @@ export class ChipLibrary {
             throw new Error("Folder2 too big");
         }
 
-        this.folder2.value = folderArry;
-        return this.folder2.value.length;
+        this.folder2 = folderArry;
+        return this.folder2.length;
     }
 
 
@@ -238,11 +244,11 @@ export class ChipLibrary {
         }
 
         const data = {
-            owned: chip.owned,
-            used: chip.used,
+            owned: signal(chip.owned),
+            used: signal(chip.used),
         };
 
-        this.pack.value.set(name, data);
+        this.pack.set(name, data);
 
     }
 
@@ -265,23 +271,26 @@ export class ChipLibrary {
                 alert(`The chip ${k} no longer exists in the library, cannot add it to your pack. You owned ${oldPack[k]?.owned}, of which ${oldPack[k]?.used} were marked as used`);
             }
         }
-        return this.pack.value.size;
+        return this.pack.size;
     }
 
     private addToPack(chipName: string, used = false): number {
-        const packChip = this.pack.value.get(chipName);
+        const packChip = this.pack.get(chipName);
 
         if (packChip) {
-            packChip.owned += 1;
-            packChip.used += (used ? 1 : 0);
-            return packChip.owned;
+            batch(() => {
+
+                packChip.owned.value += 1;
+                packChip.used.value += (used ? 1 : 0);
+                return packChip.owned;
+            });
         }
 
         const chip = {
-            owned: 1,
-            used: (used ? 1 : 0),
+            owned: signal(1),
+            used: signal(used ? 1 : 0),
         }
-        this.pack.value.set(chipName, chip);
+        this.pack.set(chipName, chip);
         return 1;
     }
 
@@ -295,12 +304,12 @@ export class ChipLibrary {
         const chipName = typeof (chip) === "string" ? chip : ChipLibrary.instance.idMap.get(chip);
         if (!chipName) throw new Error("Inconcievable!");
 
-        const packChip = ChipLibrary.instance.pack.value.get(chipName) ?? throwExpression("Inconcievable!");
+        const packChip = ChipLibrary.instance.pack.get(chipName) ?? throwExpression("Inconcievable!");
 
         const libChip = ChipLibrary.instance.chips.get(chipName) ?? throwExpression("Inconcievable!");
 
         const copyCt = ChipLibrary.ActiveFolder.reduce((ct, [name, _]) => {
-            if (name === chipName) {
+            if (name.peek() === chipName) {
                 return ct + 1;
             }
             return ct;
@@ -313,17 +322,17 @@ export class ChipLibrary {
             return null;
         }
 
-        if (packChip.used >= packChip.owned) {
+        if (packChip.used.peek() >= packChip.owned.peek()) {
             alert(`You have already used all of your ${chipName} chips`);
             return null;
         }
 
-        if (packChip.owned == 1) {
-            ChipLibrary.instance.pack.value.delete(chipName);
-            ChipLibrary.ActiveFolder.push([chipName, false]);
+        if (packChip.owned.peek() == 1) {
+            ChipLibrary.instance.pack.delete(chipName);
+            ChipLibrary.ActiveFolder.push([signal(chipName), signal(false)]);
         } else {
-            packChip.owned -= 1;
-            ChipLibrary.ActiveFolder.push([chipName, false]);
+            packChip.owned.value -= 1;
+            ChipLibrary.ActiveFolder.push([signal(chipName), signal(false)]);
         }
 
         ChipLibrary.instance.changeSinceLastSave = true;
@@ -351,14 +360,17 @@ export class ChipLibrary {
     public static saveData(): void {
         if (!ChipLibrary.instance.canSave && !ChipLibrary.instance.changeSinceLastSave) return;
 
-        const packObj = Array.from(ChipLibrary.instance.pack.value).reduce((obj: PackDict, [key, value]) => {
-            obj[key] = value;
+        const packObj = Array.from(ChipLibrary.instance.pack).reduce((obj: PackDict, [key, value]) => {
+            obj[key] = {
+                owned: value.owned.value,
+                used: value.used.value,
+            }
             return obj;
         }, {})
 
         const packString = JSON.stringify(packObj);
-        const folderString = JSON.stringify(ChipLibrary.convertFolderToObjArr(ChipLibrary.instance.folder.value));
-        const folder2String = JSON.stringify(ChipLibrary.convertFolderToObjArr(ChipLibrary.instance.folder2.value));
+        const folderString = JSON.stringify(ChipLibrary.convertFolderToObjArr(ChipLibrary.instance.folder));
+        const folder2String = JSON.stringify(ChipLibrary.convertFolderToObjArr(ChipLibrary.instance.folder2));
 
         const folderSizeStr = ChipLibrary.FolderSize + "";
         const activeFolderStr = ChipLibrary.instance.activeFolder.value.match({
@@ -379,21 +391,24 @@ export class ChipLibrary {
     public static convertFolderToObjArr(folder: FolderChipTuple[]): FolderChip[] {
         return folder.map(([name, used]) => {
             return {
-                name: name,
-                used: used
+                name: name.peek(),
+                used: used.peek()
             }
         });
     }
 
     public static exportJSON(): void {
-        const packObj = Array.from(ChipLibrary.instance.pack.value).reduce((obj: PackDict, [key, value]) => {
-            obj[key] = value;
+        const packObj = Array.from(ChipLibrary.instance.pack).reduce((obj: PackDict, [key, value]) => {
+            obj[key] = {
+                owned: value.owned.value,
+                used: value.used.value
+            };
             return obj;
         }, {});
 
         const toSave: importedData = {
-            Folder: ChipLibrary.convertFolderToObjArr(ChipLibrary.instance.folder.value),
-            Folder2: ChipLibrary.convertFolderToObjArr(ChipLibrary.instance.folder2.value),
+            Folder: ChipLibrary.convertFolderToObjArr(ChipLibrary.instance.folder),
+            Folder2: ChipLibrary.convertFolderToObjArr(ChipLibrary.instance.folder2),
             Pack: packObj,
             Limit: ChipLibrary.FolderSize,
         }
@@ -402,7 +417,7 @@ export class ChipLibrary {
 
         const blob = new Blob([json], { type: "application/json;charset=utf-8" });
         const blobUrl = URL.createObjectURL(blob);
-        
+
         const a: HTMLAnchorElement = document.createElement("a");
         a.download = "pack.json";
         a.href = blobUrl;
@@ -416,25 +431,25 @@ export class ChipLibrary {
 
         const name = typeof (chip) == "number" ? ChipLibrary.idToName(chip) : chip;
 
-        const packChip = ChipLibrary.instance.pack.value.get(name) ?? throwExpression("Unreachable!");
-        packChip.owned -= 1;
+        const packChip = ChipLibrary.instance.pack.get(name) ?? throwExpression("Unreachable!");
+        packChip.owned.value -= 1;
 
-        if (packChip.used > 0) {
-            packChip.used -= 1;
+        if (packChip.used.value > 0) {
+            packChip.used.value -= 1;
         }
 
-        if (packChip.owned <= 0) {
-            ChipLibrary.instance.pack.value.delete(name);
+        if (packChip.owned.value <= 0) {
+            ChipLibrary.instance.pack.delete(name);
         }
 
         ChipLibrary.instance.changeSinceLastSave = true;
 
-        return packChip.owned;
+        return packChip.owned.value;
     }
 
     public static removeChipFromFolder(index: number): FolderChipTuple {
         const [[name, used]] = ChipLibrary.ActiveFolder.splice(index, 1);
-        ChipLibrary.instance.addToPack(name, used);
+        ChipLibrary.instance.addToPack(name.value, used.value);
 
         ChipLibrary.instance.changeSinceLastSave = true;
 
@@ -444,7 +459,7 @@ export class ChipLibrary {
     public static clearFolder(): number {
         const len = ChipLibrary.ActiveFolder.length;
         ChipLibrary.ActiveFolder.forEach(([name, used]) => {
-            ChipLibrary.instance.addToPack(name, used);
+            ChipLibrary.instance.addToPack(name.value, used.value);
         });
         ChipLibrary.ActiveFolder = [];
         ChipLibrary.instance.changeSinceLastSave = true;
@@ -463,9 +478,9 @@ export class ChipLibrary {
             return;
         }
 
-        ChipLibrary.instance.folder.value = [];
-        ChipLibrary.instance.folder2.value = [];
-        ChipLibrary.instance.pack.value.clear();
+        ChipLibrary.instance.folder = [];
+        ChipLibrary.instance.folder2 = [];
+        ChipLibrary.instance.pack.clear();
         ChipLibrary.instance.folderSize.value = 12;
         ChipLibrary.instance.activeFolder.value = ActiveFolder.Folder1;
 
@@ -538,11 +553,11 @@ export class ChipLibrary {
             if (!ChipLibrary.instance.chips.has(chip.name)) {
                 alert(`${chip.name} no longer exists, you had it marked as ${chip.used ? "used" : "unused"}`);
             } else {
-                folderArr.push([chip.name, chip.used]);
+                folderArr.push([signal(chip.name), signal(chip.used)]);
             }
         }
 
-        ChipLibrary.instance.folder.value = folderArr;
+        ChipLibrary.instance.folder = folderArr;
     }
 
     private static importFolder2(folder: FolderChip[]): void {
@@ -561,11 +576,11 @@ export class ChipLibrary {
             if (!ChipLibrary.instance.chips.has(chip.name)) {
                 alert(`${chip.name} no longer exists, you had it marked as ${chip.used ? "used" : "unused"}`);
             } else {
-                folderArr.push([chip.name, chip.used]);
+                folderArr.push([signal(chip.name), signal(chip.used)]);
             }
         }
 
-        ChipLibrary.instance.folder2.value = folderArr;
+        ChipLibrary.instance.folder2 = folderArr;
     }
 
     private static importPack(pack: PackDict): void {
@@ -584,7 +599,10 @@ export class ChipLibrary {
                 throw new TypeError(`Expected number, found ${typeof (chip.used)}`);
             }
 
-            ChipLibrary.instance.pack.value.set(chipname, chip);
+            ChipLibrary.instance.pack.set(chipname, {
+                owned: signal(chip.owned),
+                used: signal(chip.used)
+            });
         }
     }
 
@@ -596,19 +614,19 @@ export class ChipLibrary {
     public static jackOut(): number {
         let usedCt = 0;
 
-        for (const chip of ChipLibrary.instance.folder.value) {
-            usedCt += chip[1] ? 1 : 0;
-            chip[1] = false;
+        for (const chip of ChipLibrary.instance.folder) {
+            usedCt += chip[1].value ? 1 : 0;
+            chip[1].value = false;
         }
 
-        for (const chip of ChipLibrary.instance.folder2.value) {
-            usedCt += chip[1] ? 1 : 0;
-            chip[1] = false;
+        for (const chip of ChipLibrary.instance.folder2) {
+            usedCt += chip[1].value ? 1 : 0;
+            chip[1].value = false;
         }
 
-        for (const [_, chip] of ChipLibrary.instance.pack.value) {
-            usedCt += chip.used;
-            chip.used = 0;
+        for (const [_, chip] of ChipLibrary.instance.pack) {
+            usedCt += chip.used.value;
+            chip.used.value = 0;
         }
 
         ChipLibrary.instance.changeSinceLastSave = true;
@@ -617,13 +635,17 @@ export class ChipLibrary {
         return usedCt;
     }
 
+    private static ActiveFolderAsGroupTuple(): GroupFolderChipTuple[] {
+        return ChipLibrary.instance.folder.map((chip) => [chip[0].peek(), chip[1].peek()]);
+    }
+
     public static joinGroup(group: string, name: string, spectate = false): void {
         ChipLibrary.groupWorker = new Worker(GroupWorkerURL, { type: 'module' });
 
         const eventKind = spectate ? 'spectate' : 'ready';
 
         type ReadyMsg = ["ready"];
-        type UpdatedMsg = ["updated", [string, FolderChipTuple[]][]];
+        type UpdatedMsg = ["updated", [string, GroupFolderChipTuple[]][]];
         type ErrorMsg = ["error", string];
         type ClosedMsg = ["closed"];
 
@@ -638,7 +660,7 @@ export class ChipLibrary {
                     ChipLibrary.groupFolders.value = null;
                     throw new Error(e.data[1]);
                 case "ready":
-                    ChipLibrary.groupWorker?.postMessage([eventKind, ChipLibrary.ActiveFolder]);
+                    ChipLibrary.groupWorker?.postMessage([eventKind, ChipLibrary.ActiveFolderAsGroupTuple()]);
                     break;
                 case "updated":
 
@@ -668,7 +690,7 @@ export class ChipLibrary {
         if (!ChipLibrary.groupWorker) {
             return;
         }
-        ChipLibrary.groupWorker.postMessage(["update", ChipLibrary.ActiveFolder]);
+        ChipLibrary.groupWorker.postMessage(["update", ChipLibrary.ActiveFolderAsGroupTuple()]);
     }
 
     /**
@@ -687,9 +709,9 @@ export class ChipLibrary {
 
     public static markChipUnused(chip: string | number): void {
         const chipName = typeof (chip) == "string" ? chip : ChipLibrary.idToName(chip);
-        const chipData = ChipLibrary.instance.pack.value.get(chipName);
-        if (chipData && chipData.used > 0) {
-            chipData.used -= 1;
+        const chipData = ChipLibrary.instance.pack.get(chipName);
+        if (chipData && chipData.used.value > 0) {
+            chipData.used.value -= 1;
         }
     }
 
@@ -713,34 +735,34 @@ export class ChipLibrary {
         return ChipLibrary.instance.chips.size;
     }
 
-    public static get Pack(): [string, PackChip][] {
-        return [...ChipLibrary.instance.pack.value.entries()]
+    public static get Pack(): [string, SignaledPackChip][] {
+        return [...ChipLibrary.instance.pack.entries()]
     }
 
     public static get PackLength(): number {
-        return ChipLibrary.instance.pack.value.size;
+        return ChipLibrary.instance.pack.size;
     }
 
-    public static get Folder(): Signal<FolderChipTuple[]> {
+    public static get Folder(): FolderChipTuple[] {
         return ChipLibrary.instance.folder;
     }
 
-    public static get Folder2(): Signal<FolderChipTuple[]> {
+    public static get Folder2(): FolderChipTuple[] {
         return ChipLibrary.instance.folder2;
     }
 
     public static get ActiveFolder(): FolderChipTuple[] {
 
         return ChipLibrary.instance.activeFolder.value.match({
-            Folder1: () => ChipLibrary.instance.folder.value,
-            Folder2: () => ChipLibrary.instance.folder2.value,
+            Folder1: () => ChipLibrary.instance.folder,
+            Folder2: () => ChipLibrary.instance.folder2,
         });
     }
 
     private static set ActiveFolder(val: FolderChipTuple[]) {
         ChipLibrary.instance.activeFolder.value.match({
-            Folder1: () => ChipLibrary.instance.folder.value = val,
-            Folder2: () => ChipLibrary.instance.folder2.value = val,
+            Folder1: () => ChipLibrary.instance.folder = val,
+            Folder2: () => ChipLibrary.instance.folder2 = val,
         });
     }
 
@@ -756,7 +778,7 @@ export class ChipLibrary {
      * Will not go below 12 or above 30, and will not go below the current folder size
      */
     public static set FolderSize(val: number) {
-        if (val < ChipLibrary.Folder.value.length || val < ChipLibrary.Folder2.value.length) {
+        if (val < ChipLibrary.Folder.length || val < ChipLibrary.Folder2.length) {
             return;
         } else if (val < 12) {
             ChipLibrary.instance.folderSize.value = 12;
@@ -770,14 +792,14 @@ export class ChipLibrary {
     }
 
     public static get MinFolderSize(): number {
-        return Math.max(ChipLibrary.Folder.value.length, ChipLibrary.Folder2.value.length);
+        return Math.max(ChipLibrary.Folder.length, ChipLibrary.Folder2.length);
     }
 
     public static get InGroup(): boolean {
         return !!ChipLibrary.groupWorker;
     }
 
-    public static get GroupFolders(): ReadonlyArray<[string, FolderChipTuple[]]> | null {
+    public static get GroupFolders(): ReadonlyArray<[string, GroupFolderChipTuple[]]> | null {
         return ChipLibrary.groupFolders.value;
     }
 

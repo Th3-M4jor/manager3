@@ -1,11 +1,12 @@
+import { Signal } from "@preact/signals";
 import { RenderableProps } from "preact";
 
 import {BattleChip} from "../../library/battlechip";
 
 export interface PackChipProps {
     chip: BattleChip,
-    owned: number,
-    used: number,
+    owned: Signal<number>,
+    used: Signal<number>,
     onmouseover: (e: Event) => void;
     addToFolder: (e: Event) => void;
 }

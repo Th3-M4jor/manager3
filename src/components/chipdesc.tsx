@@ -38,10 +38,10 @@ function startInterval() {
         ChipDesc.intervalHandle = setInterval(scrollInterval, 75);
     }
 }
-
 export class ChipDesc extends Component<chipDescProps> {
 
     private animationCounter: number;
+    private currentDisplay: ChipDescDisplay;
     public static intervalHandle: number | null = null;
     public static startScrollHandle: number | null = null;
     private mouseOverHandler: (e: MouseEvent) => void;
@@ -50,6 +50,7 @@ export class ChipDesc extends Component<chipDescProps> {
     constructor(vnode: chipDescProps) {
         super(vnode);
         this.animationCounter = 0;
+        this.currentDisplay = vnode.item
 
         // memoize callbacks
         this.mouseOverHandler = (_e: MouseEvent) => {
@@ -70,6 +71,27 @@ export class ChipDesc extends Component<chipDescProps> {
                 ChipDesc.startScrollHandle = setTimeout(startInterval, 1000);
             }
         };
+    }
+
+    shouldComponentUpdate(nextProps: Readonly<chipDescProps>): boolean {
+        const newVal = nextProps.item.match({
+            None: () => null,
+            ChipId: (id) => id,
+            GlossaryItem: ({text: text}) => text,
+        })
+
+        const oldVal = this.currentDisplay.match({
+            None: () => null,
+            ChipId: (id) => id,
+            GlossaryItem: ({text: text}) => text,
+        })
+
+        if (newVal !== oldVal) {
+            this.currentDisplay = nextProps.item;
+            return true;
+        }
+
+        return false;
     }
 
     // set the scroll interval when the component is created
@@ -94,6 +116,7 @@ export class ChipDesc extends Component<chipDescProps> {
         }
 
         ChipDesc.startScrollHandle = setTimeout(startInterval, 1000);
+        this.animationCounter++;
     }
 
     // remove the scroll interval when the component is removed

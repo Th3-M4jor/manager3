@@ -138,6 +138,7 @@ export class Folder extends Component<Record<string, never>, FolderState> {
             } else {
                 top.setTopMsg(`A copy of ${name} has been returned to your pack`);
             }
+            this.forceUpdate();
         }
     }
 
@@ -193,9 +194,9 @@ export class Folder extends Component<Record<string, never>, FolderState> {
 
     private getSortedChips(): FolderChipWithBChip[] {
         const folder: FolderChipWithBChip[] = ChipLibrary.ActiveFolder.map(([name, used], idx) => ({
-            chip: ChipLibrary.getChip(name),
+            chip: ChipLibrary.getChip(name.value),
             index: idx,
-            used,
+            used: used.value,
         }));
 
         const sortFunc: (a: FolderChipWithBChip, b: FolderChipWithBChip) => number =
@@ -265,6 +266,7 @@ export class Folder extends Component<Record<string, never>, FolderState> {
                 </button>
                 <button class="dropmenu-btn" onClick={() => {
                     const len = ChipLibrary.clearFolder();
+                    this.forceUpdate();
                     top.setTopMsg(`${len} ${len == 1 ? "chip has" : "chips have"} been returned to your pack`);
                 }}>
                     CLEAR FOLDER

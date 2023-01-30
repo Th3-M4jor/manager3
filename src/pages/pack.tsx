@@ -1,4 +1,5 @@
 import { Component, createRef } from "preact";
+import { Signal, signal } from "@preact/signals";
 
 import { BattleChip } from "../library/battlechip";
 import { ChipLibrary } from "../library/library";
@@ -15,8 +16,8 @@ import { cmpN } from "../util/cmp";
 
 interface PackChipWithBChip {
     chip: BattleChip,
-    owned: number,
-    used: number,
+    owned: Signal<number>,
+    used: Signal<number>,
 }
 
 //#region PackSortOpts
@@ -29,11 +30,11 @@ function sortByNameDesc(a: PackChipWithBChip, b: PackChipWithBChip): number {
 }
 
 function sortByOwned(a: PackChipWithBChip, b: PackChipWithBChip): number {
-    return cmpN(b.owned, a.owned) || sort.sortBattleChipByName(a.chip, b.chip);
+    return cmpN(b.owned.value, a.owned.value) || sort.sortBattleChipByName(a.chip, b.chip);
 }
 
 function sortByOwnedDesc(a: PackChipWithBChip, b: PackChipWithBChip): number {
-    return cmpN(a.owned, b.owned) || sort.sortBattleChipByName(a.chip, b.chip);
+    return cmpN(a.owned.value, b.owned.value) || sort.sortBattleChipByName(a.chip, b.chip);
 }
 
 function sortByAvgDmg(a: PackChipWithBChip, b: PackChipWithBChip): number {
@@ -135,13 +136,14 @@ interface PackState {
 }
 
 export class Pack extends Component<Record<string, never>, PackState> {
-    private static sortMethod: sort.SortOption = sort.SortOption.Name;
-    private static sortDescending = false;
+    private static sortMethod: Signal<sort.SortOption> = signal(sort.SortOption.Name);
+    private static sortDescending = signal(false);
     private static scrollPos = 0;
     private chipMouseoverHandler: (e: Event) => void;
     private addToFolderHandler: (e: Event) => void;
     private closeMenu: (e: MouseEvent) => void;
     private packDivRef = createRef<HTMLDivElement>();
+    private jsonInputRef = createRef<HTMLInputElement>();
 
     constructor() {
         super();
@@ -176,6 +178,7 @@ export class Pack extends Component<Record<string, never>, PackState> {
             if (name) {
                 top.setTopMsg(`A copy of ${name} has been added to ${ChipLibrary.FolderName}`);
             }
+            this.forceUpdate()
         }
     }
 
@@ -216,16 +219,16 @@ export class Pack extends Component<Record<string, never>, PackState> {
             }
         });
 
-        const sortFunc: (a: PackChipWithBChip, b: PackChipWithBChip) => number = Pack.sortMethod.match({
-            AverageDamage: () => Pack.sortDescending ? sortByAvgDmgDesc : sortByAvgDmg,
-            Element: () => Pack.sortDescending ? sortByElemDesc : sortByElem,
-            Kind: () => Pack.sortDescending ? sortByKindDesc : sortByKind,
-            MaxDamage: () => Pack.sortDescending ? sortByMaxDmgDesc : sortByMaxDmg,
-            Name: () => Pack.sortDescending ? sortByNameDesc : sortByName,
-            Owned: () => Pack.sortDescending ? sortByOwnedDesc : sortByOwned,
-            Range: () => Pack.sortDescending ? sortByRangeDesc : sortByRange,
-            Skill: () => Pack.sortDescending ? sortBySkillDesc : sortBySkill,
-            Cr: () => Pack.sortDescending ? sortByCrDesc : sortByCr,
+        const sortFunc: (a: PackChipWithBChip, b: PackChipWithBChip) => number = Pack.sortMethod.value.match({
+            AverageDamage: () => Pack.sortDescending.value ? sortByAvgDmgDesc : sortByAvgDmg,
+            Element: () => Pack.sortDescending.value ? sortByElemDesc : sortByElem,
+            Kind: () => Pack.sortDescending.value ? sortByKindDesc : sortByKind,
+            MaxDamage: () => Pack.sortDescending.value ? sortByMaxDmgDesc : sortByMaxDmg,
+            Name: () => Pack.sortDescending.value ? sortByNameDesc : sortByName,
+            Owned: () => Pack.sortDescending.value ? sortByOwnedDesc : sortByOwned,
+            Range: () => Pack.sortDescending.value ? sortByRangeDesc : sortByRange,
+            Skill: () => Pack.sortDescending.value ? sortBySkillDesc : sortBySkill,
+            Cr: () => Pack.sortDescending.value ? sortByCrDesc : sortByCr,
         });
 
         return pack.sort(sortFunc);
@@ -294,14 +297,17 @@ export class Pack extends Component<Record<string, never>, PackState> {
                 }}>
                     SWAP FOLDER
                 </button>
-                <button class="dropmenu-btn" onClick={ChipLibrary.eraseData}>
+                <button class="dropmenu-btn" onClick={() => {
+                    ChipLibrary.eraseData();
+                    this.forceUpdate();
+                }}>
                     ERASE DATA
                 </button>
                 <button class="dropmenu-btn" onClick={jackOutClicked}>
                     JACK OUT
                 </button>
                 <button class="dropmenu-btn" onClick={() => {
-                    document.getElementById("jsonFile")?.click();
+                    this.jsonInputRef.current?.click();
                 }}>
                     IMPORT JSON
                 </button>
@@ -345,18 +351,21 @@ export class Pack extends Component<Record<string, never>, PackState> {
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
                     <ChipDesc item={chipDescItem} />
                     {this.dropMenu()}
-                    <sort.SortBox currentMethod={Pack.sortMethod} includeOwned onSortChange={(e) => {
-                        Pack.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
+                    <sort.SortBox currentMethod={Pack.sortMethod.value} includeOwned onSortChange={(e) => {
+                        Pack.sortMethod.value = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         (e.target as HTMLSelectElement).blur(); //unfocus element automatically after changing sort method
                     }}
-                        descending={Pack.sortDescending} onDescendingChange={(e) => {
-                            Pack.sortDescending = (e.target as HTMLInputElement).checked;
+                        descending={Pack.sortDescending.value} onDescendingChange={(e) => {
+                            Pack.sortDescending.value = (e.target as HTMLInputElement).checked;
                             (e.target as HTMLInputElement).blur();
                         }}
                     />
                 </div>
                 {this.genContextMenu()}
-                <input id="jsonFile" type="file" class="hidden" accept=".json" onChange={loadFile} />
+                <input id="jsonFile" type="file" class="hidden" accept=".json" onChange={ async (e) => {
+                    await loadFile(e);
+                    this.forceUpdate();
+                }} ref={this.jsonInputRef} />
             </>
         );
     }

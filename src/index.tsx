@@ -26,63 +26,6 @@ async function main() {
     ChipLibrary.initFromChips(chips);
 
     render(<MainPage/>, document.body);
-
-    /*
-    m.route(document.body, "/Library", {
-        "/Library": {
-            render: function () {
-                return (
-                    <MainPage activeTab={top.Tabs.Library}>
-                        <Library />
-                    </MainPage>
-                );
-            }
-        },
-        "/Pack": {
-            render: function () {
-                return (
-                    <MainPage activeTab={top.Tabs.Pack}>
-                        <Pack />
-                    </MainPage>
-                );
-            }
-        },
-        "/Folder": {
-            render: function () {
-                return (
-                    <MainPage activeTab={top.Tabs.Folder}>
-                        <Folder />
-                    </MainPage>
-                );
-            }
-        },
-        "/Glossary": {
-            render: function () {
-                return (
-                    <MainPage activeTab={top.Tabs.Glossary}>
-                        <Glossary />
-                    </MainPage>
-                );
-            }
-        },
-        "/Group/:playerName": {
-            onmatch: function (args) {
-                const folders = ChipLibrary.GroupFolders;
-                if(!folders || !folders.some(f => f[0] == args.playerName)) {
-                    //@ts-ignore
-                    return m.route.SKIP;
-                }
-            },
-            render: function () {
-                return (
-                    <MainPage activeTab={top.Tabs.GroupFolder(m.route.param("playerName"))}>
-                        <GroupFolder />
-                    </MainPage>
-                );
-            }
-        }
-    });
-    */
 }
 
 main()
