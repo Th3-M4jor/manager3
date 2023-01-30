@@ -1,17 +1,9 @@
-import m from "mithril";
-
-import * as top from "./TopLvlMsg";
+import { render } from "preact";
 
 import { BattleChip, ChipData } from "./library/battlechip";
 import { ChipLibrary } from "./library/library";
 
 import { MainPage } from "./components/mainpage";
-
-import { Library } from "./pages/library";
-import { Pack } from "./pages/pack";
-import { Folder } from "./pages/folder";
-import { Glossary } from "./pages/glossary";
-import { GroupFolder } from "./pages/groupFolder";
 
 async function main() {
 
@@ -33,60 +25,7 @@ async function main() {
 
     ChipLibrary.initFromChips(chips);
 
-    m.route(document.body, "/Library", {
-        "/Library": {
-            render: function () {
-                return (
-                    <MainPage activeTab={top.Tabs.Library}>
-                        <Library />
-                    </MainPage>
-                );
-            }
-        },
-        "/Pack": {
-            render: function () {
-                return (
-                    <MainPage activeTab={top.Tabs.Pack}>
-                        <Pack />
-                    </MainPage>
-                );
-            }
-        },
-        "/Folder": {
-            render: function () {
-                return (
-                    <MainPage activeTab={top.Tabs.Folder}>
-                        <Folder />
-                    </MainPage>
-                );
-            }
-        },
-        "/Glossary": {
-            render: function () {
-                return (
-                    <MainPage activeTab={top.Tabs.Glossary}>
-                        <Glossary />
-                    </MainPage>
-                );
-            }
-        },
-        "/Group/:playerName": {
-            onmatch: function (args) {
-                const folders = ChipLibrary.GroupFolders;
-                if(!folders || !folders.some(f => f[0] == args.playerName)) {
-                    //@ts-ignore
-                    return m.route.SKIP;
-                }
-            },
-            render: function () {
-                return (
-                    <MainPage activeTab={top.Tabs.GroupFolder(m.route.param("playerName"))}>
-                        <GroupFolder />
-                    </MainPage>
-                );
-            }
-        }
-    });
+    render(<MainPage/>, document.body);
 }
 
 main()

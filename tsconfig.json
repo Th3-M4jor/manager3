@@ -2,9 +2,8 @@
     "include": ["src/**/*"],
     "compilerOptions": {
         "target": "ES2020",
-        "jsx": "react",
-        "jsxFactory": "m",
-        "jsxFragmentFactory": "m.Fragment",
+        "jsx": "react-jsx",
+        "jsxImportSource": "preact",
         "module": "ES2020",
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
@@ -20,5 +19,9 @@
             "ES2020",
         ],
         "removeComments": true,
+        "paths": {
+            "react": ["./node_modules/preact/compat/"],
+            "react-dom": ["./node_modules/preact/compat/"]
+        }
     }
 }

@@ -1,6 +1,4 @@
-import m from "mithril";
-
-import { MitrhilTsxComponent } from "../JsxNamespace";
+import { Component, RenderableProps } from "preact";
 
 export interface DropMenuProps {
     /**
@@ -14,14 +12,14 @@ export interface DropMenuProps {
     text?: string,
 }
 
-export class DropMenu extends MitrhilTsxComponent<DropMenuProps> {
+export class DropMenu extends Component<DropMenuProps> {
 
-    view(vnode: m.CVnode<DropMenuProps>): JSX.Element {
+    render(props: RenderableProps<DropMenuProps>) {
         return (
             <div class="dropdown">
-                <button class={vnode.attrs.class}>{vnode.attrs.text ? vnode.attrs.text : "Menu"}</button>
+                <button class={props.class}>{props.text ? props.text : "Menu"}</button>
                 <div class="dropdown-content">
-                    {vnode.children}
+                    {props.children}
                 </div>
             </div>
         );

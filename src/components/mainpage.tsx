@@ -1,38 +1,39 @@
-import m, { CVnode } from "mithril";
-
-import { MitrhilTsxComponent } from "../JsxNamespace";
+import { Component } from "preact";
 
 import * as top from "../TopLvlMsg";
 import { TopBar } from "../components/topbar";
 import { NavTabs } from "../components/navtabs";
-import { ChipLibrary } from "../library/library";
-interface MainPageProps {
-    activeTab: top.TabName;
-}
 
-export class MainPage extends MitrhilTsxComponent<MainPageProps> {
+import { Library } from "../pages/library";
+import { Pack } from "../pages/pack";
+import { Folder } from "../pages/folder";
+import { Glossary } from "../pages/glossary";
+import { GroupFolder } from "../pages/groupFolder";
 
-    tabToString(tab: top.TabName): string {
-        const val = tab.match({
-            Folder: () => { return ChipLibrary.FolderName },
-            Library: () => { return "Library" },
-            Pack: () => { return "Pack" },
-            Glossary: () => { return "Glossary" },
-            GroupFolder: (name) => {
-                return (name.length > 15 ? name.substring(0, 12) : name) + "'s Folder";
-            }
-        });
-        return val;
+export class MainPage extends Component {
+
+    constructor() {
+        super();
     }
 
-    view(vnode: CVnode<MainPageProps>): JSX.Element {
+    private renderSubPage() {
+        return top.getActiveTab().match({
+            Folder: () => { return <Folder /> },
+            Library: () => { return <Library /> },
+            Pack: () => { return <Pack /> },
+            Glossary: () => { return <Glossary /> },
+            GroupFolder: (_) => { return <GroupFolder /> }
+        });
+    }
+
+    render() {
         return (
             <div class="outermostDiv">
-                <TopBar tabName={this.tabToString(vnode.attrs.activeTab)} msg={top.getTopMsg()} />
+                <TopBar />
                 <div style="background-color: #4abdb5" class="p-2.5">
                     <div class="grid gap-0 grid-cols-4 sm:grid-cols-5 md:grid-cols-6">
-                        <NavTabs activeTab={vnode.attrs.activeTab} />
-                        {vnode.children}
+                        <NavTabs />
+                        {this.renderSubPage()}
                     </div>
                 </div>
             </div>

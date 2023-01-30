@@ -1,6 +1,4 @@
-import m from "mithril";
-
-import { MitrhilTsxComponent } from "../JsxNamespace";
+import { Component } from "preact";
 import { ChipLibrary } from "../library/library";
 
 import * as top from "../TopLvlMsg";
@@ -10,35 +8,33 @@ type ClassAndCallback = [string, (e: Event) => void];
 
 function changeToFolder(e: Event) {
     (e.currentTarget as HTMLElement)?.blur();
-    m.route.set("/Folder");
+    top.setActiveTab(top.Tabs.Folder);
 }
 
 function changeToPack(e: Event) {
     (e.currentTarget as HTMLElement)?.blur();
-    m.route.set("/Pack");
+    top.setActiveTab(top.Tabs.Pack);
 }
 
 function changeToLibrary(e: Event) {
     (e.currentTarget as HTMLElement)?.blur();
-    m.route.set("/Library");
+    top.setActiveTab(top.Tabs.Library);
 }
 
 function changeToGlossary(e: Event) {
     (e.currentTarget as HTMLElement)?.blur();
-    m.route.set("/Glossary");
+    top.setActiveTab(top.Tabs.Glossary);
 }
 
 function makeChangeToPlayerFn(name: string): (e: Event) => void {
     return (e: Event) => {
         (e.currentTarget as HTMLElement)?.blur();
-        m.route.set("/Group/:playerName", { playerName: name });
+        top.setActiveTab(top.Tabs.GroupFolder(name));
     };
 }
 
-function dontRedraw(e: Event) {
-    //@ts-ignore
-    e.redraw = false;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+function dontRedraw(_e: Event) {}
 
 function folderActive(): ClassAndCallback[] {
     return [
@@ -95,30 +91,26 @@ const baseNavTabMatcher = {
     GroupFolder: noneActive,
 }
 
-export interface navTabProps {
-    activeTab: top.TabName,
-}
+export class NavTabs extends Component {
 
-export class NavTabs extends MitrhilTsxComponent<navTabProps> {
-
-    noGroupTabs(activeTab: top.TabName): JSX.Element {
+    noGroupTabs(activeTab: top.TabName) {
         const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback], [glossaryClass, glossaryCallback]] = activeTab.match(baseNavTabMatcher);
         return (
             <>
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 pl-2 pr-6 nav-tab-group">
-                    <button onclick={fldrCallback} class={fldrClass}>{ChipLibrary.FolderName}</button>
-                    <button onclick={packCallback} class={packClass}>Pack</button>
-                    <button onclick={libCallback} class={libClass}>Library</button>
+                    <button onClick={fldrCallback} class={fldrClass}>{ChipLibrary.FolderName}</button>
+                    <button onClick={packCallback} class={packClass}>Pack</button>
+                    <button onClick={libCallback} class={libClass}>Library</button>
                 </div>
                 <div class="col-span-1 glossary-tab-group">
-                    <button onclick={glossaryCallback} class={glossaryClass + " w-19/24"}>Glossary</button>
+                    <button onClick={glossaryCallback} class={glossaryClass + " w-19/24"}>Glossary</button>
                 </div>
             </>
         );
 
     }
 
-    withGroupTabs(activeTab: top.TabName): JSX.Element {
+    withGroupTabs(activeTab: top.TabName) {
         const folders = ChipLibrary.GroupFolders || [];
 
         let maxNameLen = 30;
@@ -140,7 +132,7 @@ export class NavTabs extends MitrhilTsxComponent<navTabProps> {
             });
 
             return (
-                <button onclick={callback} class={cssClass}>
+                <button onClick={callback} class={cssClass}>
                     {shortName}
                 </button>
             );
@@ -153,26 +145,26 @@ export class NavTabs extends MitrhilTsxComponent<navTabProps> {
         return (
             <>
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 pl-2 pr-6 nav-tab-group">
-                    <button onclick={fldrCallback} class={fldrClass}>{fldr}</button>
-                    <button onclick={packCallback} class={packClass}>{pack}</button>
-                    <button onclick={libCallback} class={libClass}>{lib}</button>
+                    <button onClick={fldrCallback} class={fldrClass}>{fldr}</button>
+                    <button onClick={packCallback} class={packClass}>{pack}</button>
+                    <button onClick={libCallback} class={libClass}>{lib}</button>
                     {buttons}
                 </div>
                 <div class="col-span-1 glossary-tab-group">
-                    <button onclick={glossaryCallback} class={glossaryClass + " w-19/24"}>Glossary</button>
+                    <button onClick={glossaryCallback} class={glossaryClass + " w-19/24"}>Glossary</button>
                 </div>
             </>
         );
 
     }
 
-    view(vnode: m.CVnode<navTabProps>): JSX.Element {
+    render() {
         const folders = ChipLibrary.GroupFolders;
 
         if (!folders || folders.length == 0) {
-            return this.noGroupTabs(vnode.attrs.activeTab);
+            return this.noGroupTabs(top.getActiveTab());
         }
 
-        return this.withGroupTabs(vnode.attrs.activeTab);
+        return this.withGroupTabs(top.getActiveTab());
     }
 }

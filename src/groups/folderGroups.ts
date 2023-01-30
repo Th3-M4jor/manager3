@@ -5,6 +5,10 @@ interface GroupData {
     group: string;
     name: string;
 }
+type chipName = string;
+type chipUsed = boolean;
+type FolderChipTuple = [chipName, chipUsed];
+
 type ConnectMsg = ["connect", GroupData];
 type DisconnectMsg = ["disconnect"];
 type ReadyMsg = ["ready", FolderChipTuple[]];
@@ -49,11 +53,6 @@ self.onmessage = function (e: MessageEvent<GroupFldrMsg>): void {
             throw new Error("Unknown message");
     }
 }
-
-type chipName = string;
-type chipUsed = boolean;
-
-type FolderChipTuple = [chipName, chipUsed];
 
 function connect(group: string, name: string): void {
     if (socket !== null) {

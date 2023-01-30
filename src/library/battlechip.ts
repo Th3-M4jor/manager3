@@ -155,7 +155,7 @@ export class BattleChip {
         return this.class.variant == "Standard" ? stdChipTypeToBgCss(this.kind) : chipClassToBackgroundCss(this.class);
     }
 
-    renderElements(): JSX.Element {
+    renderElements() {
         return elementArrToHtml(this.element);
     }
 

@@ -1,1 +1,2 @@
-export const GroupWorkerURL = new URL('./folderGroups.ts', import.meta.url);
+const url = import.meta.url;
+export const GroupWorkerURL = new URL('./folderGroups.ts', url);

@@ -1,5 +1,4 @@
-import m, { CVnode } from "mithril";
-import { MitrhilTsxComponent } from "../JsxNamespace";
+import { Component, createRef } from "preact";
 
 import { BattleChip } from "../library/battlechip";
 import { ChipLibrary } from "../library/library";
@@ -56,7 +55,7 @@ function sortByCr(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
 }
 //#endregion FolderSortOpts
 
-export function folderTopRow(): JSX.Element {
+export function folderTopRow() {
     return (
         <div class="chip-top-row Chip z-20">
             <div class="w-1/24 sm:w-1/24 px-0 whitespace-nowrap select-none"/>
@@ -93,26 +92,37 @@ function jackOutClicked() {
     top.setTopMsg(msg);
 }
 
-export class Folder extends MitrhilTsxComponent {
+interface FolderState {
+    activeChipId: number | null;
+    showJoinModal: boolean;
+}
+
+export class Folder extends Component<Record<string, never>, FolderState> {
     //private sortMethod: sort.SortOption;
     private static sortMethod: sort.SortOption = sort.SortOption.Name;
     private static scrollPos = 0;
-    private activeChipId: number | null;
     private chipMouseoverHandler: (e: MouseEvent) => void;
     private returnToPack: (e: MouseEvent) => void;
-    private showJoinModal: boolean;
+    private playerNameRef = createRef<HTMLInputElement>();
+    private groupNameRef = createRef<HTMLInputElement>();
+    private spectatorRef = createRef<HTMLInputElement>();
+    private folderDivRef = createRef<HTMLDivElement>();
 
-    constructor(attrs: m.CVnode) {
-        super(attrs);
-        this.showJoinModal = false;
-        this.activeChipId = null;
+    constructor() {
+        super();
+
+        this.state = {
+            activeChipId: null,
+            showJoinModal: false,
+        }
+
         this.chipMouseoverHandler = (e: MouseEvent) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
             if (!data?.id) {
                 return;
             }
             const id = +data.id;
-            this.activeChipId = id;
+            this.setState({activeChipId: id});
         }
         this.returnToPack = (e: MouseEvent) => {
 
@@ -123,29 +133,30 @@ export class Folder extends MitrhilTsxComponent {
 
             const index = +data.index;
             const [name, used] = ChipLibrary.removeChipFromFolder(index);
-            if (used) {
+            if (used.value) {
                 top.setTopMsg(`A used copy of ${name} has been returned to your pack`);
             } else {
                 top.setTopMsg(`A copy of ${name} has been returned to your pack`);
             }
+            this.forceUpdate();
         }
     }
 
-    private generateModal(): JSX.Element {
-        if (!this.showJoinModal) {
+    private generateModal() {
+        if (!this.state.showJoinModal) {
             return <></>;
         }
 
         const cancelCallback = (_: MouseEvent) => {
-            this.showJoinModal = false;
+            this.setState({showJoinModal: false});
         }
 
         const okCallback = (_: MouseEvent) => {
-            this.showJoinModal = false;
+            this.setState({showJoinModal: false});
 
-            const groupName = (document.getElementById("groupName") as HTMLInputElement).value.trim();
-            const playerName = (document.getElementById("playerName") as HTMLInputElement).value.trim();
-            const spectator = (document.getElementById("spectator_checkbox") as HTMLInputElement).checked;
+            const groupName = this.groupNameRef.current?.value.trim();
+            const playerName = this.playerNameRef.current?.value.trim();
+            const spectator = this.spectatorRef.current?.checked;
 
             if (groupName && playerName) {
                 ChipLibrary.joinGroup(groupName, playerName, spectator);
@@ -161,19 +172,19 @@ export class Folder extends MitrhilTsxComponent {
                         <h2>JOIN GROUP</h2>
                     </div>
                     <div class="modal-body">
-                        <input type="text" placeholder="group name" id="groupName" />
+                        <input type="text" placeholder="group name" id="groupName" ref={this.groupNameRef} />
                         <br />
-                        <input type="text" placeholder="player name" id="playerName" />
+                        <input type="text" placeholder="player name" id="playerName" ref={this.playerNameRef} />
                         <br />
                         <label for="spectator_checkbox">Join as spectator</label>
-                        <input type="checkbox" id="spectator_checkbox" />
+                        <input type="checkbox" id="spectator_checkbox" ref={this.spectatorRef}/>
                     </div>
                     <div class="modal-footer">
                         <span class="pl-1">
-                            <button class="ok-button" onclick={okCallback}>Join</button>
+                            <button class="ok-button" onClick={okCallback}>Join</button>
                         </span>
                         <span class="float-right">
-                            <button class="inactiveNavTab" onclick={cancelCallback}>Cancel</button>
+                            <button class="inactiveNavTab" onClick={cancelCallback}>Cancel</button>
                         </span>
                     </div>
                 </div>
@@ -183,9 +194,9 @@ export class Folder extends MitrhilTsxComponent {
 
     private getSortedChips(): FolderChipWithBChip[] {
         const folder: FolderChipWithBChip[] = ChipLibrary.ActiveFolder.map(([name, used], idx) => ({
-            chip: ChipLibrary.getChip(name),
+            chip: ChipLibrary.getChip(name.value),
             index: idx,
-            used,
+            used: used.value,
         }));
 
         const sortFunc: (a: FolderChipWithBChip, b: FolderChipWithBChip) => number =
@@ -204,7 +215,7 @@ export class Folder extends MitrhilTsxComponent {
         return folder.sort(sortFunc);
     }
 
-    private renderChips(): JSX.Element[] | JSX.Element {
+    private renderChips() {
         if (!ChipLibrary.ActiveFolder.length) {
             return (
                 <span class="select-none Chip">
@@ -226,40 +237,41 @@ export class Folder extends MitrhilTsxComponent {
 
     }
 
-    private renderGroupBtn(): JSX.Element {
+    private renderGroupBtn() {
         if (ChipLibrary.InGroup) {
             return (
-                <button class="dropmenu-btn" onclick={() => ChipLibrary.leaveGroup()}>
+                <button class="dropmenu-btn" onClick={() => ChipLibrary.leaveGroup()}>
                     LEAVE GROUP
                 </button>
             );
         }
 
         return (
-            <button class="dropmenu-btn" onclick={() => this.showJoinModal = true}>
+            <button class="dropmenu-btn" onClick={() => this.setState({showJoinModal: true})}>
                 JOIN GROUP
             </button>
         );
 
     }
 
-    private dropMenu(): JSX.Element {
+    private dropMenu() {
         return (
             <DropMenu class="dropbtn">
-                <button class="dropmenu-btn" onclick={() => {
+                <button class="dropmenu-btn" onClick={() => {
                     ChipLibrary.swapFolder();
                     const fldrName = ChipLibrary.FolderName;
                     top.setTopMsg(`Swiched to ${fldrName}`);
                 }}>
                     SWAP FOLDER
                 </button>
-                <button class="dropmenu-btn" onclick={() => {
+                <button class="dropmenu-btn" onClick={() => {
                     const len = ChipLibrary.clearFolder();
+                    this.forceUpdate();
                     top.setTopMsg(`${len} ${len == 1 ? "chip has" : "chips have"} been returned to your pack`);
                 }}>
                     CLEAR FOLDER
                 </button>
-                <button class="dropmenu-btn" onclick={jackOutClicked}>
+                <button class="dropmenu-btn" onClick={jackOutClicked}>
                     JACK OUT
                 </button>
                 {this.renderGroupBtn()}
@@ -267,25 +279,25 @@ export class Folder extends MitrhilTsxComponent {
         );
     }
 
-    oncreate(_: CVnode) {
-        const folder = document.querySelector(".Folder");
+    componentDidMount() {
+        const folder = this.folderDivRef.current;
         if (folder) {
             folder.scrollTop = Folder.scrollPos;
         }
     }
 
-    onbeforeremove(_: CVnode) {
-        Folder.scrollPos = document.querySelector(".Folder")?.scrollTop ?? 0;
+    componentWillUnmount() {
+        Folder.scrollPos = this.folderDivRef.current?.scrollTop ?? 0;
     }
 
-    view(_: CVnode): JSX.Element {
+    render(){
         const minFldrSize = ChipLibrary.MinFolderSize + "";
         const chipLimit = ChipLibrary.FolderSize + "";
 
         let chipDescItem: ChipDescDisplay;
 
-        if (this.activeChipId) {
-            chipDescItem = ChipDescDisplay.ChipId(this.activeChipId);
+        if (this.state.activeChipId) {
+            chipDescItem = ChipDescDisplay.ChipId(this.state.activeChipId);
         } else {
             chipDescItem = ChipDescDisplay.None;
         }
@@ -313,7 +325,7 @@ export class Folder extends MitrhilTsxComponent {
                         min={minFldrSize}
                         value={chipLimit}
                         max="30"
-                        onchange={(e: Event) => {
+                        onChange={(e: Event) => {
                             const val = +(e.target as HTMLInputElement).value;
                             ChipLibrary.FolderSize = val;
                         }}
