@@ -1,4 +1,4 @@
-import { Component, RenderableProps } from "preact";
+import { Component, RenderableProps, createRef } from "preact";
 import { makeTaggedUnion, none, MemberType } from "safety-match";
 
 import { BattleChip, diceToStr } from "../library/battlechip";
@@ -46,6 +46,7 @@ export class ChipDesc extends Component<chipDescProps> {
     public static startScrollHandle: number | null = null;
     private mouseOverHandler: (e: MouseEvent) => void;
     private mouseLeaveHandler: (e: MouseEvent) => void;
+    private animationDiv = createRef<HTMLDivElement>();
 
     constructor(vnode: chipDescProps) {
         super(vnode);
@@ -116,6 +117,15 @@ export class ChipDesc extends Component<chipDescProps> {
         }
 
         ChipDesc.startScrollHandle = setTimeout(startInterval, 1000);
+        const newChipAnimClass = (this.animationCounter & 1) ? "chipWindowOne" : "chipWindowTwo";
+        const oldChipAnimClass = (this.animationCounter & 1) ? "chipWindowTwo" : "chipWindowOne";
+        requestAnimationFrame(() => {
+            const div = this.animationDiv.current;
+            if (div) {
+                div.classList.remove(oldChipAnimClass);
+                div.classList.add(newChipAnimClass);
+            }
+        });
         this.animationCounter++;
     }
 
@@ -326,19 +336,17 @@ export class ChipDesc extends Component<chipDescProps> {
 
         const background = "h-3/4 " + chip.backgroundCss;
 
-        const chipAnimClass = (this.animationCounter & 1) ? "chipWindowOne" : "chipWindowTwo";
-
         let fontSizeStyle = "font-size: 1rem";
 
         if (chip.description.length > 500) {
             fontSizeStyle = "font-size: 0.875rem";
         }
 
-        const outerChipClass = "chipDescText chipDescPadding max-h-full flex flex-col " + chipAnimClass;
+        const outerChipClass = "chipDescText chipDescPadding max-h-full flex flex-col";
 
         return (
             <div class={background} style="max-height: 65vh" onMouseEnter={this.mouseOverHandler} onMouseLeave={this.mouseLeaveHandler}>
-                <div class={outerChipClass} style="padding: 3px; height: 100%">
+                <div class={outerChipClass} style="padding: 3px; height: 100%" ref={this.animationDiv}>
                     <div class="border-b border-black chipName">{chip.name}</div>
                     <div class="grid grid-cols-2 gap-0">
                         {this.elemClassRows(chip)}
