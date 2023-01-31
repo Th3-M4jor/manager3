@@ -117,8 +117,12 @@ export class ChipDesc extends Component<chipDescProps> {
         }
 
         ChipDesc.startScrollHandle = setTimeout(startInterval, 1000);
+
+        // Need to set animation class to the new one after requestAnimationFrame
+        // to avoid stuttering on potato computers
         const newChipAnimClass = (this.animationCounter & 1) ? "chipWindowOne" : "chipWindowTwo";
         const oldChipAnimClass = (this.animationCounter & 1) ? "chipWindowTwo" : "chipWindowOne";
+        
         requestAnimationFrame(() => {
             const div = this.animationDiv.current;
             if (div) {
@@ -126,6 +130,7 @@ export class ChipDesc extends Component<chipDescProps> {
                 div.classList.add(newChipAnimClass);
             }
         });
+
         this.animationCounter++;
     }
 
