@@ -1,4 +1,4 @@
-import { Signal, signal, batch } from "@preact/signals";
+import { batch, Signal, signal } from "@preact/signals";
 import { makeTaggedUnion, none, MemberType } from "safety-match";
 
 import { storageAvailable } from "../util/storageavailable";
@@ -278,12 +278,9 @@ export class ChipLibrary {
         const packChip = this.pack.get(chipName);
 
         if (packChip) {
-            batch(() => {
-
-                packChip.owned.value += 1;
-                packChip.used.value += (used ? 1 : 0);
-                return packChip.owned;
-            });
+            packChip.owned.value += 1;
+            packChip.used.value += (used ? 1 : 0);
+            return packChip.owned.value;
         }
 
         const chip = {
@@ -614,24 +611,26 @@ export class ChipLibrary {
     public static jackOut(): number {
         let usedCt = 0;
 
-        for (const chip of ChipLibrary.instance.folder) {
-            usedCt += chip[1].value ? 1 : 0;
-            chip[1].value = false;
-        }
+        batch(() => {
+            for (const chip of ChipLibrary.instance.folder) {
+                usedCt += chip[1].value ? 1 : 0;
+                chip[1].value = false;
+            }
 
-        for (const chip of ChipLibrary.instance.folder2) {
-            usedCt += chip[1].value ? 1 : 0;
-            chip[1].value = false;
-        }
+            for (const chip of ChipLibrary.instance.folder2) {
+                usedCt += chip[1].value ? 1 : 0;
+                chip[1].value = false;
+            }
 
-        for (const [_, chip] of ChipLibrary.instance.pack) {
-            usedCt += chip.used.value;
-            chip.used.value = 0;
-        }
+            for (const [_, chip] of ChipLibrary.instance.pack) {
+                usedCt += chip.used.value;
+                chip.used.value = 0;
+            }
 
-        ChipLibrary.instance.changeSinceLastSave = true;
-        ChipLibrary.folderUpdated();
-
+            ChipLibrary.instance.changeSinceLastSave = true;
+            ChipLibrary.folderUpdated();
+        });
+        
         return usedCt;
     }
 

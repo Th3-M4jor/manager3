@@ -77,13 +77,13 @@ export class ChipDesc extends Component<chipDescProps> {
         const newVal = nextProps.item.match({
             None: () => null,
             ChipId: (id) => id,
-            GlossaryItem: ({text: text}) => text,
+            GlossaryItem: ({name: name}) => name,
         })
 
         const oldVal = this.currentDisplay.match({
             None: () => null,
             ChipId: (id) => id,
-            GlossaryItem: ({text: text}) => text,
+            GlossaryItem: ({name: name}) => name,
         })
 
         if (newVal !== oldVal) {
