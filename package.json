@@ -6,7 +6,7 @@
   "license": "ISC",
   "scripts": {
     "start": "parcel serve ./static/index.html -p 9001",
-    "build": "parcel build ./static/index.html --no-source-maps --public-url ./ --log-level verbose",
+    "build": "parcel build ./static/index.html --public-url ./ --log-level verbose",
     "analyze": "parcel build ./static/index.html --reporter @parcel/reporter-bundle-analyzer --public-url ./",
     "lint": "eslint . --env browser --ext .ts --ext .tsx",
     "lint-fix": "eslint . --env browser --ext .ts --ext .tsx --fix"

@@ -49,29 +49,13 @@ export interface SkillObject {
 }
 
 export const Skills: Record<string, SkillObject> = {
-    affinity: {
-        text: Affinity,
-        abbr: "AFF"
-    },
-    agility: {
-        text: Agility,
-        abbr: "AGI"
-    },
-    charm: {
-        text: Charm,
-        abbr: "CHM"
-    },
-    endurance: {
-        text: Endurance,
-        abbr: "END"
+    perception: {
+        text: Perception,
+        abbr: "PER"
     },
     info: {
         text: Info,
         abbr: "INF"
-    },
-    perception: {
-        text: Perception,
-        abbr: "PER"
     },
     tech: {
         text: Tech,
@@ -81,9 +65,25 @@ export const Skills: Record<string, SkillObject> = {
         text: Strength,
         abbr: "STR"
     },
+    agility: {
+        text: Agility,
+        abbr: "AGI"
+    },
+    endurance: {
+        text: Endurance,
+        abbr: "END"
+    },
+    charm: {
+        text: Charm,
+        abbr: "CHM"
+    },
     valor: {
         text: Valor,
         abbr: "VLR"
+    },
+    affinity: {
+        text: Affinity,
+        abbr: "AFF"
     }
 };
 
