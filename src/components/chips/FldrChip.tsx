@@ -1,4 +1,4 @@
-import { Component, RenderableProps } from "preact";
+import { RenderableProps } from "preact";
 
 import { BattleChip } from "../../library/battlechip";
 import { ChipLibrary } from "../../library/library";
@@ -13,75 +13,70 @@ export interface FolderChipProps {
     returnToPack?: (e: MouseEvent) => void,
 }
 
+function groupFolderInputDiv(props: RenderableProps<FolderChipProps>) {
+    return (
+        <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none">
+            <input
+                name="chipUsed"
+                type="checkbox"
+                class="cursor-not-allowed"
+                checked={props.used}
+                disabled
+            />
+        </div>
+    );
+}
 
-export class FolderChip extends Component<FolderChipProps> {
+function folderInputDiv(props: RenderableProps<FolderChipProps>) {
+    return (
+        <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none" onDblClick={(e) => { e.stopPropagation() }}>
+            <input
+                name="chipUsed"
+                type="checkbox"
+                class="cursor-pointer"
+                checked={props.used}
+                onClick={(e) => {
+                    ChipLibrary.ActiveFolder[props.folderIndex][1].value = !props.used;
+                    ChipLibrary.folderUpdated();
+                    e.currentTarget.blur();
+                }}
+            />
+        </div>
+    );
+}
 
-    private makeInputDiv(props: RenderableProps<FolderChipProps>) {
-        if (!props.groupFolder) {
-            return (
-                <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none" onDblClick={(e: MouseEvent) => { e.stopPropagation() }}>
-                    <input
-                        name="chipUsed"
-                        type="checkbox"
-                        class = "cursor-pointer"
-                        checked={props.used}
-                        onClick={(e: MouseEvent) => {
-                            ChipLibrary.ActiveFolder[props.folderIndex][1].value = !props.used;
-                            ChipLibrary.folderUpdated();
-                            (e.currentTarget as HTMLInputElement)?.blur();
-                        }}
-                    />
-                </div>
-            );
-        }
-
-        return (
-            <div class="w-2/24 sm:w-2/24 px-0 whitespace-nowrap select-none">
-                <input
-                    name="chipUsed"
-                    type="checkbox"
-                    class = "cursor-not-allowed"
-                    checked={props.used}
-                    disabled
-                />
+export function FolderChip(props: RenderableProps<FolderChipProps>) {
+    const chipCss = props.used ? "UsedChip" : props.chip.classCss;
+    
+    return (
+        <div
+            class={"select-none chip-row " + chipCss}
+            data-index={props.folderIndex}
+            data-id={props.chip.id}
+            onMouseOver={props.onmouseover} onDblClick={props.returnToPack}
+        >
+            <div class="w-1/24 sm:w-1/24 px-0 whitespace-nowrap select-none">
+                {props.displayIndex + 1}
             </div>
-        );
-
-    }
-
-    render(props: RenderableProps<FolderChipProps>) {
-        const chipCss = props.used ? "UsedChip" : props.chip.classCss;
-        //const idVal = "F_" + vnode.attrs.folderIndex;
-        return (
-            <div
-                class={"select-none chip-row " + chipCss}
-                data-index={props.folderIndex}
-                data-id={props.chip.id}
-                onMouseOver={props.onmouseover} onDblClick={props.returnToPack}
-            >
-                <div class="w-1/24 sm:w-1/24 px-0 whitespace-nowrap select-none">
-                    {props.displayIndex + 1}
-                </div>
-                <div class="w-6/24 sm:w-5/24 px-0 whitespace-nowrap select-none">
-                    {props.chip.name}
-                </div>
-                <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
-                    {props.chip.SkillAbv}
-                </div>
-                <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
-                    {props.chip.RangeAbv}
-                </div>
-                <div class="w-3/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
-                    {props.chip.dmgStr}
-                </div>
-                <div class="hidden sm:block sm:w-3/24 px-0 whitespace-nowrap select-none">
-                    {props.chip.KindAbv}
-                </div>
-                <div class="w-4/24 sm:w-4/24 px-0 whitespace-nowrap select-none">
-                    {props.chip.renderElements()}
-                </div>
-                {this.makeInputDiv(props)}
+            <div class="w-6/24 sm:w-5/24 px-0 whitespace-nowrap select-none">
+                {props.chip.name}
             </div>
-        );
-    }
+            <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
+                {props.chip.SkillAbv}
+            </div>
+            <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
+                {props.chip.RangeAbv}
+            </div>
+            <div class="w-3/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
+                {props.chip.dmgStr}
+            </div>
+            <div class="hidden sm:block sm:w-3/24 px-0 whitespace-nowrap select-none">
+                {props.chip.KindAbv}
+            </div>
+            <div class="w-4/24 sm:w-4/24 px-0 whitespace-nowrap select-none">
+                {props.chip.renderElements()}
+            </div>
+            {props.groupFolder ? groupFolderInputDiv(props) : folderInputDiv(props)}
+        </div>
+    );
 }

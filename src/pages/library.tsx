@@ -7,7 +7,7 @@ import * as sort from "../components/sortbox";
 
 import * as top from "../TopLvlMsg";
 
-import { ChipDesc, ChipDescDisplay } from "../components/chipdesc";
+import { ChipDesc, ChipDescDisplay, setActiveDisplayItem } from "../components/chipdesc";
 
 import { LibraryChip } from "../components/chips/LibChip";
 interface LibraryState {
@@ -39,7 +39,7 @@ export class Library extends Component<Record<string, never>, LibraryState> {
                 return;
             }
             const id = +data.id;
-            this.setState({ activeChipId: id });
+            setActiveDisplayItem(ChipDescDisplay.ChipId(id));
         };
 
         this.doubleClickHandler = (e: Event) => {
@@ -145,15 +145,7 @@ export class Library extends Component<Record<string, never>, LibraryState> {
     }
 
     render(): JSX.Element {
-
-        let chipDescItem: ChipDescDisplay;
-
-        if (this.state.activeChipId) {
-            chipDescItem = ChipDescDisplay.ChipId(this.state.activeChipId);
-        } else {
-            chipDescItem = ChipDescDisplay.None;
-        }
-
+        console.log("Library render");
         return (
             <>
 
@@ -164,7 +156,7 @@ export class Library extends Component<Record<string, never>, LibraryState> {
                     </div>
                 </div>
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
-                    <ChipDesc item={chipDescItem} />
+                    <ChipDesc />
                     <sort.SortBox currentMethod={Library.librarySortMethod} onSortChange={(e) => {
                         Library.librarySortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
                         this.sortChips();

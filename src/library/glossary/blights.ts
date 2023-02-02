@@ -10,88 +10,56 @@ const RecovBlight = "You are unable to heal from any source";
 const InvisBlight = "You are unable to inflict Statuses on any target or grant them to allies";
 const ObjectBlight = "You must make all attack rolls with disadvantage";
 
-export const Blights = {
-    fire: FireBlight,
-    aqua: AquaBlight,
-    elec: ElecBlight,
-    wood: WoodBlight,
-    wind: WindBlight,
-    sword: SwordBlight,
-    break: BreakBlight,
-    cursor: CursorBlight,
-    recov: RecovBlight,
-    invis: InvisBlight,
-    object: ObjectBlight,
+export interface BlightObject {
+    text: string;
+    imgCss: string;
+}
+
+export const Blights: Record<string, BlightObject> = {
+    fire: {
+        text: FireBlight,
+        imgCss: "fireChip"
+    },
+    aqua: {
+        text: AquaBlight,
+        imgCss: "aquaChip"
+    },
+    elec: {
+        text: ElecBlight,
+        imgCss: "elecChip"
+    },
+    wood: {
+        text: WoodBlight,
+        imgCss: "woodChip"
+    },
+    wind: {
+        text: WindBlight,
+        imgCss: "windChip"
+    },
+    sword: {
+        text: SwordBlight,
+        imgCss: "swordChip"
+    },
+    break: {
+        text: BreakBlight,
+        imgCss: "breakChip"
+    },
+    cursor: {
+        text: CursorBlight,
+        imgCss: "cursorChip"
+    },
+    recov: {
+        text: RecovBlight,
+        imgCss: "recovChip"
+    },
+    invis: {
+        text: InvisBlight,
+        imgCss: "invisChip"
+    },
+    object: {
+        text: ObjectBlight,
+        imgCss: "objectChip"
+    }
 }
 
 export type Blight = keyof typeof Blights;
-
-export function blightFromName(name: string): string {
-    if (!(name in Blights)) {
-        throw new Error(`Invalid blight name: ${name}`);
-    }
-
-    return Blights[name as Blight];
-}
-
-function blightToSortNum(name: string): number {
-    switch (name) {
-        case "fire":
-            return 0;
-        case "aqua":
-            return 1;
-        case "elec":
-            return 2;
-        case "wood":
-            return 3;
-        case "wind":
-            return 4;
-        case "sword":
-            return 5;
-        case "break":
-            return 6;
-        case "cursor":
-            return 7;
-        case "recov":
-            return 8;
-        case "invis":
-            return 9;
-        case "object":
-            return 10;
-        default:
-            throw new Error(`Invalid blight name: ${name}`);
-    }
-}
-
-export function blightImgCSS(name: string): string {
-    switch (name) {
-        case "fire":
-            return "fireChip";
-        case "aqua":
-            return "aquaChip";
-        case "elec":
-            return "elecChip";
-        case "wood":
-            return "woodChip";
-        case "wind":
-            return "windChip";
-        case "sword":
-            return "swordChip";
-        case "break":
-            return "breakChip";
-        case "cursor":
-            return "cursorChip";
-        case "recov":
-            return "recovChip";
-        case "invis":
-            return "invisChip";
-        case "object":
-            return "objectChip";
-        default:
-            throw new Error(`Invalid blight name: ${name}`);
-    }
-}
-
-export function blightSort(a: string, b: string): number {
-    return Math.sign(blightToSortNum(a) - blightToSortNum(b));
-}

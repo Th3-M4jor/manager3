@@ -1,4 +1,4 @@
-import { Component, RenderableProps } from "preact";
+import { RenderableProps } from "preact";
 
 import { makeTaggedUnion, none, MemberType } from "safety-match";
 import { BattleChip } from "../library/battlechip";
@@ -121,72 +121,69 @@ interface SortBoxProps {
     onDescendingChange?: EventListener,
     onSortChange: EventListener;
 }
-export class SortBox extends Component<SortBoxProps> {
 
-    private makeOptions(includeOwned: boolean | undefined) {
-        const opts = [
-            <option value="Name">
-                Name
-            </option>,
-            <option value="Element">
-                Element
-            </option>,
-            <option value="MaxDamage">
-                MaxDamage
-            </option>,
-            <option value="AverageDamage">
-                AverageDamage
-            </option>,
-            <option value="Skill">
-                Skill
-            </option>,
-            <option value="Kind">
-                Kind
-            </option>,
-            <option value="Range">
-                Range
-            </option>,
-            <option value="Cr">
-                CR
-            </option>,
-        ];
+function makeOptions(includeOwned: boolean | undefined) {
+    const opts = [
+        <option value="Name">
+            Name
+        </option>,
+        <option value="Element">
+            Element
+        </option>,
+        <option value="MaxDamage">
+            MaxDamage
+        </option>,
+        <option value="AverageDamage">
+            AverageDamage
+        </option>,
+        <option value="Skill">
+            Skill
+        </option>,
+        <option value="Kind">
+            Kind
+        </option>,
+        <option value="Range">
+            Range
+        </option>,
+        <option value="Cr">
+            CR
+        </option>,
+    ];
 
-        if (includeOwned) {
-            opts.push(
-                <option value="Owned">
-                    Owned
-                </option>
-            );
-        }
-
-        return opts;
+    if (includeOwned) {
+        opts.push(
+            <option value="Owned">
+                Owned
+            </option>
+        );
     }
+    
+    return opts;
+}
 
-    render(props: RenderableProps<SortBoxProps>) {
-
-        if (props.hideDesc) {
-            return (
-                <>
-                    <label for="chip_sort_select" class="Chip select-none">Sort By</label>
-                    <select id="chip_sort_select" class="chip-sort-select cursor-pointer" onChange={props.onSortChange} value={props.currentMethod.variant}>
-                        {this.makeOptions(props.includeOwned)}
-                    </select>
-                </>
-            );
-        }
-
+export function SortBox(props: RenderableProps<SortBoxProps>) {
+    if (props.hideDesc) {
         return (
             <>
                 <label for="chip_sort_select" class="Chip select-none">Sort By</label>
                 <select id="chip_sort_select" class="chip-sort-select cursor-pointer" onChange={props.onSortChange} value={props.currentMethod.variant}>
-                    {this.makeOptions(props.includeOwned)}
+                    {makeOptions(props.includeOwned)}
                 </select>
-                <span class="Chip select-none">
-                    <label for="descending_checkbox">Descending</label>
-                    <input id="descending_checkbox" name="descending" type="checkbox" class="cursor-pointer m-0.5 sm:m-1" checked={props.descending} onClick={props.onDescendingChange} />
-                </span>
             </>
         );
-
     }
+
+    return (
+        <>
+            <label for="chip_sort_select" class="Chip select-none">Sort By</label>
+            <select id="chip_sort_select" class="chip-sort-select cursor-pointer" onChange={props.onSortChange} value={props.currentMethod.variant}>
+                {makeOptions(props.includeOwned)}
+            </select>
+            <span class="Chip select-none">
+                <label for="descending_checkbox">Descending</label>
+                <input id="descending_checkbox" name="descending" type="checkbox" class="cursor-pointer m-0.5 sm:m-1" checked={props.descending} onClick={props.onDescendingChange} />
+            </span>
+        </>
+    );
+
 }

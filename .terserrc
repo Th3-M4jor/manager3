@@ -3,7 +3,7 @@
         ecma: 2016,
         module: true,
         passes: 3,
-        drop_console: true,
+        drop_console: true
     },
     mangle: {
         toplevel: true,

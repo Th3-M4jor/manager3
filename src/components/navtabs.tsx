@@ -1,4 +1,3 @@
-import { Component } from "preact";
 import { ChipLibrary } from "../library/library";
 
 import * as top from "../TopLvlMsg";
@@ -34,7 +33,7 @@ function makeChangeToPlayerFn(name: string): (e: Event) => void {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-function dontRedraw(_e: Event) {}
+function dontRedraw(_e: Event) { }
 
 function folderActive(): ClassAndCallback[] {
     return [
@@ -91,80 +90,74 @@ const baseNavTabMatcher = {
     GroupFolder: noneActive,
 }
 
-export class NavTabs extends Component {
+function noGroupTabs(activeTab: top.TabName) {
+    const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback], [glossaryClass, glossaryCallback]] = activeTab.match(baseNavTabMatcher);
+    return (
+        <>
+            <div class="col-span-3 sm:col-span-4 md:col-span-5 pl-2 pr-6 nav-tab-group">
+                <button onClick={fldrCallback} class={fldrClass}>{ChipLibrary.FolderName}</button>
+                <button onClick={packCallback} class={packClass}>Pack</button>
+                <button onClick={libCallback} class={libClass}>Library</button>
+            </div>
+            <div class="col-span-1 glossary-tab-group">
+                <button onClick={glossaryCallback} class={glossaryClass + " w-19/24"}>Glossary</button>
+            </div>
+        </>
+    );
+}
 
-    noGroupTabs(activeTab: top.TabName) {
-        const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback], [glossaryClass, glossaryCallback]] = activeTab.match(baseNavTabMatcher);
-        return (
-            <>
-                <div class="col-span-3 sm:col-span-4 md:col-span-5 pl-2 pr-6 nav-tab-group">
-                    <button onClick={fldrCallback} class={fldrClass}>{ChipLibrary.FolderName}</button>
-                    <button onClick={packCallback} class={packClass}>Pack</button>
-                    <button onClick={libCallback} class={libClass}>Library</button>
-                </div>
-                <div class="col-span-1 glossary-tab-group">
-                    <button onClick={glossaryCallback} class={glossaryClass + " w-19/24"}>Glossary</button>
-                </div>
-            </>
-        );
+function withGroupTabs(activeTab: top.TabName) {
+    const folders = ChipLibrary.GroupFolders || [];
 
+    let maxNameLen = 30;
+
+    if (folders.length >= 5) {
+        maxNameLen = 1;
+    } else if (folders.length >= 2) {
+        maxNameLen = 3;
     }
 
-    withGroupTabs(activeTab: top.TabName) {
-        const folders = ChipLibrary.GroupFolders || [];
+    const buttons = folders.map(f => {
+        const name = f[0];
+        const shortName = name.trim().charAt(0).toUpperCase() + name.trim().slice(1, maxNameLen - 1);
 
-        let maxNameLen = 30;
-
-        if (folders.length >= 5) {
-            maxNameLen = 1;
-        } else if (folders.length >= 2) {
-            maxNameLen = 3;
-        }
-
-        const buttons = folders.map(f => {
-            const name = f[0];
-            const shortName = name.trim().charAt(0).toUpperCase() + name.trim().slice(1, maxNameLen - 1);
-
-            //@ts-ignore
-            const [cssClass, callback]: ClassAndCallback = activeTab.match({
-                GroupFolder: (playerName) => playerName == name ? ["activeNavTab", dontRedraw] : ["inactiveNavTab", makeChangeToPlayerFn(name)],
-                _: () => ["inactiveNavTab", makeChangeToPlayerFn(name)],
-            });
-
-            return (
-                <button onClick={callback} class={cssClass}>
-                    {shortName}
-                </button>
-            );
+        const [cssClass, callback]: ClassAndCallback = activeTab.match({
+            GroupFolder: (playerName) => playerName == name ? (["activeNavTab", dontRedraw] as ClassAndCallback) : (["inactiveNavTab", makeChangeToPlayerFn(name)] as ClassAndCallback),
+            _: () => (["inactiveNavTab", makeChangeToPlayerFn(name)] as ClassAndCallback),
         });
 
-        const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback], [glossaryClass, glossaryCallback]] = activeTab.match(baseNavTabMatcher);
-        const fldr = "Folder".slice(0, maxNameLen);
-        const pack = "Pack".slice(0, maxNameLen);
-        const lib = "Library".slice(0, maxNameLen);
         return (
-            <>
-                <div class="col-span-3 sm:col-span-4 md:col-span-5 pl-2 pr-6 nav-tab-group">
-                    <button onClick={fldrCallback} class={fldrClass}>{fldr}</button>
-                    <button onClick={packCallback} class={packClass}>{pack}</button>
-                    <button onClick={libCallback} class={libClass}>{lib}</button>
-                    {buttons}
-                </div>
-                <div class="col-span-1 glossary-tab-group">
-                    <button onClick={glossaryCallback} class={glossaryClass + " w-19/24"}>Glossary</button>
-                </div>
-            </>
+            <button onClick={callback} class={cssClass}>
+                {shortName}
+            </button>
         );
+    });
 
+    const [[fldrClass, fldrCallback], [packClass, packCallback], [libClass, libCallback], [glossaryClass, glossaryCallback]] = activeTab.match(baseNavTabMatcher);
+    const fldr = "Folder".slice(0, maxNameLen);
+    const pack = "Pack".slice(0, maxNameLen);
+    const lib = "Library".slice(0, maxNameLen);
+    return (
+        <>
+            <div class="col-span-3 sm:col-span-4 md:col-span-5 pl-2 pr-6 nav-tab-group">
+                <button onClick={fldrCallback} class={fldrClass}>{fldr}</button>
+                <button onClick={packCallback} class={packClass}>{pack}</button>
+                <button onClick={libCallback} class={libClass}>{lib}</button>
+                {buttons}
+            </div>
+            <div class="col-span-1 glossary-tab-group">
+                <button onClick={glossaryCallback} class={glossaryClass + " w-19/24"}>Glossary</button>
+            </div>
+        </>
+    );
+}
+
+export function NavTabs() {
+    const folders = ChipLibrary.GroupFolders;
+
+    if (!folders?.length) {
+        return noGroupTabs(top.getActiveTab());
     }
 
-    render() {
-        const folders = ChipLibrary.GroupFolders;
-
-        if (!folders || folders.length == 0) {
-            return this.noGroupTabs(top.getActiveTab());
-        }
-
-        return this.withGroupTabs(top.getActiveTab());
-    }
+    return withGroupTabs(top.getActiveTab());
 }

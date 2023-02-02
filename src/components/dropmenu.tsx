@@ -1,4 +1,4 @@
-import { Component, RenderableProps } from "preact";
+import { RenderableProps } from "preact";
 
 export interface DropMenuProps {
     /**
@@ -12,16 +12,13 @@ export interface DropMenuProps {
     text?: string,
 }
 
-export class DropMenu extends Component<DropMenuProps> {
-
-    render(props: RenderableProps<DropMenuProps>) {
-        return (
-            <div class="dropdown">
-                <button class={props.class}>{props.text ? props.text : "Menu"}</button>
-                <div class="dropdown-content">
-                    {props.children}
-                </div>
+export function DropMenu(props: RenderableProps<DropMenuProps>) {
+    return (
+        <div class="dropdown">
+            <button class={props.class}>{props.text ? props.text : "Menu"}</button>
+            <div class="dropdown-content">
+                {props.children}
             </div>
-        );
-    }
+        </div>
+    );
 }

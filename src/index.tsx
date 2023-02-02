@@ -14,7 +14,7 @@ async function main() {
 
     const chips: BattleChip[] = (await res.json()).map((chip: ChipData) => new BattleChip(chip));
 
-    window.addEventListener("beforeunload", function (e) {
+    addEventListener("beforeunload", function (e) {
         const confirmationMessage = 'Progress might be lost if you leave without saving an export.';
         if (ChipLibrary.ChangeSinceLastSave) {
             (e || window.event).returnValue = confirmationMessage; //Gecko + IE

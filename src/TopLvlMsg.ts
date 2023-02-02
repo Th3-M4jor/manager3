@@ -1,6 +1,8 @@
 import { makeTaggedUnion, none, MemberType } from "safety-match";
 import { signal, Signal } from "@preact/signals";
 
+import { setActiveDisplayItem, ChipDescDisplay } from "./components/chipdesc";
+
 export const Tabs = makeTaggedUnion({
     Library: none,
     Pack: none,
@@ -20,11 +22,11 @@ export function getTopMsg(): Signal<string> {
 }
 
 export function setTopMsg(msg: string): void {
-    if(msg.length == 0) {
+    if (msg.length == 0) {
         msgClearHandle = undefined;
     } else {
-        window.clearTimeout(msgClearHandle);
-        msgClearHandle = window.setTimeout(() => {topMsg.value = "";}, 15_000); //15 seconds
+        clearTimeout(msgClearHandle);
+        msgClearHandle = setTimeout(() => { topMsg.value = ""; }, 15_000); //15 seconds
     }
     topMsg.value = msg;
 }
@@ -34,6 +36,9 @@ export function getActiveTab(): TabName {
 }
 
 export function setActiveTab(tab: TabName): void {
+
+    // Clear the chip description when switching tabs
+    setActiveDisplayItem(ChipDescDisplay.None);
     activeTab.value = tab;
     const stateStr = tab.match({
         Library: () => "#!/Library",
@@ -42,12 +47,12 @@ export function setActiveTab(tab: TabName): void {
         Glossary: () => "#!/Glossary",
         GroupFolder: (name) => `#!/GroupFolder/${name}`,
     });
-    window.history.replaceState({}, "", stateStr);
+    history.replaceState({}, "", stateStr);
 }
 
 function initActiveTab() {
-    const hash = window.location.hash;
-    switch(hash) {
+    const hash = location.hash;
+    switch (hash) {
         case "#!/Library":
             return signal(Tabs.Library);
         case "#!/Pack":
@@ -57,7 +62,7 @@ function initActiveTab() {
         case "#!/Glossary":
             return signal(Tabs.Glossary);
         default:
-            window.history.replaceState({}, "", "#!/Library");
+            history.replaceState({}, "", "#!/Library");
             return signal(Tabs.Library);
     }
 }

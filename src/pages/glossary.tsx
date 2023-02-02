@@ -1,76 +1,97 @@
 import { Component } from "preact";
 
-import { makeTaggedUnion, MemberType, none } from "safety-match";
+import { ChipDesc, ChipDescDisplay, setActiveDisplayItem } from "../components/chipdesc";
 
-import { ChipDesc, ChipDescDisplay } from "../components/chipdesc";
+import { Statuses } from "../library/glossary/statuses";
 
-import { Statuses, statusFromName } from "../library/glossary/statuses";
+import { Blights } from "../library/glossary/blights";
 
-import { Blights, blightFromName, blightSort, blightImgCSS } from "../library/glossary/blights";
+import { Panels } from "../library/glossary/terrain";
 
-import { Panels, terrainFromName } from "../library/glossary/terrain";
+import { ChipTypes } from "../library/glossary/chipTypes";
 
-import { ChipTypes, chipTypeFromName, chipTypeBgCss, chipTypeFgCss, chipTypeToShortStr, chipTypeSortFunc } from "../library/glossary/chipTypes";
+import { Skills } from "../library/glossary/skills";
 
-const ActiveGlossaryItem = makeTaggedUnion({
-    Status: (name: string) => name,
-    Blight: (name: string) => name,
-    Terrain: (name: string) => name,
-    ChipType: (name: string) => name,
-    None: none,
-});
-
-type ActiveGlossaryItem = MemberType<typeof ActiveGlossaryItem>;
-
-interface GlossaryState {
-    activeItem: ActiveGlossaryItem;
-}
-
-export class Glossary extends Component<Record<string, never>, GlossaryState> {
+export default class Glossary extends Component {
     private statusMouseoverHandler: (e: MouseEvent) => void;
     private blightMouseoverHandler: (e: MouseEvent) => void;
     private terrainMouseoverHandler: (e: MouseEvent) => void;
     private chipTypeMouseoverHandler: (e: MouseEvent) => void;
-    
+    private skillMouseoverHandler: (e: MouseEvent) => void;
 
     constructor() {
         super();
-        this.state = {
-            activeItem: ActiveGlossaryItem.None,
+
+        this.skillMouseoverHandler = (e: MouseEvent) => {
+            const data = (e.currentTarget as HTMLDivElement).dataset;
+            if (!data?.name) {
+                return;
+            }
+
+            const item = ChipDescDisplay.GlossaryItem(
+                `${data.name.charAt(0).toUpperCase()}${data.name.slice(1)}`,
+                "chipDescBackgroundStd",
+                Skills[data.name].text
+            );
+
+            setActiveDisplayItem(item);
         }
 
         this.statusMouseoverHandler = (e: MouseEvent) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
-            if (!data || !data.name) {
+            if (!data?.name) {
                 return;
             }
 
-            this.setState({ activeItem: ActiveGlossaryItem.Status(data.name) });
+            const item = ChipDescDisplay.GlossaryItem(
+                `${data.name.charAt(0).toUpperCase()}${data.name.slice(1)}`,
+                "chipDescBackgroundMega",
+                Statuses[data.name]
+            );
+
+            setActiveDisplayItem(item);
         }
 
         this.blightMouseoverHandler = (e: MouseEvent) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
-            if (!data || !data.name) {
+            if (!data?.name) {
                 return;
             }
 
-            this.setState({ activeItem: ActiveGlossaryItem.Blight(data.name) });
+            const item = ChipDescDisplay.GlossaryItem(
+                `Blight (${data.name.charAt(0).toUpperCase()}${data.name.slice(1)})`,
+                "chipDescBackgroundGiga",
+                Blights[data.name].text
+            );
+            setActiveDisplayItem(item);
         }
         this.terrainMouseoverHandler = (e: MouseEvent) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
-            if (!data || !data.name) {
+            if (!data?.name) {
                 return;
             }
 
-            this.setState({ activeItem: ActiveGlossaryItem.Terrain(data.name) });
+            const item = ChipDescDisplay.GlossaryItem(
+                `${data.name.charAt(0).toUpperCase()}${data.name.slice(1)}`,
+                "chipDescBackgroundStd",
+                Panels[data.name]
+            );
+            setActiveDisplayItem(item);
         }
         this.chipTypeMouseoverHandler = (e: MouseEvent) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
-            if (!data || !data.name) {
+            if (!data?.name) {
                 return;
             }
 
-            this.setState({ activeItem: ActiveGlossaryItem.ChipType(data.name) });
+            const chipType = ChipTypes[data.name];
+
+            const item = ChipDescDisplay.GlossaryItem(
+                `${data.name.charAt(0).toUpperCase()}${data.name.slice(1)}`,
+                chipType.bgCss,
+                chipType.text
+            );
+            setActiveDisplayItem(item);
         }
     }
 
@@ -90,6 +111,23 @@ export class Glossary extends Component<Record<string, never>, GlossaryState> {
         );
     }
 
+    private renderSkills() {
+        // Observe that on modern browsers, Object.keys() returns keys in insertion order.
+        return Object.keys(Skills).map((skill) => (
+            <div class="select-none chip-row Chip" data-name={skill} onMouseOver={this.skillMouseoverHandler}>
+                <div class="w-8/24 sm:w-6/24 px-0 mx-0 whitespace-nowrap select-none">
+                    {skill.charAt(0).toUpperCase() + skill.slice(1)}
+                </div>
+                <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
+                    {Skills[skill].abbr}
+                </div>
+                <div class="w-5/24 sm:w-4/24 px-0 select-none whitespace-nowrap">
+                    Skill
+                </div>
+            </div>
+        ));
+    }
+
     private renderStatuses() {
         return Object.keys(Statuses).map((status) => (
             <div class="select-none chip-row Mega" data-name={status} onMouseOver={this.statusMouseoverHandler}>
@@ -107,14 +145,15 @@ export class Glossary extends Component<Record<string, never>, GlossaryState> {
     }
 
     private renderBlights() {
-        return Object.keys(Blights).sort(blightSort).map((blight) => (
+        // Observe that on modern browsers, Object.keys() returns the keys in the order in which they were inserted.
+        return Object.keys(Blights).map(blight => (
             <div class="select-none chip-row Giga" data-name={blight} onMouseOver={this.blightMouseoverHandler}>
                 <div class="w-8/24 sm:w-6/24 px-0 mx-0 whitespace-nowrap select-none">
                     {blight.charAt(0).toUpperCase() + blight.slice(1)}
                 </div>
                 <div class="w-4/24 sm:w-3/24 px-0 whitespace-nowrap select-none">
                     <span class="chipImgBox">
-                        <span class={blightImgCSS(blight)} />
+                        <span class={Blights[blight].imgCss} />
                     </span>
                 </div>
                 <div class="w-5/24 sm:w-4/24 px-0 select-none whitespace-nowrap">
@@ -141,9 +180,10 @@ export class Glossary extends Component<Record<string, never>, GlossaryState> {
     }
 
     private renderChipTypes() {
-        return Object.keys(ChipTypes).sort(chipTypeSortFunc).map((chipType) => {
-            const typeCss = chipTypeFgCss(chipType);
-            const typeAbbr = chipTypeToShortStr(chipType);
+        return Object.keys(ChipTypes).map((chipType) => {
+            const typeData = ChipTypes[chipType];
+            const typeCss = typeData.fgCss;
+            const typeAbbr = typeData.abbr;
 
             return (
                 <div class={"select-none chip-row " + typeCss} data-name={chipType} onMouseOver={this.chipTypeMouseoverHandler}>
@@ -161,49 +201,36 @@ export class Glossary extends Component<Record<string, never>, GlossaryState> {
         });
     }
 
-    private getActiveItemData(): ChipDescDisplay {
-
-        return this.state.activeItem.match({
-            Status: (name) => ChipDescDisplay.GlossaryItem(
-                `${name.charAt(0).toUpperCase()}${name.slice(1)}`,
-                "chipDescBackgroundMega",
-                statusFromName(name)
-            ),
-            Terrain: (name) => ChipDescDisplay.GlossaryItem(
-                `${name.charAt(0).toUpperCase()}${name.slice(1)}`,
-                "chipDescBackgroundStd",
-                terrainFromName(name)
-            ),
-            ChipType: (name) => ChipDescDisplay.GlossaryItem(
-                `${name.charAt(0).toUpperCase()}${name.slice(1)}`,
-                chipTypeBgCss(name),
-                chipTypeFromName(name)
-            ),
-            Blight: (name) => ChipDescDisplay.GlossaryItem(
-                `Blight (${name.charAt(0).toUpperCase()}${name.slice(1)})`,
-                "chipDescBackgroundGiga",
-                blightFromName(name)
-            ),
-            None: () => ChipDescDisplay.None,
-        });
+    private linebreak() {
+        return (
+            <div class="select-none justify-center flex flex-row mx-0 UsedChip">
+                <div class="w-21/24 px-0 mx-0 whitespace-nowrap select-none overflow-hidden shadow-none">
+                {"- ".repeat(50)}
+                </div>
+            </div>
+        );
     }
 
     render() {
-        const activeItemData = this.getActiveItemData();
 
         return (
             <>
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 px-0 z-10">
                     <div class="Folder activeFolder">
                         {this.viewTopRow()}
+                        {this.renderSkills()}
+                        {this.linebreak()}
                         {this.renderChipTypes()}
+                        {this.linebreak()}
                         {this.renderPanels()}
+                        {this.linebreak()}
                         {this.renderStatuses()}
+                        {this.linebreak()}
                         {this.renderBlights()}
                     </div>
                 </div>
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
-                    <ChipDesc item={activeItemData} />
+                    <ChipDesc />
                 </div>
             </>
         )

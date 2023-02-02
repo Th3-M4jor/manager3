@@ -6,7 +6,7 @@ import { ChipLibrary } from "../library/library";
 
 import * as sort from "../components/sortbox";
 import { DropMenu } from "../components/dropmenu";
-import { ChipDesc, ChipDescDisplay } from "../components/chipdesc";
+import { ChipDesc, ChipDescDisplay, setActiveDisplayItem } from "../components/chipdesc";
 import { PackChip } from "../components/chips/PackChip";
 
 
@@ -129,7 +129,6 @@ async function loadFile(e: Event) {
 }
 
 interface PackState {
-    activeChipId: number | null;
     contextMenuX: number | null;
     contextMenuY: number | null;
     contextMenuSelectedId: number | null;
@@ -149,7 +148,6 @@ export class Pack extends Component<Record<string, never>, PackState> {
         super();
 
         this.state = {
-            activeChipId: null,
             contextMenuX: null,
             contextMenuY: null,
             contextMenuSelectedId: null,
@@ -161,7 +159,7 @@ export class Pack extends Component<Record<string, never>, PackState> {
                 return;
             }
             const id = +data.id;
-            this.setState({ activeChipId: id });
+            setActiveDisplayItem(ChipDescDisplay.ChipId(id));
         }
 
         this.closeMenu = (_e: MouseEvent) => {
@@ -185,24 +183,22 @@ export class Pack extends Component<Record<string, never>, PackState> {
     private openContextMenu(e: MouseEvent) {
 
         const target = document.querySelector<HTMLElement>(".chip-row:hover");
-        if (!target) {
+        if (!target?.dataset.id) {
             return;
         }
-        const data = target.dataset;
-        if (!data || !data.id) {
-            return;
-        }
+        
+        const id = +target.dataset.id;
         e.preventDefault();
 
-        this.setState({ contextMenuX: e.clientX, contextMenuY: e.clientY, contextMenuSelectedId: +data.id });
+        this.setState({ contextMenuX: e.clientX, contextMenuY: e.clientY, contextMenuSelectedId: id });
 
-        window.addEventListener("click", this.closeMenu, { once: true });
+        addEventListener("click", this.closeMenu, { once: true });
     }
 
     private hideContextMenu(): void {
         
         this.setState({ contextMenuX: null, contextMenuY: null, contextMenuSelectedId: null });
-        window.removeEventListener("click", this.closeMenu);
+        removeEventListener("click", this.closeMenu);
     }
 
     componentWillUnmount(): void {
@@ -284,6 +280,7 @@ export class Pack extends Component<Record<string, never>, PackState> {
             addToFolder={this.addToFolderHandler}
             owned={packChip.owned}
             used={packChip.used}
+            key={`P_${packChip.chip.id}`}
         />);
     }
 
@@ -332,14 +329,6 @@ export class Pack extends Component<Record<string, never>, PackState> {
 
     render() {
 
-        let chipDescItem: ChipDescDisplay;
-
-        if (this.state.activeChipId) {
-            chipDescItem = ChipDescDisplay.ChipId(this.state.activeChipId);
-        } else {
-            chipDescItem = ChipDescDisplay.None;
-        }
-
         return (
             <>
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 px-0 z-10">
@@ -349,7 +338,7 @@ export class Pack extends Component<Record<string, never>, PackState> {
                     </div>
                 </div>
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
-                    <ChipDesc item={chipDescItem} />
+                    <ChipDesc />
                     {this.dropMenu()}
                     <sort.SortBox currentMethod={Pack.sortMethod.value} includeOwned onSortChange={(e) => {
                         Pack.sortMethod.value = sort.SortOptFromStr((e.target as HTMLSelectElement).value);

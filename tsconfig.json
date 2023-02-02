@@ -6,6 +6,7 @@
         "jsxImportSource": "preact",
         "module": "ES2020",
         "moduleResolution": "node",
+        "isolatedModules": true,
         "allowSyntheticDefaultImports": true,
         "keyofStringsOnly": true,
         "strict": true,
@@ -18,6 +19,7 @@
             "ES6",
             "ES2020",
         ],
+        "experimentalDecorators": true,
         "removeComments": true,
         "paths": {
             "react": ["./node_modules/preact/compat/"],

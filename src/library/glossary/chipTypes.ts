@@ -38,96 +38,70 @@ const Trap = " Chips of the trap type will usually set \
 some condition to be activated before the end of combat. \
 When this condition is met, their attacks trigger. They \
 may not always require you to make an attack roll, \
-but they still consume and attack action to use.";
+but they still consume an attack action to use.";
 
-export const ChipTypes = {
-    burst: Burst,
-    construct: Construct,
-    melee: Melee,
-    projectile: Projectile,
-    wave: Wave,
-    recovery: Recovery,
-    summon: Summon,
-    support: Support,
-    trap: Trap
+export interface ChipTypeObject {
+    text: string;
+    bgCss: string;
+    fgCss: string;
+    abbr: string;
 }
+
+export const ChipTypes: Record<string, ChipTypeObject> = {
+    burst: {
+        text: Burst,
+        bgCss: "chipDescBackgroundStd",
+        fgCss: "Chip",
+        abbr: "BST"
+    },
+    construct: {
+        text: Construct,
+        bgCss: "chipDescBackgroundSupprt",
+        fgCss: "SupportChip",
+        abbr: "CNS"
+    },
+    melee: {
+        text: Melee,
+        bgCss: "chipDescBackgroundStd",
+        fgCss: "Chip",
+        abbr: "MLE",
+    },
+    projectile: {
+        text: Projectile,
+        bgCss: "chipDescBackgroundStd",
+        fgCss: "Chip",
+        abbr: "PRJ"
+    },
+    wave: {
+        text: Wave,
+        bgCss: "chipDescBackgroundStd",
+        fgCss: "Chip",
+        abbr: "WVE"
+    },
+    recovery: {
+        text: Recovery,
+        bgCss: "chipDescBackgroundStd",
+        fgCss: "Chip",
+        abbr: "RCV"
+    },
+    summon: {
+        text: Summon,
+        bgCss: "chipDescBackgroundSupprt",
+        fgCss: "SupportChip",
+        abbr: "SUM"
+    },
+    support: {
+        text: Support,
+        bgCss: "chipDescBackgroundSupprt",
+        fgCss: "SupportChip",
+        abbr: "SPT"
+    },
+    trap: {
+        text: Trap,
+        bgCss: "chipDescBackgroundStd",
+        fgCss: "Chip",
+        abbr: "TRP"
+    }
+};
 
 export type ChipType = keyof typeof ChipTypes;
-
-export function chipTypeFromName(name: string): string {
-    if(!(name in ChipTypes)) {
-        throw new TypeError("Bad chiptype name");
-    }
-
-    return ChipTypes[name as ChipType];
-}
-
-export function chipTypeBgCss(name: string): string {
-    if(["construct", "summon", "support"].includes(name)) {
-        return "chipDescBackgroundSupprt";
-    }
-
-    return "chipDescBackgroundStd";
-}
-
-export function chipTypeFgCss(name: string): string {
-    if(["construct", "summon", "support"].includes(name)) {
-        return "SupportChip";
-    }
-
-    return "Chip";
-}
-
-function chipTypeToSortNum(name: string): number {
-    switch(name) {
-        case "burst":
-            return 0;
-        case "construct":
-            return 1;
-        case "melee":
-            return 2;
-        case "projectile":
-            return 3;
-        case "wave":
-            return 4;
-        case "recovery":
-            return 5;
-        case "summon":
-            return 6;
-        case "support":
-            return 7;
-        case "trap":
-            return 8;
-        default:
-            throw new TypeError("Bad chiptype name");
-    }
-}
-
-export function chipTypeSortFunc(a: string, b: string): number {
-    return Math.sign(chipTypeToSortNum(a) - chipTypeToSortNum(b));
-}
-
-export function chipTypeToShortStr(name: string): string {
-    switch(name) {
-        case "burst":
-            return "BST";
-        case "construct":
-            return "CNS";
-        case "melee":
-            return "MLE";
-        case "projectile":
-            return "PRJ";
-        case "wave":
-            return "WVE";
-        case "recovery":
-            return "RCV";
-        case "summon":
-            return "SUM";
-        case "support":
-            return "SPT";
-        case "trap":
-            return "TRP";
-        default:
-            throw new TypeError("Bad chiptype name");
-    }
-}

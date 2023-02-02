@@ -47,7 +47,7 @@
     "preact/jsx-dev-runtime": "preact/jsx-runtime"
   },
   "browserslist": [
-    "> 10.0% in US",
+    "> 20.0% in US",
     "not dead"
   ],
   "@parcel/transformer-css": {

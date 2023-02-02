@@ -5,20 +5,15 @@ import * as top from "../TopLvlMsg";
 
 import { FolderChipWithBChip, sortByName, folderTopRow } from "./folder";
 
-import { ChipDesc, ChipDescDisplay } from "../components/chipdesc";
+import { ChipDesc, ChipDescDisplay, setActiveDisplayItem } from "../components/chipdesc";
 import { FolderChip } from "../components/chips/FldrChip";
 
-interface GroupFolderState {
-    activeChipId: number | null;
-}
-export class GroupFolder extends Component<Record<string, never>, GroupFolderState> {
+
+export class GroupFolder extends Component {
     private chipMouseoverHandler: (e: MouseEvent) => void;
 
     constructor() {
         super();
-        this.state = {
-            activeChipId: null,
-        }
 
         this.chipMouseoverHandler = (e: MouseEvent) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
@@ -26,7 +21,7 @@ export class GroupFolder extends Component<Record<string, never>, GroupFolderSta
                 return;
             }
             const id = +data.id;
-            this.setState({ activeChipId: id });
+            setActiveDisplayItem(ChipDescDisplay.ChipId(id));
         }
     }
 
@@ -74,21 +69,13 @@ export class GroupFolder extends Component<Record<string, never>, GroupFolderSta
                 used={c.used}
                 displayIndex={idx}
                 onmouseover={this.chipMouseoverHandler}
+                key={`FG_${c.chip.name}-${c.index}`}
                 groupFolder
             />
         );
-
     }
 
     render() {
-
-        let chipDescItem: ChipDescDisplay;
-
-        if (this.state.activeChipId) {
-            chipDescItem = ChipDescDisplay.ChipId(this.state.activeChipId);
-        } else {
-            chipDescItem = ChipDescDisplay.None;
-        }
 
         return (
             <>
@@ -99,7 +86,7 @@ export class GroupFolder extends Component<Record<string, never>, GroupFolderSta
                     </div>
                 </div>
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
-                    <ChipDesc item={chipDescItem} />
+                    <ChipDesc />
                 </div>
             </>
         );

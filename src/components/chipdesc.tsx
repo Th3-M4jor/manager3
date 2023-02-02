@@ -1,4 +1,5 @@
-import { Component, RenderableProps, createRef } from "preact";
+import { Component, createRef } from "preact";
+import { signal } from "@preact/signals";
 import { makeTaggedUnion, none, MemberType } from "safety-match";
 
 import { BattleChip, diceToStr } from "../library/battlechip";
@@ -13,23 +14,21 @@ export const ChipDescDisplay = makeTaggedUnion({
 
 export type ChipDescDisplay = MemberType<typeof ChipDescDisplay>;
 
-export interface chipDescProps {
-    item: ChipDescDisplay;
-}
-
 // callback function for the scroll interval
 function scrollInterval() {
-    const div = document.getElementById("ScrollTextDiv");
-    if (!div) return;
-    const clientHeight = div.clientHeight;
-    const totalHeight = div.scrollHeight;
-    const scrollPos = div.scrollTop;
+    requestAnimationFrame(() => {
+        const div = document.getElementById("ScrollTextDiv");
+        if (!div) return;
+        const clientHeight = div.clientHeight;
+        const totalHeight = div.scrollHeight;
+        const scrollPos = div.scrollTop;
 
-    const maxScroll = totalHeight - clientHeight;
+        const maxScroll = totalHeight - clientHeight;
 
-    if (maxScroll - 10 <= 0) return;
+        if (maxScroll - 10 <= 0) return;
 
-    div.scrollTop = scrollPos + 1;
+        div.scrollTop = scrollPos + 1;
+    });
 }
 
 function startInterval() {
@@ -38,7 +37,14 @@ function startInterval() {
         ChipDesc.intervalHandle = setInterval(scrollInterval, 75);
     }
 }
-export class ChipDesc extends Component<chipDescProps> {
+
+const activeDisplayItem = signal<ChipDescDisplay>(ChipDescDisplay.None);
+
+export function setActiveDisplayItem(item: ChipDescDisplay) {
+    activeDisplayItem.value = item;
+}
+
+export class ChipDesc extends Component {
 
     private animationCounter: number;
     private currentDisplay: ChipDescDisplay;
@@ -48,10 +54,10 @@ export class ChipDesc extends Component<chipDescProps> {
     private mouseLeaveHandler: (e: MouseEvent) => void;
     private animationDiv = createRef<HTMLDivElement>();
 
-    constructor(vnode: chipDescProps) {
-        super(vnode);
+    constructor() {
+        super();
         this.animationCounter = 0;
-        this.currentDisplay = vnode.item
+        this.currentDisplay = activeDisplayItem.peek();
 
         // memoize callbacks
         this.mouseOverHandler = (_e: MouseEvent) => {
@@ -74,21 +80,21 @@ export class ChipDesc extends Component<chipDescProps> {
         };
     }
 
-    shouldComponentUpdate(nextProps: Readonly<chipDescProps>): boolean {
-        const newVal = nextProps.item.match({
+    shouldComponentUpdate(): boolean {
+        const newVal = activeDisplayItem.peek().match({
             None: () => null,
             ChipId: (id) => id,
-            GlossaryItem: ({name: name}) => name,
+            GlossaryItem: ({ name: name }) => name,
         })
 
         const oldVal = this.currentDisplay.match({
             None: () => null,
             ChipId: (id) => id,
-            GlossaryItem: ({name: name}) => name,
+            GlossaryItem: ({ name: name }) => name,
         })
 
         if (newVal !== oldVal) {
-            this.currentDisplay = nextProps.item;
+            this.currentDisplay = activeDisplayItem.peek();
             return true;
         }
 
@@ -122,7 +128,7 @@ export class ChipDesc extends Component<chipDescProps> {
         // to avoid stuttering on potato computers
         const newChipAnimClass = (this.animationCounter & 1) ? "chipWindowOne" : "chipWindowTwo";
         const oldChipAnimClass = (this.animationCounter & 1) ? "chipWindowTwo" : "chipWindowOne";
-        
+
         requestAnimationFrame(() => {
             const div = this.animationDiv.current;
             if (div) {
@@ -405,11 +411,11 @@ export class ChipDesc extends Component<chipDescProps> {
         return <div class="h-3/4 chipDescBackgroundStd" style="max-height: 65vh" />
     }
 
-    render(props: RenderableProps<chipDescProps>) {
-        return props.item.match({
+    render() {
+        return activeDisplayItem.value.match({
             None: () => this.viewNoChip(),
             ChipId: (id) => this.viewWithChip(id),
-            GlossaryItem: ({name, backgroundCss, text}) => this.glossaryItem(name, backgroundCss, text),
+            GlossaryItem: ({ name, backgroundCss, text }) => this.glossaryItem(name, backgroundCss, text),
         });
     }
 }

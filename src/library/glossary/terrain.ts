@@ -54,7 +54,7 @@ move away from it. Further, targets standing on this \
 terrain that take Elec damage have the damage increased \
 by half the attack's damage dice."
 
-export const Panels = {
+export const Panels: Record<string, string> = {
     cracked: Cracked,
     grass: Grass,
     holy: Holy,
@@ -68,10 +68,3 @@ export const Panels = {
 };
 
 export type Terrain = keyof typeof Panels;
-
-export function terrainFromName(name: string): string {
-    if (!(name in Panels)) {
-        throw new Error(`Unknown terrain: ${name}`);
-    }
-    return Panels[name as Terrain];
-}

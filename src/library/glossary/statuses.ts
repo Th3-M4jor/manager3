@@ -63,7 +63,7 @@ you're required to make. This includes Attack Rolls. This \
 effect can be removed at the cost of all your remaining \
 Move Actions for that round.";
 
-export const Statuses = {
+export const Statuses: Record<string, string> = {
     angry: AngryStatus,
     aura: AuraStatus,
     barrier: BarrierStatus,

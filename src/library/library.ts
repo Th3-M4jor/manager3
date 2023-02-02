@@ -122,11 +122,11 @@ export class ChipLibrary {
                 ChipLibrary.instance.loadPack();
             } catch (e) {
                 alert(`There was an error loading your save data ${(e as Error).message}, clearing data`);
-                window.localStorage.removeItem('folder');
-                window.localStorage.removeItem('folder2');
-                window.localStorage.removeItem('activeFolder');
-                window.localStorage.removeItem('pack');
-                window.localStorage.removeItem('chipLimit');
+                localStorage.removeItem('folder');
+                localStorage.removeItem('folder2');
+                localStorage.removeItem('activeFolder');
+                localStorage.removeItem('pack');
+                localStorage.removeItem('chipLimit');
                 ChipLibrary.instance.folder = [];
                 ChipLibrary.instance.folder2 = [];
                 ChipLibrary.instance.folderSize.value = 12;
@@ -154,9 +154,9 @@ export class ChipLibrary {
 
     private loadFolder(): number {
 
-        const folder = window.localStorage.getItem('folder');
-        const chipLimit = window.localStorage.getItem('chipLimit');
-        const activeFolder = window.localStorage.getItem('activeFolder');
+        const folder = localStorage.getItem('folder');
+        const chipLimit = localStorage.getItem('chipLimit');
+        const activeFolder = localStorage.getItem('activeFolder');
         if (chipLimit !== null && (+chipLimit) > 0) {
             this.folderSize.value = +chipLimit;
         }
@@ -198,7 +198,7 @@ export class ChipLibrary {
 
     private loadFolder2(): number {
 
-        const folder = window.localStorage.getItem('folder2');
+        const folder = localStorage.getItem('folder2');
 
         if (!folder) {
             return 0;
@@ -253,7 +253,7 @@ export class ChipLibrary {
     }
 
     private loadPack(): number {
-        const pack = window.localStorage.getItem('pack');
+        const pack = localStorage.getItem('pack');
         if (!pack) {
             return 0;
         }
@@ -375,11 +375,11 @@ export class ChipLibrary {
             Folder2: () => "2",
         });
 
-        window.localStorage.setItem('folder', folderString);
-        window.localStorage.setItem('folder2', folder2String);
-        window.localStorage.setItem('activeFolder', activeFolderStr);
-        window.localStorage.setItem('pack', packString);
-        window.localStorage.setItem('chipLimit', folderSizeStr);
+        localStorage.setItem('folder', folderString);
+        localStorage.setItem('folder2', folder2String);
+        localStorage.setItem('activeFolder', activeFolderStr);
+        localStorage.setItem('pack', packString);
+        localStorage.setItem('chipLimit', folderSizeStr);
 
         ChipLibrary.instance.changeSinceLastSave = false;
 
@@ -482,11 +482,11 @@ export class ChipLibrary {
         ChipLibrary.instance.activeFolder.value = ActiveFolder.Folder1;
 
         if (storageAvailable('localStorage')) {
-            window.localStorage.removeItem('folder');
-            window.localStorage.removeItem('folder2');
-            window.localStorage.removeItem('activeFolder');
-            window.localStorage.removeItem('pack');
-            window.localStorage.removeItem('chipLimit');
+            localStorage.removeItem('folder');
+            localStorage.removeItem('folder2');
+            localStorage.removeItem('activeFolder');
+            localStorage.removeItem('pack');
+            localStorage.removeItem('chipLimit');
         }
 
         ChipLibrary.instance.changeSinceLastSave = false;

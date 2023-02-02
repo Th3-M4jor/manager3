@@ -5,7 +5,7 @@ import { ChipLibrary } from "../library/library";
 
 import * as sort from "../components/sortbox";
 import { DropMenu } from "../components/dropmenu";
-import { ChipDesc, ChipDescDisplay } from "../components/chipdesc";
+import { ChipDesc, ChipDescDisplay, setActiveDisplayItem } from "../components/chipdesc";
 import { FolderChip } from "../components/chips/FldrChip";
 
 import * as top from "../TopLvlMsg";
@@ -93,7 +93,6 @@ function jackOutClicked() {
 }
 
 interface FolderState {
-    activeChipId: number | null;
     showJoinModal: boolean;
 }
 
@@ -112,8 +111,7 @@ export class Folder extends Component<Record<string, never>, FolderState> {
         super();
 
         this.state = {
-            activeChipId: null,
-            showJoinModal: false,
+            showJoinModal: false
         }
 
         this.chipMouseoverHandler = (e: MouseEvent) => {
@@ -122,7 +120,7 @@ export class Folder extends Component<Record<string, never>, FolderState> {
                 return;
             }
             const id = +data.id;
-            this.setState({activeChipId: id});
+            setActiveDisplayItem(ChipDescDisplay.ChipId(id));
         }
         this.returnToPack = (e: MouseEvent) => {
 
@@ -232,9 +230,9 @@ export class Folder extends Component<Record<string, never>, FolderState> {
                 displayIndex={idx}
                 onmouseover={this.chipMouseoverHandler}
                 returnToPack={this.returnToPack}
+                key={`F_${c.chip.name}-${c.index}`}
             />
         );
-
     }
 
     private renderGroupBtn() {
@@ -294,14 +292,6 @@ export class Folder extends Component<Record<string, never>, FolderState> {
         const minFldrSize = ChipLibrary.MinFolderSize + "";
         const chipLimit = ChipLibrary.FolderSize + "";
 
-        let chipDescItem: ChipDescDisplay;
-
-        if (this.state.activeChipId) {
-            chipDescItem = ChipDescDisplay.ChipId(this.state.activeChipId);
-        } else {
-            chipDescItem = ChipDescDisplay.None;
-        }
-
         return (
             <>
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 px-0 z-10">
@@ -311,7 +301,7 @@ export class Folder extends Component<Record<string, never>, FolderState> {
                     </div>
                 </div>
                 <div class="col-span-1 flex flex-col px-0 max-h-full">
-                    <ChipDesc item={chipDescItem} />
+                    <ChipDesc />
                     {this.dropMenu()}
                     <sort.SortBox currentMethod={Folder.sortMethod} onSortChange={(e) => {
                         Folder.sortMethod = sort.SortOptFromStr((e.target as HTMLSelectElement).value);
