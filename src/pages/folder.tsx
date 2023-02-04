@@ -58,7 +58,7 @@ function sortByCr(a: FolderChipWithBChip, b: FolderChipWithBChip): number {
 export function folderTopRow() {
     return (
         <div class="chip-top-row Chip z-20">
-            <div class="w-1/24 sm:w-1/24 px-0 whitespace-nowrap select-none"/>
+            <div class="w-1/24 sm:w-1/24 px-0 whitespace-nowrap select-none" />
             <div class="w-6/24 sm:w-5/24 px-0 whitespace-nowrap select-none">
                 NAME
             </div>
@@ -146,11 +146,11 @@ export class Folder extends Component<Record<string, never>, FolderState> {
         }
 
         const cancelCallback = (_: MouseEvent) => {
-            this.setState({showJoinModal: false});
+            this.setState({ showJoinModal: false });
         }
 
         const okCallback = (_: MouseEvent) => {
-            this.setState({showJoinModal: false});
+            this.setState({ showJoinModal: false });
 
             const groupName = this.groupNameRef.current?.value.trim();
             const playerName = this.playerNameRef.current?.value.trim();
@@ -175,7 +175,7 @@ export class Folder extends Component<Record<string, never>, FolderState> {
                         <input type="text" placeholder="player name" id="playerName" ref={this.playerNameRef} />
                         <br />
                         <label for="spectator_checkbox">Join as spectator</label>
-                        <input type="checkbox" id="spectator_checkbox" ref={this.spectatorRef}/>
+                        <input type="checkbox" id="spectator_checkbox" ref={this.spectatorRef} />
                     </div>
                     <div class="modal-footer">
                         <span class="pl-1">
@@ -245,7 +245,7 @@ export class Folder extends Component<Record<string, never>, FolderState> {
         }
 
         return (
-            <button class="dropmenu-btn" onClick={() => this.setState({showJoinModal: true})}>
+            <button class="dropmenu-btn" onClick={() => this.setState({ showJoinModal: true })}>
                 JOIN GROUP
             </button>
         );
@@ -288,7 +288,7 @@ export class Folder extends Component<Record<string, never>, FolderState> {
         Folder.scrollPos = this.folderDivRef.current?.scrollTop ?? 0;
     }
 
-    render(){
+    render() {
         const minFldrSize = ChipLibrary.MinFolderSize + "";
         const chipLimit = ChipLibrary.FolderSize + "";
 

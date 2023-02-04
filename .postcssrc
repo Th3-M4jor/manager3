@@ -1,6 +1,7 @@
 {
     "map": false,
     "plugins": {
+        "tailwindcss/nesting": {},
         "tailwindcss": true,
         "postcss-extend": true,
         "postcss-mixins": true

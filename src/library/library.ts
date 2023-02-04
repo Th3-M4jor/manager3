@@ -4,7 +4,6 @@ import { makeTaggedUnion, none, MemberType } from "safety-match";
 import { storageAvailable } from "../util/storageavailable";
 import { BattleChip, ChipData } from "./battlechip";
 import { throwExpression } from "../util/throwExpression";
-import { GroupWorkerURL } from "../groups/groupWorkerURL";
 
 export interface FolderChip {
     name: string,
@@ -45,7 +44,7 @@ interface importedData {
 
 
 export class ChipLibrary {
-    public static readonly instance = new ChipLibrary();
+    private static readonly instance = new ChipLibrary();
 
     private static groupWorker: Signal<Worker | null> = signal(null);
 
@@ -639,7 +638,7 @@ export class ChipLibrary {
     }
 
     public static joinGroup(group: string, name: string, spectate = false): void {
-        ChipLibrary.groupWorker.value = new Worker(GroupWorkerURL, { type: 'module' });
+        ChipLibrary.groupWorker.value = new Worker(new URL("../groups/folderGroups.ts", import.meta.url), { type: 'module' });
 
         const eventKind = spectate ? 'spectate' : 'ready';
 
@@ -663,9 +662,7 @@ export class ChipLibrary {
                     break;
                 case "updated":
 
-                    //@ts-ignore
-                    if (process.env.NODE_ENV === "development") {
-                        // eslint-disable-next-line
+                    if (import.meta.env.DEV) {
                         console.debug(`${e.data[1].length} chips updated`);
                     }
 

@@ -17,7 +17,7 @@ export class GroupFolder extends Component {
 
         this.chipMouseoverHandler = (e: MouseEvent) => {
             const data = (e.currentTarget as HTMLDivElement).dataset;
-            if (!data || !data.id) {
+            if (!data?.id) {
                 return;
             }
             const id = +data.id;
@@ -69,8 +69,8 @@ export class GroupFolder extends Component {
                 used={c.used}
                 displayIndex={idx}
                 onmouseover={this.chipMouseoverHandler}
+                groupFolder={true}
                 key={`FG_${c.chip.name}-${c.index}`}
-                groupFolder
             />
         );
     }

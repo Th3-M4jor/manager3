@@ -8,9 +8,8 @@ import { MainPage } from "./components/mainpage";
 async function main() {
 
     const res = await fetch(
-        //@ts-ignore
-        process.env.BASE_URL + "fetch/chips"
-        )
+        import.meta.env.VITE_BASE_URL + "fetch/chips"
+    )
 
     const chips: BattleChip[] = (await res.json()).map((chip: ChipData) => new BattleChip(chip));
 
@@ -25,7 +24,7 @@ async function main() {
 
     ChipLibrary.initFromChips(chips);
 
-    render(<MainPage/>, document.body);
+    render(<MainPage />, document.body);
 }
 
 main()

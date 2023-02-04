@@ -158,5 +158,4 @@ export class BattleChip {
     renderElements() {
         return elementArrToHtml(this.element);
     }
-
 }
