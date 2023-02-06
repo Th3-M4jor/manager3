@@ -5,17 +5,20 @@ import { NavTabs } from "../components/navtabs";
 import { Library } from "../pages/library";
 import { Pack } from "../pages/pack";
 import { Folder } from "../pages/folder";
-import Glossary from "../pages/glossary";
 import { GroupFolder } from "../pages/groupFolder";
 
-
+let Glossary: typeof import("../pages/glossary").default | null = null
 
 export function MainPage() {
     const subPage = top.getActiveTab().match({
         Folder: () => <Folder />,
         Library: () => <Library />,
         Pack: () => <Pack />,
-        Glossary: () => <Glossary />,
+        Glossary: () => {
+            Glossary ??= top.getGlossary();
+
+            return <Glossary />
+    },
         GroupFolder: (_) => <GroupFolder />
     });
 

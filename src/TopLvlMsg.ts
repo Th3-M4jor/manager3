@@ -35,8 +35,24 @@ export function getActiveTab(): TabName {
     return activeTab.value;
 }
 
-export function setActiveTab(tab: TabName): void {
+let Glossary: typeof import("./pages/glossary").default | null = null
 
+export function getGlossary() {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return Glossary!;
+}
+
+export function setActiveTab(tab: TabName): void | Promise<void> {
+    if (tab.variant === "Glossary" && !Glossary) {
+        return import("./pages/glossary").then((glossary) => {
+            Glossary = glossary.default;
+            setActiveTabInner(tab);
+        });
+    }
+    setActiveTabInner(tab);
+}
+
+function setActiveTabInner(tab: TabName): void {
     // Clear the chip description when switching tabs
     setActiveDisplayItem(ChipDescDisplay.None);
     activeTab.value = tab;
@@ -59,8 +75,6 @@ function initActiveTab() {
             return signal(Tabs.Pack);
         case "#!/Folder":
             return signal(Tabs.Folder);
-        case "#!/Glossary":
-            return signal(Tabs.Glossary);
         default:
             history.replaceState({}, "", "#!/Library");
             return signal(Tabs.Library);

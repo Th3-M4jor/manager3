@@ -59,8 +59,7 @@ function connect(group: string, name: string): void {
         throw new Error("Already connected");
     }
 
-    //@ts-ignore
-    const url = process.env.SOCKET_URL;
+    const url = import.meta.env.VITE_SOCKET_URL
 
     socket = new Socket(url);
     socket.connect();
@@ -132,10 +131,7 @@ function update(): void {
 
 function doLog(msg: string, ...args: unknown[]): void {
 
-    //@ts-ignore
-    if (process.env.NODE_ENV !== "production") {
-        //eslint-disable-next-line no-console
+    if (import.meta.env.PROD) {
         console.log(msg, ...args);
     }
-
 }

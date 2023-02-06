@@ -5,9 +5,10 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "start": "parcel serve ./static/index.html -p 9001",
-    "build": "parcel build ./static/index.html --public-url ./ --log-level verbose",
-    "analyze": "parcel build ./static/index.html --reporter @parcel/reporter-bundle-analyzer --public-url ./",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "tsc --noEmit",
     "lint": "eslint . --env browser --ext .ts --ext .tsx",
     "lint-fix": "eslint . --env browser --ext .ts --ext .tsx --fix"
   },
@@ -20,20 +21,13 @@
     "throttle-debounce": "^5.0.0"
   },
   "devDependencies": {
-    "@parcel/optimizer-data-url": "^2.8.2",
-    "@parcel/reporter-bundle-analyzer": "^2.0.0",
-    "@parcel/transformer-css": "^2.0.0",
-    "@parcel/transformer-image": "^2.0.0",
-    "@parcel/transformer-inline-string": "^2.8.2",
-    "@parcel/compressor-brotli": "^2.8.2",
-    "@parcel/compressor-gzip": "^2.8.2",
-    "@types/file-saver": "^2.0.3",
     "@types/phoenix": "^1.5.2",
     "@types/throttle-debounce": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "@typescript-eslint/parser": "^5.2.0",
+    "vite": "4.1.1",
+    "vite-plugin-compression2": "^0.6.3",
     "eslint": "^8.1.0",
-    "parcel": "^2.0.0",
     "postcss": "^8.3.6",
     "postcss-extend": "^1.0.5",
     "postcss-mixins": "^9.0.0",
@@ -49,10 +43,5 @@
   "browserslist": [
     "> 20.0% in US",
     "not dead"
-  ],
-  "@parcel/transformer-css": {
-    "drafts": {
-      "nesting": true
-    }
-  }
+  ]
 }
