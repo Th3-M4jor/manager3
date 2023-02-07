@@ -1,4 +1,4 @@
-import { Component } from "preact";
+import { Component, JSX } from "preact";
 import { signal } from "@preact/signals";
 import { makeTaggedUnion, none, MemberType } from "safety-match";
 
@@ -13,6 +13,12 @@ export const ChipDescDisplay = makeTaggedUnion({
 });
 
 export type ChipDescDisplay = MemberType<typeof ChipDescDisplay>;
+
+const activeDisplayItem = signal<ChipDescDisplay>(ChipDescDisplay.None);
+
+export function setActiveDisplayItem(item: ChipDescDisplay) {
+    activeDisplayItem.value = item;
+}
 
 // callback function for the scroll interval
 function scrollInterval() {
@@ -62,11 +68,21 @@ function startInterval() {
     }
 }
 
-const activeDisplayItem = signal<ChipDescDisplay>(ChipDescDisplay.None);
-
-export function setActiveDisplayItem(item: ChipDescDisplay) {
-    activeDisplayItem.value = item;
+function descMouseOverHandler() {
+    clearInterval(ChipDesc.intervalHandle);
+    ChipDesc.intervalHandle = undefined;
+    clearTimeout(ChipDesc.startScrollHandle);
+    ChipDesc.startScrollHandle = undefined;
+    clearTimeout(ChipDesc.fadeOutHandle);
+    ChipDesc.fadeOutHandle = undefined;
 }
+
+function descMouseLeaveHandler() {
+    if (!ChipDesc.intervalHandle && !ChipDesc.startScrollHandle) {
+        ChipDesc.startScrollHandle = setTimeout(startInterval, 1000);
+    }
+}
+
 
 export class ChipDesc extends Component {
 
@@ -75,29 +91,11 @@ export class ChipDesc extends Component {
     public static intervalHandle: number | undefined;
     public static startScrollHandle: number | undefined;
     public static fadeOutHandle: number | undefined;
-    private mouseOverHandler: (e: MouseEvent) => void;
-    private mouseLeaveHandler: (e: MouseEvent) => void;
 
     constructor() {
         super();
         this.animationCounter = 0;
         this.currentDisplay = activeDisplayItem.peek();
-
-        // memoize callbacks
-        this.mouseOverHandler = (_e: MouseEvent) => {
-            clearInterval(ChipDesc.intervalHandle);
-            ChipDesc.intervalHandle = undefined;
-            clearTimeout(ChipDesc.startScrollHandle);
-            ChipDesc.startScrollHandle = undefined;
-            clearTimeout(ChipDesc.fadeOutHandle);
-            ChipDesc.fadeOutHandle = undefined;
-        };
-
-        this.mouseLeaveHandler = (_e: MouseEvent) => {
-            if (!ChipDesc.intervalHandle && !ChipDesc.startScrollHandle) {
-                ChipDesc.startScrollHandle = setTimeout(startInterval, 1000);
-            }
-        };
     }
 
     shouldComponentUpdate(): boolean {
@@ -173,49 +171,42 @@ export class ChipDesc extends Component {
 
     private classRow(chip: BattleChip) {
 
-        if (!["Standard", "Support"].includes(chip.class.variant)) {
-            return (
-                <>
-                    <div class="chipDescLeft chipBasicInfo">
-                        class:
-                    </div>
-                    <div class="chipDescRight chipBasicInfo">
-                        {chip.class.variant}
-                    </div>
-                </>
-            );
-        }
+        return ["Standard", "Support"].includes(chip.class.variant) ? null : (
+            <>
+                <div class="chipDescLeft chipBasicInfo">
+                    class:
+                </div>
+                <div class="chipDescRight chipBasicInfo">
+                    {chip.class.variant}
+                </div>
+            </>
+        );
     }
 
     private crRow(chip: BattleChip) {
-        if (["Standard", "Support"].includes(chip.class.variant) && chip.cr > 0) {
-            return (
-                <>
-                    <div class="chipDescLeft chipBasicInfo">
-                        cr:
-                    </div>
-                    <div class="chipDescRight chipBasicInfo">
-                        {chip.cr}
-                    </div>
-                </>
-            );
-        }
+        return ["Standard", "Support"].includes(chip.class.variant) && chip.cr > 0 ? (
+            <>
+                <div class="chipDescLeft chipBasicInfo">
+                    cr:
+                </div>
+                <div class="chipDescRight chipBasicInfo">
+                    {chip.cr}
+                </div>
+            </>
+        ) : null;
     }
 
     private dmgRow(chip: BattleChip) {
-
-        if (chip.damage) {
-            return (
-                <>
-                    <div class="chipDescLeft chipBasicInfo">
-                        dmg:
-                    </div>
-                    <div class="chipDescRight chipBasicInfo">
-                        {chip.dmgStr}
-                    </div>
-                </>
-            );
-        }
+        return chip.damage ? (
+            <>
+                <div class="chipDescLeft chipBasicInfo">
+                    dmg:
+                </div>
+                <div class="chipDescRight chipBasicInfo">
+                    {chip.dmgStr}
+                </div>
+            </>
+        ) : null;
     }
 
     private kindRow(chip: BattleChip) {
@@ -232,18 +223,16 @@ export class ChipDesc extends Component {
     }
 
     private skillRow(chip: BattleChip) {
-        if (chip.Skill.variant != "None") {
-            return (
-                <>
-                    <div class="chipDescLeft chipBasicInfo">
-                        skill:
-                    </div>
-                    <div class="chipDescRight chipBasicInfo">
-                        {chip.SkillAbv}
-                    </div>
-                </>
-            );
-        }
+        return chip.Skill.variant != "None" ? (
+            <>
+                <div class="chipDescLeft chipBasicInfo">
+                    skill:
+                </div>
+                <div class="chipDescRight chipBasicInfo">
+                    {chip.SkillAbv}
+                </div>
+            </>
+        ) : null;
     }
 
     private rangeRow(chip: BattleChip) {
@@ -260,128 +249,95 @@ export class ChipDesc extends Component {
     }
 
     private hitsRow(chip: BattleChip) {
-        if (chip.hits !== "0") {
-            return (
-                <>
-                    <div class="chipDescLeft chipBasicInfo">
-                        hits:
-                    </div>
-                    <div class="chipDescRight chipBasicInfo">
-                        {chip.hits}
-                    </div>
-                </>
-            );
-        }
+        return chip.hits !== "0" ? (
+            <>
+                <div class="chipDescLeft chipBasicInfo">
+                    hits:
+                </div>
+                <div class="chipDescRight chipBasicInfo">
+                    {chip.hits}
+                </div>
+            </>
+        ) : null;
     }
 
     private targetsRow(chip: BattleChip) {
-
-        if (chip.targets && chip.targets !== "0") {
-            return (
-                <>
-                    <div class="chipDescLeft chipBasicInfo">
-                        trgts:
-                    </div>
-                    <div class="chipDescRight chipBasicInfo">
-                        {chip.targets}
-                    </div>
-                </>
-            );
-        }
+        return chip.targets && chip.targets !== "0" ? (
+            <>
+                <div class="chipDescLeft chipBasicInfo">
+                    trgts:
+                </div>
+                <div class="chipDescRight chipBasicInfo">
+                    {chip.targets}
+                </div>
+            </>
+        ) : null;
     }
 
     private blightRows(chip: BattleChip) {
-        if (chip.blight) {
-
-            const elemClass = elementToCssClass(chip.blight.elem);
-
-            return (
-                <>
-                    <div class="chipDescLeft chipBasicInfo">
-                        blight:
-                    </div>
-                    <div class="chipDescRight chipBasicInfo">
-                        <span class="chipImgBox"><span class={elemClass} /></span>
-                    </div>
-                    <div class="chipDescLeft chipBasicInfo">
-                        bdmg:
-                    </div>
-                    <div class="chipDescRight chipBasicInfo">
-                        {diceToStr(chip.blight.dmg)}
-                    </div>
-                    <div class="chipDescLeft chipBasicInfo">
-                        bdur:
-                    </div>
-                    <div class="chipDescRight chipBasicInfo">
-                        {diceToStr(chip.blight.duration)}
-                    </div>
-                </>
-            );
-        }
-    }
-
-    private viewWithChip(chipId: number) {
-
-        const chip = ChipLibrary.getChip(chipId)
-
-        const background = "h-3/4 " + chip.backgroundCss;
-
-        let fontSizeStyle = "font-size: 1rem";
-
-        if (chip.description.length > 500) {
-            fontSizeStyle = "font-size: 0.875rem";
-        }
-
-        const chipAnimClass = (this.animationCounter & 1) ? "chipWindowOne" : "chipWindowTwo";
-
-        const outerChipClass = "chipDescText chipDescPadding max-h-full flex flex-col " + chipAnimClass;
-
-        return (
-            <div class={background} style="max-height: 65vh" onMouseEnter={this.mouseOverHandler} onMouseLeave={this.mouseLeaveHandler}>
-                <div class={outerChipClass} style="padding: 3px; height: 100%">
-                    <div class="border-b border-black chipName">{chip.name}</div>
-                    <div class="grid grid-cols-2 gap-0">
-                        {this.classRow(chip)}
-                        {this.elemRow(chip)}
-                        {this.crRow(chip)}
-                        {this.dmgRow(chip)}
-                        {this.kindRow(chip)}
-                        {this.skillRow(chip)}
-                        {this.rangeRow(chip)}
-                        {this.hitsRow(chip)}
-                        {this.targetsRow(chip)}
-                        {this.blightRows(chip)}
-                    </div>
-                    <div class="overflow-y-scroll hideScrollBar m-0"
-                        style={fontSizeStyle} id="ScrollTextDiv">
-                        {chip.description}
-                    </div>
-                    <div class="flex-none" style="height: 12%" />
+        return chip.blight ? (
+            <>
+                <div class="chipDescLeft chipBasicInfo">
+                    blight:
                 </div>
-            </div>
-        );
+                <div class="chipDescRight chipBasicInfo">
+                    <span class="chipImgBox"><span class={elementToCssClass(chip.blight.elem)} /></span>
+                </div>
+                <div class="chipDescLeft chipBasicInfo">
+                    bdmg:
+                </div>
+                <div class="chipDescRight chipBasicInfo">
+                    {diceToStr(chip.blight.dmg)}
+                </div>
+                <div class="chipDescLeft chipBasicInfo">
+                    bdur:
+                </div>
+                <div class="chipDescRight chipBasicInfo">
+                    {diceToStr(chip.blight.duration)}
+                </div>
+            </>
+        ) : null;
     }
 
-    private glossaryItem(name: string, backgroundCss: string, text: string) {
-        const background = "h-3/4 " + backgroundCss;
+    private viewInner(chipId: number): JSX.Element;
+    private viewInner(name: string, backgroundCss: string, description: string): JSX.Element;
+    private viewInner(chipIdOrName: number | string, backgroundCss?: string, description?: string): JSX.Element {
+        const isChip = typeof chipIdOrName === "number";
+        const chip = isChip ? ChipLibrary.getChip(chipIdOrName) : undefined;
+        const background = "h-3/4 " + (isChip ? chip!.backgroundCss : backgroundCss);
+
+        let fontSizeStyle = "font-size: 1rem";
+
+        if ((isChip && chip!.description.length > 500) || (description && description.length > 500)) {
+            fontSizeStyle = "font-size: 0.875rem";
+        }
 
         const chipAnimClass = (this.animationCounter & 1) ? "chipWindowOne" : "chipWindowTwo";
 
         const outerChipClass = "chipDescText chipDescPadding max-h-full flex flex-col " + chipAnimClass;
 
-        let fontSizeStyle = "font-size: 1rem";
-
-        if (text.length > 500) {
-            fontSizeStyle = "font-size: 0.875rem";
-        }
-
         return (
-            <div class={background} style="max-height: 65vh" onMouseEnter={this.mouseOverHandler} onMouseLeave={this.mouseLeaveHandler}>
+            <div class={background} style="max-height: 65vh" onMouseEnter={descMouseOverHandler} onMouseLeave={descMouseLeaveHandler}>
                 <div class={outerChipClass} style="padding: 3px; height: 100%">
-                    <div class="border-b border-black chipName">{name}</div>
-                    <div class="border-t border-black overflow-y-scroll hideScrollBar m-0"
-                        style={fontSizeStyle} id="ScrollTextDiv">
-                        {text}
+                    <div class="border-b border-black chipName">{isChip ? chip!.name : chipIdOrName}</div>
+                    <div class="grid grid-cols-2 gap-0">
+                        {
+                            isChip ? [
+                                this.classRow(chip!),
+                                this.elemRow(chip!),
+                                this.crRow(chip!),
+                                this.dmgRow(chip!),
+                                this.kindRow(chip!),
+                                this.skillRow(chip!),
+                                this.rangeRow(chip!),
+                                this.hitsRow(chip!),
+                                this.targetsRow(chip!),
+                                this.blightRows(chip!)
+                            ] : null
+                        }
+                    </div>
+                    <div class="overflow-y-scroll hideScrollBar m-0" style={fontSizeStyle} id="ScrollTextDiv">
+                        {isChip ? chip!.description : description}
                     </div>
                     <div class="flex-none" style="height: 12%" />
                 </div>
@@ -396,8 +352,8 @@ export class ChipDesc extends Component {
     render() {
         return activeDisplayItem.value.match({
             None: () => this.viewNoChip(),
-            ChipId: (id) => this.viewWithChip(id),
-            GlossaryItem: ({ name, backgroundCss, text }) => this.glossaryItem(name, backgroundCss, text),
+            ChipId: (id) => this.viewInner(id),
+            GlossaryItem: ({ name, backgroundCss, text }) => this.viewInner(name, backgroundCss, text)
         });
     }
 }

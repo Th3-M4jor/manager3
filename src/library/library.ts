@@ -393,7 +393,7 @@ export class ChipLibrary {
         });
     }
 
-    public static exportJSON(): void {
+    public static async exportJSON(): Promise<void> {
         const packObj = Array.from(ChipLibrary.instance.pack).reduce((obj: PackDict, [key, value]) => {
             obj[key] = {
                 owned: value.owned.value,
@@ -412,9 +412,39 @@ export class ChipLibrary {
         const json = JSON.stringify(toSave, null, 4);
 
         const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+
+        // fallback for browsers that don't support the file picker API
+        if (!('showSaveFilePicker' in window)) {
+            ChipLibrary.fallbackSaveData(blob);
+            return;
+        }
+
+        try {
+            // @ts-ignore
+            const handle = await window.showSaveFilePicker({
+                suggestedName: 'pack.json',
+                types: [{
+                    description: 'JSON File',
+                    accept: { 'application/json': ['.json'] }
+                }]
+            });
+
+            const writable = await handle.createWritable();
+            await writable.write(blob);
+            await writable.close();
+
+            // user might abort, so we do nothing on error
+        } catch (e) {
+            console.error(e);
+            return;
+        }
+    }
+
+    private static fallbackSaveData(blob: Blob) {
         const blobUrl = URL.createObjectURL(blob);
 
-        const a: HTMLAnchorElement = document.createElement("a");
+        // workaround for blocker that prevents the download from starting
+        const a = document.createElementNS('http://www.w3.org/1999/xhtml', 'a') as HTMLAnchorElement;
         a.download = "pack.json";
         a.href = blobUrl;
         a.rel = "noopener";
@@ -629,7 +659,7 @@ export class ChipLibrary {
             ChipLibrary.instance.changeSinceLastSave = true;
             ChipLibrary.folderUpdated();
         });
-        
+
         return usedCt;
     }
 

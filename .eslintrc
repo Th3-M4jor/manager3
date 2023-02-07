@@ -39,6 +39,7 @@
         "argsIgnorePattern": "^_[a-zA-Z]*$"
       }
     ],
+    "@typescript-eslint/no-non-null-assertion": 0,
     "no-else-return": "error",
     "array-callback-return": "error"
   }

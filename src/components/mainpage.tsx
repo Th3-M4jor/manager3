@@ -7,7 +7,7 @@ import { Pack } from "../pages/pack";
 import { Folder } from "../pages/folder";
 import { GroupFolder } from "../pages/groupFolder";
 
-let Glossary: typeof import("../pages/glossary").default | null = null
+let Glossary: typeof import("../pages/glossary").default | undefined;
 
 export function MainPage() {
     const subPage = top.getActiveTab().match({

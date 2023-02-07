@@ -1,16 +1,19 @@
+import { useComputed } from "@preact/signals";
+
 import * as top from "../TopLvlMsg";
 import { ChipLibrary } from "../library/library";
 
 export function TopBar() {
 
-    const tabname = top.getActiveTab().match({
-        Folder: () => { return ChipLibrary.FolderName },
-        Library: () => { return "Library" },
-        Pack: () => { return "Pack" },
-        Glossary: () => { return "Glossary" },
-        GroupFolder: (name) => {
-            return (name.length > 15 ? name.substring(0, 12) : name) + "'s Folder";
-        }
+    const tabname = useComputed(() => {
+        console.debug("TopBar: useComputed");
+        return top.getActiveTab().match({
+            Folder: () => ChipLibrary.FolderName,
+            Library: () => "Library",
+            Pack: () => "Pack",
+            Glossary: () => "Glossary",
+            GroupFolder: (name) => (name.length > 15 ? name.substring(0, 12) : name) + "'s Folder",
+        });
     });
 
     const topMsg = top.getTopMsg();

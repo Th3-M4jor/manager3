@@ -12,88 +12,82 @@ import { ChipTypes } from "../library/glossary/chipTypes";
 
 import { Skills } from "../library/glossary/skills";
 
-export default class Glossary extends Component {
-    private statusMouseoverHandler: (e: MouseEvent) => void;
-    private blightMouseoverHandler: (e: MouseEvent) => void;
-    private terrainMouseoverHandler: (e: MouseEvent) => void;
-    private chipTypeMouseoverHandler: (e: MouseEvent) => void;
-    private skillMouseoverHandler: (e: MouseEvent) => void;
-
-    constructor() {
-        super();
-
-        this.skillMouseoverHandler = (e: MouseEvent) => {
-            const data = (e.currentTarget as HTMLDivElement).dataset;
-            if (!data?.name) {
-                return;
-            }
-
-            const item = ChipDescDisplay.GlossaryItem(
-                `${data.name.charAt(0).toUpperCase()}${data.name.slice(1)}`,
-                "chipDescBackgroundStd",
-                Skills[data.name].text
-            );
-
-            setActiveDisplayItem(item);
-        }
-
-        this.statusMouseoverHandler = (e: MouseEvent) => {
-            const data = (e.currentTarget as HTMLDivElement).dataset;
-            if (!data?.name) {
-                return;
-            }
-
-            const item = ChipDescDisplay.GlossaryItem(
-                `${data.name.charAt(0).toUpperCase()}${data.name.slice(1)}`,
-                "chipDescBackgroundMega",
-                Statuses[data.name]
-            );
-
-            setActiveDisplayItem(item);
-        }
-
-        this.blightMouseoverHandler = (e: MouseEvent) => {
-            const data = (e.currentTarget as HTMLDivElement).dataset;
-            if (!data?.name) {
-                return;
-            }
-
-            const item = ChipDescDisplay.GlossaryItem(
-                `Blight (${data.name.charAt(0).toUpperCase()}${data.name.slice(1)})`,
-                "chipDescBackgroundGiga",
-                Blights[data.name].text
-            );
-            setActiveDisplayItem(item);
-        }
-        this.terrainMouseoverHandler = (e: MouseEvent) => {
-            const data = (e.currentTarget as HTMLDivElement).dataset;
-            if (!data?.name) {
-                return;
-            }
-
-            const item = ChipDescDisplay.GlossaryItem(
-                `${data.name.charAt(0).toUpperCase()}${data.name.slice(1)}`,
-                "chipDescBackgroundStd",
-                Panels[data.name]
-            );
-            setActiveDisplayItem(item);
-        }
-        this.chipTypeMouseoverHandler = (e: MouseEvent) => {
-            const data = (e.currentTarget as HTMLDivElement).dataset;
-            if (!data?.name) {
-                return;
-            }
-
-            const chipType = ChipTypes[data.name];
-
-            const item = ChipDescDisplay.GlossaryItem(
-                `${data.name.charAt(0).toUpperCase()}${data.name.slice(1)}`,
-                chipType.bgCss,
-                chipType.text
-            );
-            setActiveDisplayItem(item);
-        }
+function statusMouseoverHandler(e: MouseEvent) {
+    const data = (e.currentTarget as HTMLDivElement).dataset;
+    if (!data?.name) {
+        return;
     }
+
+    const item = ChipDescDisplay.GlossaryItem(
+        `${data.name.charAt(0).toUpperCase()}${data.name.slice(1)}`,
+        "chipDescBackgroundMega",
+        Statuses[data.name]
+    );
+
+    setActiveDisplayItem(item);
+}
+
+function blightMouseoverHandler(e: MouseEvent) {
+    const data = (e.currentTarget as HTMLDivElement).dataset;
+    if (!data?.name) {
+        return;
+    }
+
+    const item = ChipDescDisplay.GlossaryItem(
+        `Blight (${data.name.charAt(0).toUpperCase()}${data.name.slice(1)})`,
+        "chipDescBackgroundGiga",
+        Blights[data.name].text
+    );
+
+    setActiveDisplayItem(item);
+}
+
+function terrainMouseoverHandler(e: MouseEvent) {
+    const data = (e.currentTarget as HTMLDivElement).dataset;
+    if (!data?.name) {
+        return;
+    }
+
+    const item = ChipDescDisplay.GlossaryItem(
+        `${data.name.charAt(0).toUpperCase()}${data.name.slice(1)}`,
+        "chipDescBackgroundStd",
+        Panels[data.name]
+    );
+    setActiveDisplayItem(item);
+}
+
+function chipTypeMouseoverHandler(e: MouseEvent) {
+    const data = (e.currentTarget as HTMLDivElement).dataset;
+    if (!data?.name) {
+        return;
+    }
+
+    const chipType = ChipTypes[data.name];
+
+    const item = ChipDescDisplay.GlossaryItem(
+        `${data.name.charAt(0).toUpperCase()}${data.name.slice(1)}`,
+        chipType.bgCss,
+        chipType.text
+    );
+    setActiveDisplayItem(item);
+}
+
+function skillMouseoverHandler(e: MouseEvent) {
+    const data = (e.currentTarget as HTMLDivElement).dataset;
+    if (!data?.name) {
+        return;
+    }
+
+    const item = ChipDescDisplay.GlossaryItem(
+        `${data.name.charAt(0).toUpperCase()}${data.name.slice(1)}`,
+        "chipDescBackgroundStd",
+        Skills[data.name].text
+    );
+
+    setActiveDisplayItem(item);
+}
+
+export default class Glossary extends Component {
 
     private viewTopRow() {
         return (
@@ -114,7 +108,7 @@ export default class Glossary extends Component {
     private renderSkills() {
         // Observe that on modern browsers, Object.keys() returns keys in insertion order.
         return Object.keys(Skills).map((skill) => (
-            <div class="select-none chip-row Chip" data-name={skill} onMouseOver={this.skillMouseoverHandler}>
+            <div class="select-none chip-row Chip" data-name={skill} onMouseOver={skillMouseoverHandler}>
                 <div class="w-8/24 sm:w-6/24 px-0 mx-0 whitespace-nowrap select-none">
                     {skill.charAt(0).toUpperCase() + skill.slice(1)}
                 </div>
@@ -130,7 +124,7 @@ export default class Glossary extends Component {
 
     private renderStatuses() {
         return Object.keys(Statuses).map((status) => (
-            <div class="select-none chip-row Mega" data-name={status} onMouseOver={this.statusMouseoverHandler}>
+            <div class="select-none chip-row Mega" data-name={status} onMouseOver={statusMouseoverHandler}>
                 <div class="w-8/24 sm:w-6/24 px-0 mx-0 whitespace-nowrap select-none">
                     {status.charAt(0).toUpperCase() + status.slice(1)}
                 </div>
@@ -147,7 +141,7 @@ export default class Glossary extends Component {
     private renderBlights() {
         // Observe that on modern browsers, Object.keys() returns the keys in the order in which they were inserted.
         return Object.keys(Blights).map(blight => (
-            <div class="select-none chip-row Giga" data-name={blight} onMouseOver={this.blightMouseoverHandler}>
+            <div class="select-none chip-row Giga" data-name={blight} onMouseOver={blightMouseoverHandler}>
                 <div class="w-8/24 sm:w-6/24 px-0 mx-0 whitespace-nowrap select-none">
                     {blight.charAt(0).toUpperCase() + blight.slice(1)}
                 </div>
@@ -165,7 +159,7 @@ export default class Glossary extends Component {
 
     private renderPanels() {
         return Object.keys(Panels).map((panel) => (
-            <div class="select-none chip-row Chip" data-name={panel} onMouseOver={this.terrainMouseoverHandler}>
+            <div class="select-none chip-row Chip" data-name={panel} onMouseOver={terrainMouseoverHandler}>
                 <div class="w-8/24 sm:w-6/24 px-0 mx-0 whitespace-nowrap select-none">
                     {panel.charAt(0).toUpperCase() + panel.slice(1)}
                 </div>
@@ -186,7 +180,7 @@ export default class Glossary extends Component {
             const typeAbbr = typeData.abbr;
 
             return (
-                <div class={"select-none chip-row " + typeCss} data-name={chipType} onMouseOver={this.chipTypeMouseoverHandler}>
+                <div class={"select-none chip-row " + typeCss} data-name={chipType} onMouseOver={chipTypeMouseoverHandler}>
                     <div class="w-8/24 sm:w-6/24 px-0 mx-0 whitespace-nowrap select-none">
                         {chipType.charAt(0).toUpperCase() + chipType.slice(1)}
                     </div>
@@ -205,14 +199,13 @@ export default class Glossary extends Component {
         return (
             <div class="select-none justify-center flex flex-row mx-0 UsedChip">
                 <div class="w-21/24 px-0 mx-0 whitespace-nowrap select-none overflow-hidden shadow-none">
-                {"- ".repeat(50)}
+                    {"- ".repeat(50)}
                 </div>
             </div>
         );
     }
 
     render() {
-
         return (
             <>
                 <div class="col-span-3 sm:col-span-4 md:col-span-5 px-0 z-10">

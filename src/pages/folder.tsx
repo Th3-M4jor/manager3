@@ -142,7 +142,7 @@ export class Folder extends Component<Record<string, never>, FolderState> {
 
     private generateModal() {
         if (!this.state.showJoinModal) {
-            return <></>;
+            return null;
         }
 
         const cancelCallback = (_: MouseEvent) => {

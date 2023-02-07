@@ -11,7 +11,6 @@ import { ChipDesc, ChipDescDisplay, setActiveDisplayItem } from "../components/c
 
 import { LibraryChip } from "../components/chips/LibChip";
 interface LibraryState {
-    activeChipId: number | null;
     filterby: string;
     chips: BattleChip[];
 }
@@ -28,7 +27,6 @@ export class Library extends Component<Record<string, never>, LibraryState> {
     constructor() {
         super();
         this.state = {
-            activeChipId: null,
             filterby: "",
             chips: ChipLibrary.array(),
         }
@@ -171,7 +169,5 @@ export class Library extends Component<Record<string, never>, LibraryState> {
                 </div>
             </>
         );
-
     }
-
 }

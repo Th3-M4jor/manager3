@@ -155,9 +155,5 @@ function withGroupTabs(activeTab: top.TabName) {
 export function NavTabs() {
     const folders = ChipLibrary.GroupFolders;
 
-    if (!folders?.length) {
-        return noGroupTabs(top.getActiveTab());
-    }
-
-    return withGroupTabs(top.getActiveTab());
+    return folders?.length ? withGroupTabs(top.getActiveTab()) : noGroupTabs(top.getActiveTab());
 }

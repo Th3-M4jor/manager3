@@ -17,7 +17,8 @@ export default defineConfig(({ command }) => {
             target: "esnext",
             modulePreload: false,
             cssCodeSplit: false,
-            assetsDir: "./"
+            assetsDir: "./",
+            sourcemap: true,
         },
         esbuild: {
             drop: ["console", "debugger"],

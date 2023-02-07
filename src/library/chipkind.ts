@@ -15,8 +15,7 @@ export const ChipType = makeTaggedUnion({
 export type ChipType = MemberType<typeof ChipType>;
 
 export function chipTypeFromStr(val: string): ChipType {
-    val = val.toLowerCase();
-    switch (val) {
+    switch (val.toLowerCase()) {
         case "burst":
             return ChipType.Burst;
         case "construct":

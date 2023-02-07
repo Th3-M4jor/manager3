@@ -157,33 +157,28 @@ function makeOptions(includeOwned: boolean | undefined) {
             </option>
         );
     }
-    
+
     return opts;
 }
 
 export function SortBox(props: RenderableProps<SortBoxProps>) {
-    if (props.hideDesc) {
-        return (
-            <>
-                <label for="chip_sort_select" class="Chip select-none">Sort By</label>
-                <select id="chip_sort_select" class="chip-sort-select cursor-pointer" onChange={props.onSortChange} value={props.currentMethod.variant}>
-                    {makeOptions(props.includeOwned)}
-                </select>
-            </>
-        );
-    }
-
     return (
         <>
             <label for="chip_sort_select" class="Chip select-none">Sort By</label>
             <select id="chip_sort_select" class="chip-sort-select cursor-pointer" onChange={props.onSortChange} value={props.currentMethod.variant}>
                 {makeOptions(props.includeOwned)}
             </select>
-            <span class="Chip select-none">
-                <label for="descending_checkbox">Descending</label>
-                <input id="descending_checkbox" name="descending" type="checkbox" class="cursor-pointer m-0.5 sm:m-1" checked={props.descending} onClick={props.onDescendingChange} />
-            </span>
+            <DescendingBox {...props} />
         </>
     );
 
+}
+
+function DescendingBox(props: RenderableProps<SortBoxProps>) {
+    return props.hideDesc ? null : (
+        <span class="Chip select-none">
+            <label for="descending_checkbox" class="m-0 sm:m-px md:m-0.5">Descending</label>
+            <input id="descending_checkbox" name="descending" type="checkbox" class="cursor-pointer m-0 sm:m-px lg:m-0.5 xl:m-1" checked={props.descending} onClick={props.onDescendingChange} />
+        </span>
+    );
 }
