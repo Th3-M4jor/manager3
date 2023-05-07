@@ -3,3 +3,13 @@ dist
 .parcel-cache
 .proxyrc.json
 parcel-bundle-reports
+
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+.vscode

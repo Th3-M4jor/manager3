@@ -8,7 +8,6 @@
         "moduleResolution": "node",
         "isolatedModules": true,
         "allowSyntheticDefaultImports": true,
-        "keyofStringsOnly": true,
         "strict": true,
         "noFallthroughCasesInSwitch": true,
         "strictFunctionTypes": true,
