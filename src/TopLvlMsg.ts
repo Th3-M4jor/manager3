@@ -35,7 +35,7 @@ export function getActiveTab(): TabName {
     return activeTab.value;
 }
 
-let Glossary: typeof import("./pages/glossary").default | null = null
+let Glossary: typeof import("./pages/glossary").Glossary | null = null
 
 export function getGlossary() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -44,8 +44,8 @@ export function getGlossary() {
 
 export function setActiveTab(tab: TabName): void | Promise<void> {
     if (tab.variant === "Glossary" && !Glossary) {
-        return import("./pages/glossary").then((glossary) => {
-            Glossary = glossary.default;
+        return import("./pages/glossary.js").then((glossary) => {
+            Glossary = glossary.Glossary;
             setActiveTabInner(tab);
         });
     }

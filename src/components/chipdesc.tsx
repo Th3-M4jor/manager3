@@ -299,16 +299,41 @@ export class ChipDesc extends Component {
         ) : null;
     }
 
-    private viewInner(chipId: number): JSX.Element;
-    private viewInner(name: string, backgroundCss: string, description: string): JSX.Element;
-    private viewInner(chipIdOrName: number | string, backgroundCss?: string, description?: string): JSX.Element {
-        const isChip = typeof chipIdOrName === "number";
-        const chip = isChip ? ChipLibrary.getChip(chipIdOrName) : undefined;
-        const background = "h-3/4 " + (isChip ? chip!.backgroundCss : backgroundCss);
+    private viewGlossary(name: string, backgroundCss: string, description: string): JSX.Element {
+        let fontSizeStyle = "font-size: 1rem";
+
+        if (description.length > 700) {
+            fontSizeStyle = "font-size: 0.875rem";
+        }
+
+        const background = "h-full " + backgroundCss;
+
+        const chipAnimClass = (this.animationCounter & 1) ? "chipWindowOne" : "chipWindowTwo";
+
+        const outerChipClass = "chipDescText chipDescPadding max-h-full flex flex-col " + chipAnimClass;
+
+        return (
+            <div class={background} style="max-height: 85vh" onMouseEnter={descMouseOverHandler} onMouseLeave={descMouseLeaveHandler}>
+                <div class={outerChipClass} style="padding: 3px; height: 100%">
+                    <div class="border-b border-black chipName">{name}</div>
+                    <div class="grid grid-cols-2 gap-0">
+                    </div>
+                    <div class="overflow-y-scroll hideScrollBar m-0" style={fontSizeStyle} id="ScrollTextDiv">
+                        {description}
+                    </div>
+                    <div class="flex-none" style="height: 12%" />
+                </div>
+            </div>
+        );
+    }
+
+    private viewChip(chipId: number): JSX.Element {
+        const chip = ChipLibrary.getChip(chipId);
+        const background = "h-3/4 " + chip.backgroundCss;
 
         let fontSizeStyle = "font-size: 1rem";
 
-        if ((isChip && chip!.description.length > 500) || (description && description.length > 500)) {
+        if (chip.description.length > 500) {
             fontSizeStyle = "font-size: 0.875rem";
         }
 
@@ -319,10 +344,10 @@ export class ChipDesc extends Component {
         return (
             <div class={background} style="max-height: 65vh" onMouseEnter={descMouseOverHandler} onMouseLeave={descMouseLeaveHandler}>
                 <div class={outerChipClass} style="padding: 3px; height: 100%">
-                    <div class="border-b border-black chipName">{isChip ? chip!.name : chipIdOrName}</div>
+                    <div class="border-b border-black chipName">{chip.name}</div>
                     <div class="grid grid-cols-2 gap-0">
                         {
-                            isChip ? [
+                            [
                                 this.classRow(chip!),
                                 this.elemRow(chip!),
                                 this.crRow(chip!),
@@ -333,11 +358,11 @@ export class ChipDesc extends Component {
                                 this.hitsRow(chip!),
                                 this.targetsRow(chip!),
                                 this.blightRows(chip!)
-                            ] : null
+                            ]
                         }
                     </div>
                     <div class="overflow-y-scroll hideScrollBar m-0" style={fontSizeStyle} id="ScrollTextDiv">
-                        {isChip ? chip!.description : description}
+                        {chip.description}
                     </div>
                     <div class="flex-none" style="height: 12%" />
                 </div>
@@ -352,8 +377,8 @@ export class ChipDesc extends Component {
     render() {
         return activeDisplayItem.value.match({
             None: () => this.viewNoChip(),
-            ChipId: (id) => this.viewInner(id),
-            GlossaryItem: ({ name, backgroundCss, text }) => this.viewInner(name, backgroundCss, text)
+            ChipId: (id) => this.viewChip(id),
+            GlossaryItem: ({ name, backgroundCss, text }) => this.viewGlossary(name, backgroundCss, text)
         });
     }
 }

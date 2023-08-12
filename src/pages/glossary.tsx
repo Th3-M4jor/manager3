@@ -87,7 +87,7 @@ function skillMouseoverHandler(e: MouseEvent) {
     setActiveDisplayItem(item);
 }
 
-export default class Glossary extends Component {
+export class Glossary extends Component {
 
     private viewTopRow() {
         return (
