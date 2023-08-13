@@ -1,11 +1,11 @@
-@import 'elemimg.pcss';
-@import 'buttons.pcss';
-@import 'chipdesc.pcss';
-@import 'row.pcss';
-@import 'battlechip.pcss';
-@import 'inputbox.pcss';
-@import 'menu.pcss';
-@import 'modal.pcss';
+@import "elemimg.pcss";
+@import "buttons.pcss";
+@import "chipdesc.pcss";
+@import "row.pcss";
+@import "battlechip.pcss";
+@import "inputbox.pcss";
+@import "menu.pcss";
+@import "modal.pcss";
 
 @tailwind base;
 @tailwind components;
@@ -13,117 +13,119 @@
 
 /*! Fonts created by MegaRockEXE, retrieved from https://twitter.com/megarock_exe/status/959320476790095872 */
 @font-face {
-    font-family: "BN5 Bold";
-    src: url("fonts/bn5_font_bold.ttf") format("truetype");
-    font-display: swap;
+  font-family: "BN5 Bold";
+  src: url("fonts/bn5_font_bold.ttf") format("truetype");
+  font-display: swap;
 }
 
 @font-face {
-    font-family: "BN5 Thin Mono";
-    src: url("fonts/bn5_font_thin_mono.ttf") format("truetype");
+  font-family: "BN5 Thin Mono";
+  src: url("fonts/bn5_font_thin_mono.ttf") format("truetype");
 }
 
 @font-face {
-    font-family: "BN6 Bold";
-    src: url("fonts/bn6_font_bold.ttf") format("truetype");
-    font-display: swap;
+  font-family: "BN6 Bold";
+  src: url("fonts/bn6_font_bold.ttf") format("truetype");
+  font-display: swap;
 }
 
 @font-face {
-    font-family: "SF3 Bold";
-    src: url("fonts/sf3_font_bold.ttf") format("truetype");
-    font-display: swap;
+  font-family: "SF3 Bold";
+  src: url("fonts/sf3_font_bold.ttf") format("truetype");
+  font-display: swap;
 }
 
 @font-face {
-    font-family: "SF3 Small";
-    src: url("fonts/sf3_font_small.ttf") format("truetype");
-    font-display: swap;
+  font-family: "SF3 Small";
+  src: url("fonts/sf3_font_small.ttf") format("truetype");
+  font-display: swap;
 }
 
 body {
-	margin: 0;
-	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-	font-size: 1rem;
-	font-weight: 400;
-	line-height: 1.5;
-	color: #212529;
-	text-align: left;
-    background-color: #00637b;
-    height: 100%;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: left;
+  background-color: #00637b;
+  height: 100%;
 }
 
 html {
-    height: 100%;
+  height: 100%;
 }
 
 div {
-    background-color: inherit;
+  background-color: inherit;
 }
 
 .Folder {
-    @apply rounded-lg text-center px-0 w-full overflow-y-scroll overflow-x-hidden font-bold text-white text-base;
-    font-family: "BN6 Bold";
-    height: calc(100vh - 6.5rem);
-    background-color: #00637b;
-    scrollbar-width: thin;
+  @apply rounded-lg text-center px-0 w-full overflow-y-scroll overflow-x-hidden font-bold text-white text-base;
+  font-family: "BN6 Bold";
+  height: calc(100vh - 6.5rem);
+  background-color: #00637b;
+  scrollbar-width: thin;
 
-    &::-webkit-scrollbar {
-        width: 0.5rem;
-        height: 0.5rem;
-        background-color: #064b5d;
-    }
+  &::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: #064b5d;
+  }
 
-    &::-webkit-scrollbar-thumb {
-        background-color: #68919c;
-    }
+  &::-webkit-scrollbar-thumb {
+    background-color: #68919c;
+  }
 }
 
 .tabPaneArea {
-    background-color: #4abdb5;
+  background-color: #4abdb5;
 }
 
 .inactiveTab {
-    display: none !important;
+  display: none !important;
 }
 
 .activefolder {
-    will-change: scroll-position;
+  will-change: scroll-position;
 }
 
 .debug {
-    @apply border border-solid border-red-500 border-collapse;
+  @apply border border-solid border-red-500 border-collapse;
 }
 
 .outermostDiv {
-    @apply max-w-screen-lg;
-    background-color: #00637b;
-    padding: 5px;
-    height: 99vh;
-    margin: auto;
+  @apply max-w-screen-lg;
+  background-color: #00637b;
+  padding: 5px;
+  height: 99vh;
+  margin: auto;
 }
 
 .topStatusBar {
-    background-color: #ffbd18;
-    font-family: "BN6 Bold";
-    font-size: 1.5rem;
-    line-height: 1;
-    margin: 5px;
-    color: #FFFFFF;
+  background-color: #ffbd18;
+  font-family: "BN6 Bold";
+  font-size: 1.5rem;
+  line-height: 1;
+  margin: 5px;
+  color: #ffffff;
 }
 
 .topMsgSpan {
-    @apply float-right text-red-600 whitespace-nowrap overflow-hidden inline;
-    max-width: 75%;
-    text-overflow: ellipsis;
+  @apply float-right text-red-600 whitespace-nowrap overflow-hidden inline;
+  max-width: 75%;
+  text-overflow: ellipsis;
 }
 
 /* Chrome, Safari */
 .hideScrollBar::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .hideScrollBar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

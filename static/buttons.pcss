@@ -3,82 +3,82 @@
 @tailwind utilities;
 
 %nav-tab {
-    @apply inline-block text-center
+  @apply inline-block text-center
         align-middle select-none bg-transparent border
         border-solid border-transparent
         py-1.5 px-3 rounded
         transition-all duration-150;
-    position: relative;
-    flex: 1 1 auto;
-    cursor: pointer;
-    margin: 0;
-    font-family: "BN5 Bold";
-    text-transform: uppercase;
-    font-size: 0.875rem;
+  position: relative;
+  flex: 1 1 auto;
+  cursor: pointer;
+  margin: 0;
+  font-family: "BN5 Bold";
+  text-transform: uppercase;
+  font-size: 0.875rem;
 }
 
 %nav-tab:not(:last-child) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 %nav-tab:not(:first-child) {
-    margin-left: -1px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .activeNavTab {
-    @extend %nav-tab;
-    background-color: grey;
-    color: white;
-    border-bottom: 0px;
+  @extend %nav-tab;
+  background-color: grey;
+  color: white;
+  border-bottom: 0px;
 }
 
 .inactiveNavTab {
-    @extend %nav-tab;
-    @apply bg-white text-blue-700;
-    color: blue;
-    border: 1px solid lightgray;
+  @extend %nav-tab;
+  @apply bg-white text-blue-700;
+  color: blue;
+  border: 1px solid lightgray;
 }
 
 .ok-button {
-    @extend %nav-tab;
-    @apply bg-red-600 text-white;
+  @extend %nav-tab;
+  @apply bg-red-600 text-white;
 }
 
 .nav-tab-group {
-    @apply relative inline-flex align-middle translate-y-1 -translate-x-px;
+  @apply relative inline-flex align-middle translate-y-1 -translate-x-px;
 }
 
 .glossary-tab-group {
-    @apply text-center translate-y-1;
+  @apply text-center translate-y-1;
 }
 
 .dropbtn {
-    @apply bg-white hover:bg-hover-yellow mt-3 ml-1;
-    width: 95%;
-    height: calc(1.5em + .75rem + 2px);
-    font-family: "BN5 Bold";
-    font-size: 1rem;
+  @apply bg-white hover:bg-hover-yellow mt-3 ml-1;
+  width: 95%;
+  height: calc(1.5em + 0.75rem + 2px);
+  font-family: "BN5 Bold";
+  font-size: 1rem;
 }
 
 .dropdown {
-    @apply relative inline-block w-full;
+  @apply relative inline-block w-full;
 }
 
 .dropdown-content {
-    @apply hidden absolute z-10;
-    width: 95%;
+  @apply hidden absolute z-10;
+  width: 95%;
 }
 
 .dropdown:hover .dropdown-content {
-    @apply block;
+  @apply block;
 }
 
 .dropmenu-btn {
-    @apply ml-1 bg-white hover:bg-red-500;
-    width: 100%;
-    font-family: "BN5 Thin Mono";
-    line-height: 2;
+  @apply ml-1 bg-white hover:bg-red-500;
+  width: 100%;
+  font-family: "BN5 Thin Mono";
+  line-height: 2;
 }

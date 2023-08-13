@@ -6,25 +6,25 @@ import { ChipLibrary } from "./library/library";
 import { MainPage } from "./components/mainpage";
 
 async function main() {
+  const res = await fetch(import.meta.env.VITE_BASE_URL + "fetch/chips");
 
-    const res = await fetch(
-        import.meta.env.VITE_BASE_URL + "fetch/chips"
-    )
+  const chips: BattleChip[] = (await res.json()).map(
+    (chip: ChipData) => new BattleChip(chip),
+  );
 
-    const chips: BattleChip[] = (await res.json()).map((chip: ChipData) => new BattleChip(chip));
+  addEventListener("beforeunload", function (e) {
+    const confirmationMessage =
+      "Progress might be lost if you leave without saving an export.";
+    if (ChipLibrary.ChangeSinceLastSave) {
+      (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+      ChipLibrary.saveData();
+      return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+    }
+  });
 
-    addEventListener("beforeunload", function (e) {
-        const confirmationMessage = 'Progress might be lost if you leave without saving an export.';
-        if (ChipLibrary.ChangeSinceLastSave) {
-            (e || window.event).returnValue = confirmationMessage; //Gecko + IE
-            ChipLibrary.saveData();
-            return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.    
-        }
-    });
+  ChipLibrary.initFromChips(chips);
 
-    ChipLibrary.initFromChips(chips);
-
-    render(<MainPage />, document.body);
+  render(<MainPage />, document.body);
 }
 
-main()
+main();

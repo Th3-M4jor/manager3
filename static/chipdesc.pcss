@@ -2,149 +2,148 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .chipName {
-    font-family: "BN6 Bold";
-    font-size: 1.3rem;
-    line-height: 1;
+  font-family: "BN6 Bold";
+  font-size: 1.3rem;
+  line-height: 1;
 }
 
 %chipDescBox {
-    @apply rounded-t-2xl bg-no-repeat bg-cover z-10;
-    background-size: 100% 100%;
+  @apply rounded-t-2xl bg-no-repeat bg-cover z-10;
+  background-size: 100% 100%;
 }
 
 .chipDescBackgroundStd {
-    @extend %chipDescBox;
-    background-image: url("img/chip-background.webp");
+  @extend %chipDescBox;
+  background-image: url("img/chip-background.webp");
 }
 
 .chipDescBackgroundSupprt {
-    @extend %chipDescBox;
-    background-image: url("img/chip-background-support.webp");
+  @extend %chipDescBox;
+  background-image: url("img/chip-background-support.webp");
 }
 
 .chipDescBackgroundMega {
-    @extend %chipDescBox;
-    background-image: url("img/chip-background-mega.webp");
+  @extend %chipDescBox;
+  background-image: url("img/chip-background-mega.webp");
 }
 
 .chipDescBackgroundGiga {
-    @extend %chipDescBox;
-    background-image: url("img/chip-background-giga.webp");
+  @extend %chipDescBox;
+  background-image: url("img/chip-background-giga.webp");
 }
 
 .chipDescBackgroundDark {
-    @extend %chipDescBox;
-    background-color: purple;
+  @extend %chipDescBox;
+  background-color: purple;
 }
 
 .chipDescPadding {
-    margin-left: 6px;
-    margin-right: 6px;
+  margin-left: 6px;
+  margin-right: 6px;
 }
 
 .chipDescSm {
-    font-size: 12px; /*text-xs*/
+  font-size: 12px; /*text-xs*/
 }
 
 .chipDescMd {
-    font-size: 14px; /*text-sm*/
+  font-size: 14px; /*text-sm*/
 }
 
 .chipDescLg {
-    font-size: 16px; /*text-base*/
+  font-size: 16px; /*text-base*/
 }
 
 .chipDescLeft {
-    @apply col-span-1 text-left border-b border-r border-black overflow-hidden;
+  @apply col-span-1 text-left border-b border-r border-black overflow-hidden;
 }
 
 .chipDescRight {
-    @apply col-span-1 border-b border-black overflow-hidden;
+  @apply col-span-1 border-b border-black overflow-hidden;
 }
 
 .chipBasicInfo {
-    font-family: "SF3 Bold";
-    font-size: 1.2rem;
-    line-height: 1;
+  font-family: "SF3 Bold";
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 .chipDescDiv {
-    text-align: left;
-    border-top: 1px solid black;
-    background-color: transparent;
-    max-height: 70vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+  text-align: left;
+  border-top: 1px solid black;
+  background-color: transparent;
+  max-height: 70vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .chipDescDiv::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 @keyframes chip-in-one {
-    from {
-     transform:rotateY(-90deg)
-    }
-    to {
-     transform:rotateY(0deg)
-    }
+  from {
+    transform: rotateY(-90deg);
+  }
+  to {
+    transform: rotateY(0deg);
+  }
 }
 @keyframes chip-in-two {
-    from {
-     transform:rotateY(-90deg)
-    }
-    to {
-     transform:rotateY(0deg)
-    }
+  from {
+    transform: rotateY(-90deg);
+  }
+  to {
+    transform: rotateY(0deg);
+  }
 }
 
 @keyframes chip-fade-out {
-    from {
-     opacity:1
-    }
-    to {
-     opacity:0
-    }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes chip-fade-in {
-    from {
-     opacity:0
-    }
-    to {
-     opacity:1
-    }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .chipDescFadeOut {
-    animation-name:chip-fade-out;
-    animation-duration:.5s;
-    animation-iteration-count:1
+  animation-name: chip-fade-out;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
 }
 
 .chipDescFadeIn {
-    animation-name:chip-fade-in;
-    animation-duration:.5s;
-    animation-iteration-count:1
+  animation-name: chip-fade-in;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
 }
 
 .chipDescFadeIn {
-    opacity: 1;
-    transition: opacity .3s ease-in-out;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .chipWindowOne {
-    animation-name:chip-in-one;
-    animation-duration:.3s;
-    animation-iteration-count:1
+  animation-name: chip-in-one;
+  animation-duration: 0.3s;
+  animation-iteration-count: 1;
 }
 
 .chipWindowTwo {
-    animation-name:chip-in-two;
-    animation-duration:.3s;
-    animation-iteration-count:1
+  animation-name: chip-in-two;
+  animation-duration: 0.3s;
+  animation-iteration-count: 1;
 }

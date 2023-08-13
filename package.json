@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "check": "tsc --noEmit",
     "lint": "eslint . --env browser --ext .ts --ext .tsx",
-    "lint-fix": "eslint . --env browser --ext .ts --ext .tsx --fix"
+    "lint-fix": "eslint . --env browser --ext .ts --ext .tsx --fix",
+    "fmt": "prettier . --write"
   },
   "dependencies": {
     "@preact/signals": "1.2.1",
@@ -29,6 +30,7 @@
     "postcss": "^8.4.27",
     "postcss-extend": "^1.0.5",
     "postcss-mixins": "^9.0.0",
+    "prettier": "3.0.1",
     "typescript": "^5.1.6",
     "vite": "4.4.9",
     "vite-plugin-compression2": "^0.10.3"

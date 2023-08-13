@@ -1,0 +1,4 @@
+dist/*
+.vscode/*
+.yarn/*
+node_modules/*
